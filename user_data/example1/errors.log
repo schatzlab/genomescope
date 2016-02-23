@@ -1,0 +1,4 @@
+Loading required package: methods
+Warning messages:
+1: position_stack requires constant width: output may be incorrect 
+2: Removed 9 rows containing missing values (geom_path). 
