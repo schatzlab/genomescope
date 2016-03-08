@@ -40,9 +40,6 @@ eval_model<-function(nls1,nls2,control){
 	}else if (!is.null(nls2[[1]])){ 
 		return (list(nls2,(control$m$deviance()/nls2$m$deviance())))
 	}else{	#No Model converged
-		fileConn<-file(paste(foldername,"/","progress.txt",sep=""),open="w")
-		writeLines("Error: Model did not converge.", fileConn)
-		close(fileConn)
 		return (list(NULL,0))
 	}
 }
@@ -82,90 +79,126 @@ estimate_Genome_2peak2<-function(d,x,y,k,readlength,foldername){
 	return(eval_model(nls1,nls2,control))
 }
 
-gen_summary<-function(model){
- 	size=min_max(summary(model[[1]])$coefficients['length',])
-	het=min_max(summary(model[[1]])$coefficients['r',])
-	repeats=c(-1,-1)
-	##repeats=min_max(summary(model[[1]])$coefficients['d',])
-	dups=min_max(summary(model[[1]])$coefficients['bias',])
-	
-	fileConn<-file(paste(foldername,"/summary.txt",sep=""))
-	writeLines(paste("property\tmin\tmax\n","k\t",k,"\nHeterozygosity(%)\t",het[1],"\t",het[2],"\nHaploid Genome Size(bp)\t",round(size[1]),"\t",round(size[2]),"\nRead Duplication Level(times)\t",dups[1],"\t",dups[2]," \nRepeats\t",repeats[1],"\t",repeats[2],"\nRatio\t",model[2],"\t",model[2],"\n",sep=""), fileConn)
-	close(fileConn)
-
-        s<-summary(model[[1]])
-        capture.output(s, file=paste(foldername,"/model.txt", sep=""))
-}
-
-report_results<-function(p,container,foldername){
+report_results<-function(p,container,foldername)
+{
+        x=p[[1]]
+        y=p[[2]]
 	d=data.frame(x=p[[1]],y=p[[2]])
+
+	#automatically zoom into the relevant regions of the plot
 	start=which(p[,2]==min(p[1:15,2]))
-	x=d$x[start:xmax-1]
-	y=d$y[start:xmax-1]
+	zoomx=d$x[start:xmax-1]
+	zoomy=d$y[start:xmax-1]
 	
-	#first attempt to automatically zoom into the plot
-	y_limit=max(y[start:length(y)])*1.1
+	y_limit=max(zoomy[start:length(zoomy)])*1.1
 	
-	
-	x_limit= which(max(p[c(start:length(p[,2])),2])==p[,2]) *3
-	if(min(y)>y[1]){
-		x_limit=max(which(y<y[1])[2],600)
+	x_limit= which(max(p[c(start:length(zoomx)),2])==p[,2]) * 3
+
+	if(min(zoomy)>zoomy[1]){
+		x_limit=max(which(zoomy<zoomy[1])[2],600)
 	}
-	pdf(paste(foldername,"/","plot.pdf",sep=""))
-	plot(p,type="h",main="Kmer profile",xlab="Coverage",ylab="Frequency",ylim=c(0,y_limit),xlim=c(0,x_limit))
-	if(!is.null(container[[1]])){ #check if prediction worked
-	    res<-data.frame(x,pred=predict(container[[1]]))
+
+        ## Features to report
+        het=c(-1,-1)
+        size=c(-1,-1)
+        dups=c(-1,-1)
+        repeats=c(-1,-1)
+        error_rate=c(-1,-1)
+        model_status="fail"
+
+        ## Plot the distribution, and hopefully with the model fit
+	pdf(paste(foldername,"/plot.pdf",sep=""))
+	plot(p,type="h",main="GenomeScope profile\n",xlab="Coverage",ylab="Frequency",ylim=c(0,y_limit),xlim=c(0,x_limit))
+
+	if(!is.null(container[[1]])) { 
+                ## The model converged!
+	        res<-data.frame(x,pred=predict(container[[1]], newdata=data.frame(x)))
 		lines(x,res$pred,col="Blue",lwd=3)
 	
-		#generates the summary report
-		gen_summary(container)
-	
-		fileConn<-file(paste(foldername,"/","progress.txt",sep=""),open="w")
-		writeLines("done", fileConn)
-		close(fileConn)
-	}else{
-		fileConn<-file(paste(foldername,"/","summary.txt",sep=""))
-		writeLines(paste("property\tmin\tmax\n","k\t",k,"\nHeterozygosity(%)\t",-1,"\t",-1,"\nHaploid Genome Size(bp)\t",-1,"\t",-1,"\nRead Duplication Level(times)\t",-1,"\t",-1," \nRepeats\t",-1,"\t",-1,"\nRatio\t",-1,"\t",-1,"\n",sep=""), fileConn)
-		close(fileConn)
+                ## Compute the genome characteristics
+                model_sum=summary(container[[1]])
+
+                het  = min_max(model_sum$coefficients['r',])
+                dups = min_max(model_sum$coefficients['bias',])
+                kcov = min_max(model_sum$coefficients['kmercov',])
+
+                abline(v=kcov[1] * c(1,2,3,4), col="green", lty=2)
+
+                error_xcutoff = floor(kcov[1])
+                error_xcutoff_ind = which(x==error_xcutoff)
+
+                error_kmers = sum(y[1:error_xcutoff_ind] - res$pred[1:error_xcutoff_ind])
+                total_kmers = sum(as.numeric(x*y))
+
+                error_rate  = c(error_kmers/total_kmers/k, error_kmers/total_kmers/k)
+                size = (total_kmers-error_kmers)/(2*kcov)
+
+                repeats=c(-1,-1)
+                
+                title(paste("\nhet:", format(het[1], digits=3), 
+                            " kcov:", format(kcov[1], digits=3), 
+                            " err:", format(error_rate[1], digits=3), 
+                            " dup:", format(dups[1], digits=3), 
+                            " len:", round(size[1]), sep=""))
+
+                ## save the model to a file
+                capture.output(model_sum, file=paste(foldername,"/model.txt", sep=""))
+
+                model_status="done"
 	}
+
 	dev.off()
+
+	summaryFile <- paste(foldername,"/summary.txt",sep="")
+      
+	cat(paste("property", "min", "max", sep="\t"),                                  file=summaryFile, sep="\n")
+	cat(paste("k", k, k, sep="\t"),                                                 file=summaryFile, sep="\n", append=TRUE) 
+	cat(paste("Heterozygosity(%)", het[1], het[2], sep="\t"),                       file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("Haploid Genome Size(bp)", round(size[1]), round(size[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("Read Duplication Level(times)", dups[1], dups[2], sep="\t"),         file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("Repeats", repeats[1], repeats[2], sep="\t"),                         file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("Ratio", container[2], container[2], sep="\t"),                               file=summaryFile, sep="\n", append=TRUE)
+
+        ## Finalize the progress
+        fileConn<-file(paste(foldername,"/progress.txt",sep=""),open="w")
+        writeLines(model_status, fileConn)
+        close(fileConn)
 }
 
 args<-commandArgs(TRUE)
 
-if(length(args)==0)
+if(length(args) < 4)
 {
-	cat("USAGE: histfit.R histogram_file [k-mer length] [read length] [title of dataset] [xlim max value (optional)]\n")
+	cat("USAGE: histfit.R histogram_file k-mer_length read_length title_of_dataset [xlim max value (optional)]\n")
 } else{
 #	options(show.error.messages = FALSE)
 #	options(error=FALSE)
 #	options(showWarnCalls=FALSE)
 #	options(showNCalls=FALSE)
 	
-	
 	histfile <- args[[1]]
 	k<-as.numeric(args[[2]])
 	readlength <-as.numeric(args[[3]])
 	title <- args[[4]] #We dont really need this.
 
-        #histfile <- "~/build/genomescope/simulation/simulation_results/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
-        #k <- 21
-        #readlength <- 100
-        #title <- "~/build/genomescope/simulation/simulation_analysis/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
+   #     histfile <- "~/build/genomescope/simulation/simulation_results/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
+   #     k <- 21
+   #     readlength <- 100
+   #     title <- "~/build/genomescope/simulation/simulation_analysis/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
 
 	foldername = paste(title,"_results",sep="")
 	dir.create(foldername,showWarnings=FALSE)
+
 	kmer_prof=read.csv(file=histfile,sep=" ", header=FALSE) 
 	kmer_prof=kmer_prof[c(1:length(kmer_prof[,2])-1),] #get rid of the last position
 	
 	num=0
-	container=0
+	container=c(-1,-1)
 	best_p=kmer_prof
 	p=kmer_prof
+
 	while(num < 5) { ## terminate after num iterations or if the score becomes good enough
-		
-		p[,2]= p[,2]+rnorm(length(p[,2]), sd = 0.01) #edited FS
-	
+
 		d=data.frame(x=p[[1]],y=p[[2]])
 		if(length(args)==5){
 			xmax <- as.numeric(args[[5]])
@@ -176,11 +209,12 @@ if(length(args)==0)
 		start=which(p[,2]==min(p[1:15,2]))
 		x=d$x[start:xmax-1]
 		y=d$y[start:xmax-1]
+
 		#estimates the model
 		model_4peaks=estimate_Genome_4peak2(d,x,y,k, readlength, foldername) 
 		model_2peaks=estimate_Genome_2peak2(d,x,y,k, readlength, foldername) 
-		#check wich model works better:
 
+		#check wich model works better:
 		if(num==0 || model_4peaks[2][[1]]>container[2][[1]]){
 			container=model_4peaks
 			best_p=p
@@ -192,8 +226,11 @@ if(length(args)==0)
 		if(container[2][[1]]>90){ #it does not make sense to continue as the result is good enough. 
 			break
 		}
-		num=num+1
+
+                ## If we didnt get a good score, try again with random noise added
+		p[,2]= p[,2] + rnorm(length(p[,2]), sd = 0.01) 
+		num = num+1
 	}
 
-	report_results(best_p,container,foldername)
+	report_results(kmer_prof,container,foldername)
 }
