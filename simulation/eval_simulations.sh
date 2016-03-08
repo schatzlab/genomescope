@@ -9,7 +9,7 @@ MODELBIN=../histfitdup_bothplots.R
 if [ $(which parallel) ] 
 then
   echo "Running results in parallel"
-  /bin/ls $INDIR/*.fa21.hist | parallel Rscript $MODELBIN {} $K $READLEN {}
+  /bin/ls $INDIR/*.fa21.hist | parallel -t Rscript $MODELBIN {} $K $READLEN {}
 
 else
   for hist in `/bin/ls $INDIR/*.fa21.hist`
