@@ -81,8 +81,8 @@ estimate_Genome_2peak2<-function(d,x,y,k,readlength,foldername){
 
 report_results<-function(p,container,foldername)
 {
-        x=p[[1]]
-        y=p[[2]]
+    x=p[[1]]
+    y=p[[2]]
 	d=data.frame(x=p[[1]],y=p[[2]])
 
 	#automatically zoom into the relevant regions of the plot
@@ -98,22 +98,22 @@ report_results<-function(p,container,foldername)
 		x_limit=max(which(zoomy<zoomy[1])[2],600)
 	}
 
-        ## Features to report
-        het=c(-1,-1)
-        size=c(-1,-1)
-        dups=c(-1,-1)
-        repeats=c(-1,-1)
-        error_rate=c(-1,-1)
-        model_status="fail"
+    ## Features to report
+    het=c(-1,-1)
+    size=c(-1,-1)
+    dups=c(-1,-1)
+    repeats=c(-1,-1)
+    error_rate=c(-1,-1)
+    model_status="fail"
 
-        ## Plot the distribution, and hopefully with the model fit
+    ## Plot the distribution, and hopefully with the model fit
 	pdf(paste(foldername,"/plot.pdf",sep=""))
 	plot(p,type="h",main="GenomeScope profile\n",xlab="Coverage",ylab="Frequency",ylim=c(0,y_limit),xlim=c(0,x_limit))
 
 	if(!is.null(container[[1]])) { 
                 ## The model converged!
-	        res<-data.frame(x,pred=predict(container[[1]], newdata=data.frame(x)))
-		lines(x,res$pred,col="Blue",lwd=3)
+	            res<-data.frame(x,pred=predict(container[[1]], newdata=data.frame(x)))
+		        lines(x,res$pred,col="Blue",lwd=3)
 	
                 ## Compute the genome characteristics
                 model_sum=summary(container[[1]])
@@ -151,18 +151,19 @@ report_results<-function(p,container,foldername)
 
 	summaryFile <- paste(foldername,"/summary.txt",sep="")
       
-	cat(paste("property", "min", "max", sep="\t"),                                  file=summaryFile, sep="\n")
-	cat(paste("k", k, k, sep="\t"),                                                 file=summaryFile, sep="\n", append=TRUE) 
-	cat(paste("Heterozygosity(%)", het[1], het[2], sep="\t"),                       file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("Haploid Genome Size(bp)", round(size[1]), round(size[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("Read Duplication Level(times)", dups[1], dups[2], sep="\t"),         file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("Repeats", repeats[1], repeats[2], sep="\t"),                         file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("Ratio", container[2], container[2], sep="\t"),                               file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("property", "min", "max", sep="\t"),                            file=summaryFile, sep="\n")
+	cat(paste("k", k, k, sep="\t"),                                           file=summaryFile, sep="\n", append=TRUE) 
+	cat(paste("Heterozygosity", het[1], het[2], sep="\t"),                    file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("HaploidGenomeSize", round(size[1]), round(size[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("GenomeRepeatRate", repeats[1], repeats[2], sep="\t"),          file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("ReadDuplicationLevel", dups[1], dups[2], sep="\t"),            file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("ReadErrorRate", error_rate[1], error_rate[2], sep="\t"),       file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("ModelScore", container[2], container[2], sep="\t"),            file=summaryFile, sep="\n", append=TRUE)
 
-        ## Finalize the progress
-        fileConn<-file(paste(foldername,"/progress.txt",sep=""),open="w")
-        writeLines(model_status, fileConn)
-        close(fileConn)
+    ## Finalize the progress
+    fileConn<-file(paste(foldername,"/progress.txt",sep=""),open="w")
+    writeLines(model_status, fileConn)
+    close(fileConn)
 }
 
 args<-commandArgs(TRUE)
