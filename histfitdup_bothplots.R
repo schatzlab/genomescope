@@ -89,9 +89,12 @@ gen_summary<-function(model){
 	##repeats=min_max(summary(model[[1]])$coefficients['d',])
 	dups=min_max(summary(model[[1]])$coefficients['bias',])
 	
-	fileConn<-file(paste(foldername,"/","summary.txt",sep=""))
+	fileConn<-file(paste(foldername,"/summary.txt",sep=""))
 	writeLines(paste("property\tmin\tmax\n","k\t",k,"\nHeterozygosity(%)\t",het[1],"\t",het[2],"\nHaploid Genome Size(bp)\t",round(size[1]),"\t",round(size[2]),"\nRead Duplication Level(times)\t",dups[1],"\t",dups[2]," \nRepeats\t",repeats[1],"\t",repeats[2],"\nRatio\t",model[2],"\t",model[2],"\n",sep=""), fileConn)
 	close(fileConn)
+
+        s<-summary(model[[1]])
+        capture.output(s, file=paste(foldername,"/model.txt", sep=""))
 }
 
 report_results<-function(p,container,foldername){
@@ -145,16 +148,21 @@ if(length(args)==0)
 	readlength <-as.numeric(args[[3]])
 	title <- args[[4]] #We dont really need this.
 
+        #histfile <- "~/build/genomescope/simulation/simulation_results/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
+        #k <- 21
+        #readlength <- 100
+        #title <- "~/build/genomescope/simulation/simulation_analysis/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
+
 	foldername = paste(title,"_results",sep="")
 	dir.create(foldername,showWarnings=FALSE)
-	kmer_prof=read.csv(file=histfile,sep=" ") 
+	kmer_prof=read.csv(file=histfile,sep=" ", header=FALSE) 
 	kmer_prof=kmer_prof[c(1:length(kmer_prof[,2])-1),] #get rid of the last position
 	
 	num=0
 	container=0
 	best_p=kmer_prof
 	p=kmer_prof
-	while(num < 5) { ## derminate over num iterationis or score.
+	while(num < 5) { ## terminate after num iterations or if the score becomes good enough
 		
 		p[,2]= p[,2]+rnorm(length(p[,2]), sd = 0.01) #edited FS
 	
@@ -186,6 +194,6 @@ if(length(args)==0)
 		}
 		num=num+1
 	}
-	
+
 	report_results(best_p,container,foldername)
 }
