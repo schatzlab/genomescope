@@ -100,9 +100,10 @@ report_results<-function(p,container,foldername)
 
     ## Features to report
     het=c(-1,-1)
-    size=c(-1,-1)
+    total_len=c(-1,-1)
+    repeat_len=c(-1,-1)
+    unique_len=c(-1,-1)
     dups=c(-1,-1)
-    repeats=c(-1,-1)
     error_rate=c(-1,-1)
     model_status="fail"
 
@@ -121,6 +122,8 @@ report_results<-function(p,container,foldername)
                 het  = min_max(model_sum$coefficients['r',])
                 dups = min_max(model_sum$coefficients['bias',])
                 kcov = min_max(model_sum$coefficients['kmercov',])
+                mlen = min_max(model_sum$coefficients['length',])
+                md   = min_max(model_sum$coefficients['d',])
 
                 abline(v=kcov[1] * c(1,2,3,4), col="green", lty=2)
 
@@ -131,34 +134,49 @@ report_results<-function(p,container,foldername)
                 total_kmers = sum(as.numeric(x*y))
 
                 error_rate  = c(error_kmers/total_kmers/k, error_kmers/total_kmers/k)
-                size = (total_kmers-error_kmers)/(2*kcov)
+                total_len = (total_kmers-error_kmers)/(2*kcov)
 
-                repeats=c(-1,-1)
+                ## find kmers that fit the 2 peak model (no repeats)
+                unique_dist <- (2 * (1 - md[1]) * (1 - (1 - het[1])^k)) * dnbinom(x, size = kcov[1]/dups[1], mu = kcov[1]) * mlen[1] +
+                               ((md[1] * (1 - (1 - het[1])^k)^2) + (1 - 2 * md[1]) * ((1 - het[1])^k)) * dnbinom(x, size = kcov[1] * 2/(dups[1]), mu = kcov[1] * 2) * mlen[1]
+
+                lines(x, unique_dist, col="red", lty=3, lwd=3)
+
+                unique_kmers = sum(as.numeric(x*unique_dist))
+                repeat_kmers = total_kmers - unique_kmers - error_kmers
+
+                repeat_len=repeat_kmers/(2*kcov)
+                unique_len=unique_kmers/(2*kcov)
                 
                 title(paste("\nhet:", format(het[1], digits=3), 
                             " kcov:", format(kcov[1], digits=3), 
                             " err:", format(error_rate[1], digits=3), 
                             " dup:", format(dups[1], digits=3), 
-                            " len:", round(size[1]), sep=""))
+                            " len:", round(total_len[1]), sep=""))
 
                 ## save the model to a file
                 capture.output(model_sum, file=paste(foldername,"/model.txt", sep=""))
 
                 model_status="done"
 	}
+    else
+    {
+      title("\nFailed to converge")
+    }
 
 	dev.off()
 
 	summaryFile <- paste(foldername,"/summary.txt",sep="")
       
-	cat(paste("property", "min", "max", sep="\t"),                            file=summaryFile, sep="\n")
-	cat(paste("k", k, k, sep="\t"),                                           file=summaryFile, sep="\n", append=TRUE) 
-	cat(paste("Heterozygosity", het[1], het[2], sep="\t"),                    file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("HaploidGenomeSize", round(size[1]), round(size[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("GenomeRepeatRate", repeats[1], repeats[2], sep="\t"),          file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("ReadDuplicationLevel", dups[1], dups[2], sep="\t"),            file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("ReadErrorRate", error_rate[1], error_rate[2], sep="\t"),       file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("ModelScore", container[2], container[2], sep="\t"),            file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("property", "min", "max", sep="\t"),                                      file=summaryFile, sep="\n")
+	cat(paste("k", k, k, sep="\t"),                                                     file=summaryFile, sep="\n", append=TRUE) 
+	cat(paste("Heterozygosity", het[1], het[2], sep="\t"),                              file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("GenomeHaploidLen", round(total_len[1]), round(total_len[2]), sep="\t"),  file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("GenomeRepeatLen", round(repeat_len[1]), round(repeat_len[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("GenomeUniqueLen", round(unique_len[1]), round(unique_len[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("ReadDuplicationLevel", dups[1], dups[2], sep="\t"),                      file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("ReadErrorRate", error_rate[1], error_rate[2], sep="\t"),                 file=summaryFile, sep="\n", append=TRUE)
+	cat(paste("ModelScore", container[2], container[2], sep="\t"),                      file=summaryFile, sep="\n", append=TRUE)
 
     ## Finalize the progress
     fileConn<-file(paste(foldername,"/progress.txt",sep=""),open="w")
