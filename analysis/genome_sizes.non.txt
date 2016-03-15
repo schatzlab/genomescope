@@ -1,0 +1,3 @@
+Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa	119481543
+Drosophila_melanogaster.BDGP6.dna_sm.toplevel.fa	142573017
+Escherichia_coli_str_k_12_substr_w3110.GCA_000010245.1.26.dna.toplevel.fa	4646332
