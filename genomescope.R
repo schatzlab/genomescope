@@ -1,11 +1,16 @@
 #!/bin/env Rscript
 
 #Gregory Vurture + Fritz J Sedlazeck + Michael Schatz
-#histfitdup.R
 #This is the automated script for reading in a histogram file given the k-mer size, readlength and an optional parameter for what you want the x-axis limit to be.
 
 ## Threshold on score for stopping search
 GOOD_SCORE_THRESHOLD=90
+
+## Number of rounds before giving up
+NUM_ROUNDS=5
+
+## Max rounds on NLS
+MAX_ITERATIONS=100
 
 min_max <- function(table){
 	return (c( abs(table[1]) - abs(table[2]) , abs(table[1])+abs(table[2])))
@@ -48,7 +53,6 @@ eval_model<-function(nls1,nls2,control){
 }
 
 estimate_Genome_4peak2<-function(d,x,y,k,readlength,foldername){
-	max_iterations=100
 	#We can calculate the numer of reads from the number of kmers, read-length, and kmersize
 	#First we see what happens when the max peak is the kmercoverage for the plot
 	numofReads = sum(as.numeric(x*y))/(readlength-k+1) 
@@ -56,29 +60,28 @@ estimate_Genome_4peak2<-function(d,x,y,k,readlength,foldername){
 	estCoverage1= estKmercov1*readlength/(readlength-k)
 	estLength1 = numofReads*readlength/estCoverage1
 	
-	nls1=nls_4peak(d,x,y,k,estKmercov1,estLength1,max_iterations)
-	control=nls_control(d,x,y,k,estKmercov1,estLength1,max_iterations)
+	nls1=nls_4peak(d,x,y,k,estKmercov1,estLength1,MAX_ITERATIONS)
+	control=nls_control(d,x,y,k,estKmercov1,estLength1,MAX_ITERATIONS)
 	#Second we half the max kmercoverage
 	estKmercov2 = estKmercov1/2 ##2.5
 	estCoverage2= estKmercov2*readlength/(readlength-k)
 	estLength2 = numofReads*readlength/estCoverage2
-	nls2=nls_4peak(d,x,y,k,estKmercov2,estLength2,max_iterations)
+	nls2=nls_4peak(d,x,y,k,estKmercov2,estLength2,MAX_ITERATIONS)
 	return(eval_model(nls1,nls2,control))
 }
 
 estimate_Genome_2peak2<-function(d,x,y,k,readlength,foldername){
-	max_iterations=100
 	numofReads = sum(as.numeric(x*y))/(readlength-k+1) 
 	estKmercov1 = x[which(y==max(y))][1]
 	estCoverage1= estKmercov1*readlength/(readlength-k)
 	estLength1 = numofReads*readlength/estCoverage1
-	nls1=nls_2peak(d,x,y,k,estKmercov1,estLength1,max_iterations)
-	control=nls_control(d,x,y,k,estKmercov1,estLength1,max_iterations)
+	nls1=nls_2peak(d,x,y,k,estKmercov1,estLength1,MAX_ITERATIONS)
+	control=nls_control(d,x,y,k,estKmercov1,estLength1,MAX_ITERATIONS)
 	#Second we double the max kmercoverage
 	estKmercov2 = estKmercov1*2
 	estCoverage2= estKmercov2*readlength/(readlength-k)
 	estLength2 = numofReads*readlength/estCoverage2
-	nls2=nls_2peak(d,x,y,k,estKmercov2,estLength2,max_iterations)
+	nls2=nls_2peak(d,x,y,k,estKmercov2,estLength2,MAX_ITERATIONS)
 	return(eval_model(nls1,nls2,control))
 }
 
@@ -143,15 +146,25 @@ report_results<-function(p,container,foldername)
 
        error_kmers = sum(as.numeric(error_kmers * x[1:error_xcutoff_ind]))
        total_kmers = sum(as.numeric(x*y))
+
+       f1 <- function(x){
+             i=seq(1,k) 
+             h=(1-x)^(k-i)*x^i*choose(k,i)
+             sum(h)*total_kmers-error_kmers
+       }
+
+       error_rate_root=uniroot(f1, c(0,1))$root
        
-       error_rate  = c(error_kmers/total_kmers/k, error_kmers/total_kmers/k)
+       #error_rate  = c(error_kmers/total_kmers/k, error_kmers/total_kmers/k)
+       error_rate  = c(error_rate_root, error_rate_root)
+
        total_len = (total_kmers-error_kmers)/(2*kcov)
        
        ## find kmers that fit the 2 peak model (no repeats)
-       unique_dist <- (2 * (1 - md[1]) * (1 - (1 - het[1])^k)) * dnbinom(x, size = kcov[1]/dups[1], mu = kcov[1]) * mlen[1] +
+       unique_hist <- (2 * (1 - md[1]) * (1 - (1 - het[1])^k)) * dnbinom(x, size = kcov[1]/dups[1], mu = kcov[1]) * mlen[1] +
                       ((md[1] * (1 - (1 - het[1])^k)^2) + (1 - 2 * md[1]) * ((1 - het[1])^k)) * dnbinom(x, size = kcov[1] * 2/(dups[1]), mu = kcov[1] * 2) * mlen[1]
        
-       unique_kmers = sum(as.numeric(x*unique_dist))
+       unique_kmers = sum(as.numeric(x*unique_hist))
        repeat_kmers = total_kmers - unique_kmers - error_kmers
        
        repeat_len=repeat_kmers/(2*kcov)
@@ -169,7 +182,7 @@ report_results<-function(p,container,foldername)
        abline(v=kcov[1] * c(1,2,3,4), col="green", lty=2)
        
        ## Draw just the unique portion of the model
-       lines(x, unique_dist, col="red", lty=3, lwd=3)
+       lines(x, unique_hist, col="red", lty=3, lwd=3)
        
        model_status="done"
 	}
@@ -234,7 +247,7 @@ if(length(args) < 4)
     progressFilename=paste(foldername,"/progress.txt",sep="")
 	cat("starting", file=progressFilename, sep="\n")
 
-	while(num < 5) { ## terminate after num iterations or if the score becomes good enough
+	while(num < NUM_ROUNDS) { ## terminate after num iterations or if the score becomes good enough
 
 		d=data.frame(x=p[[1]],y=p[[2]])
 		if(length(args)==5){
