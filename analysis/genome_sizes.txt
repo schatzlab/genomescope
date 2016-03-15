@@ -1,0 +1,4 @@
+genome	GenomeHaploidLen	GenomeUniqueLen GenomeRepeatLen
+Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa	119481543	107213570	12267973
+Drosophila_melanogaster.BDGP6.dna_sm.toplevel.fa	142573017	116913468	25659549
+Escherichia_coli_str_k_12_substr_w3110.GCA_000010245.1.26.dna.toplevel.fa	4646332	4525311	121021
