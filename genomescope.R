@@ -7,10 +7,10 @@
 GOOD_SCORE_THRESHOLD=90
 
 ## Number of rounds before giving up
-NUM_ROUNDS=5
+NUM_ROUNDS=1
 
 ## Max rounds on NLS
-MAX_ITERATIONS=100
+MAX_ITERATIONS=50
 
 min_max <- function(table){
 	return (c( abs(table[1]) - abs(table[2]) , abs(table[1])+abs(table[2])))
@@ -59,14 +59,22 @@ estimate_Genome_4peak2<-function(d,x,y,k,readlength,foldername){
 	estKmercov1 = x[which(y==max(y))][1]
 	estCoverage1= estKmercov1*readlength/(readlength-k)
 	estLength1 = numofReads*readlength/estCoverage1
+
+    print(paste("trying with kmercov: ", estKmercov1))
 	
 	nls1=nls_4peak(d,x,y,k,estKmercov1,estLength1,MAX_ITERATIONS)
 	control=nls_control(d,x,y,k,estKmercov1,estLength1,MAX_ITERATIONS)
+    print(summary(nls1))
+
 	#Second we half the max kmercoverage
 	estKmercov2 = estKmercov1/2 ##2.5
 	estCoverage2= estKmercov2*readlength/(readlength-k)
 	estLength2 = numofReads*readlength/estCoverage2
+
+    print(paste("trying with kmercov: ", estKmercov2))
 	nls2=nls_4peak(d,x,y,k,estKmercov2,estLength2,MAX_ITERATIONS)
+    print(summary(nls2))
+
 	return(eval_model(nls1,nls2,control))
 }
 
@@ -117,12 +125,19 @@ report_results<-function(p,container,foldername)
 	pdf(paste(foldername,"/plot.pdf",sep=""))
 	plot(p,type="h",main="GenomeScope profile\n",xlab="Coverage",ylab="Frequency",ylim=c(0,y_limit),xlim=c(0,x_limit))
 
+    ## Make a second plot in log space over entire range
+	pdf(paste(foldername,"/plot.log.pdf",sep=""))
+	plot(p,type="h",main="GenomeScope profile\n",xlab="Coverage",ylab="Frequency",log="xy")
+
 	if(!is.null(container[[1]])) 
     { 
        ## The model converged!
        res<-data.frame(x,pred=predict(container[[1]], newdata=data.frame(x)))
        lines(x,res$pred,col="Blue",lwd=3)
-       
+
+       dev.set(dev.next())
+       lines(x,res$pred,col="Blue",lwd=3)
+
        ## Compute the genome characteristics
        model_sum=summary(container[[1]])
        
@@ -142,6 +157,9 @@ report_results<-function(p,container,foldername)
 
        error_kmers = y[1:error_xcutoff_ind] - res$pred[1:error_xcutoff_ind]
        error_kmers = pmax(error_kmers, 0)
+
+       lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col="orange")
+       dev.set(dev.next())
        lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col="orange")
 
        error_kmers = sum(as.numeric(error_kmers * x[1:error_xcutoff_ind]))
@@ -183,14 +201,33 @@ report_results<-function(p,container,foldername)
        
        ## Draw just the unique portion of the model
        lines(x, unique_hist, col="red", lty=3, lwd=3)
+
+       dev.set(dev.next())
+
+       ## update the other plot
+       title(paste("\nhet:", format(het[1], digits=3), 
+                   " kcov:", format(kcov[1], digits=3), 
+                   " err:", format(error_rate[1], digits=3), 
+                   " dup:", format(dups[1], digits=3), 
+                   " len:", round(total_len[1]), sep=""), 
+                   cex.main=.85)
+       
+       ## Mark the modes of the peaks
+       abline(v=kcov[1] * c(1,2,3,4), col="green", lty=2)
+       
+       ## Draw just the unique portion of the model
+       lines(x, unique_hist, col="red", lty=3, lwd=3)
        
        model_status="done"
 	}
     else
     {
       title("\nFailed to converge")
+      dev.set(dev.next())
+      title("\nFailed to converge")
     }
 
+	dev.off()
 	dev.off()
 
     ## Write key values to summary file
@@ -215,7 +252,7 @@ args<-commandArgs(TRUE)
 
 if(length(args) < 4)
 {
-	cat("USAGE: histfit.R histogram_file k-mer_length read_length title_of_dataset [xlim max value (optional)]\n")
+	cat("USAGE: genomescope.R histogram_file k-mer_length read_length title_of_dataset [xlim max value (optional)]\n")
 } else{
 #	options(show.error.messages = FALSE)
 #	options(error=FALSE)
@@ -226,6 +263,12 @@ if(length(args) < 4)
 	k<-as.numeric(args[[2]])
 	readlength <-as.numeric(args[[3]])
 	title <- args[[4]] #We dont really need this.
+    plot_xlim <- -1
+
+    if (length(args)==5)
+    {
+      plot_xlim <- as.numeric(args[[5]])
+    }
 
    #     histfile <- "~/build/genomescope/simulation/simulation_results/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
    #     k <- 21
@@ -247,23 +290,32 @@ if(length(args) < 4)
     progressFilename=paste(foldername,"/progress.txt",sep="")
 	cat("starting", file=progressFilename, sep="\n")
 
-	while(num < NUM_ROUNDS) { ## terminate after num iterations or if the score becomes good enough
-
+    ## terminate after num iterations or if the score becomes good enough
+	while(num < NUM_ROUNDS) 
+    {
 		d=data.frame(x=p[[1]],y=p[[2]])
-		if(length(args)==5){
-			xmax <- as.numeric(args[[5]])
-		} else{
-			xmax <- nrow(p)
-		}
+	    xmax <- nrow(p)
 	
 		start=which(p[,2]==min(p[1:15,2]))
+        print(paste("trimming to ", start))
+
 		x=d$x[start:xmax-1]
 		y=d$y[start:xmax-1]
 
 		#estimates the model
-        cat(paste("trying 4peak model, round", num), file=progressFilename, sep="\n", append=TRUE)
+        cat(paste("round", num, "trying 4peak model... "), file=progressFilename, sep="", append=TRUE)
+
 		model_4peaks=estimate_Genome_4peak2(d,x,y,k, readlength, foldername) 
-        
+
+        if(!is.null(container[[1]])) 
+        { 
+          cat(paste("converged. score: ", container[[2]][[1]]), file=progressFilename, sep="\n", append=TRUE)
+        }
+        else
+        {
+          cat(paste("unconverged"), file=progressFilename, sep="\n", append=TRUE)
+        }
+
         #cat(paste("trying 2peak model, round", num), file=progressFilename, sep="\n", append=TRUE)
 		#model_2peaks=estimate_Genome_2peak2(d,x,y,k, readlength, foldername) 
 
