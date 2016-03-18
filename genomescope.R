@@ -3,23 +3,26 @@
 ## GenomeScope: Fast Genome Analysis from Unassembled Short Reads
 ## This is the automated script for reading in a histogram file given the k-mer size, readlength and an optional parameter for what you want the x-axis limit to be.
 
-## Threshold on score for stopping search
-GOOD_SCORE_THRESHOLD=90
-
 ## Number of rounds before giving up
 NUM_ROUNDS=5
 
 ## Coverage steps to trim off between rounds
-START_SHIFT=10
+START_SHIFT=5
+
+## Typical cutoff for sequencing error
+TYPICAL_ERROR = 15
 
 ## Amount of random noise to introduce
-RAND_ERROR = 0.01
+RAND_ERROR = 0.0001
 
 ## Max rounds on NLS
-MAX_ITERATIONS=50
+MAX_ITERATIONS=20
 
 ## Print out debugging messages (0/1)
-DEBUG = 1
+DEBUG = 0
+
+## Suppress the warnings if the modeling goes crazy, those are in try/catch blocks anyways
+options(warn=-1)
 
 
 
@@ -38,99 +41,98 @@ min_max <- function(table){
 nls_4peak<-function(x, y, k, estKmercov, estLength, max_iterations){
 	model4 = NULL
 
-    if (DEBUG) { print("trying standard algorithm") }
-	try(model4 <- nls(y ~ ((2.0 * (1-d) * (1-(1-r)^k))*dnbinom(x,size=kmercov/(bias),mu=kmercov)*length +
-                          ((d*(1-(1-r)^k)^2) + (1-2*d)*((1-r)^k))*dnbinom(x,size=kmercov*2/(bias),mu=kmercov*2)*length + 
-                          (2*d*((1-r)^k)*(1-(1-r)^k))*dnbinom(x,size = kmercov*3/(bias), mu = kmercov*3)*length + 
-                          (d*(1-r)^(2*k))*dnbinom(x, size = kmercov*4 / (bias), mu = kmercov*4)*length), 
-                      start=list(d=0, r=0, kmercov=estKmercov, bias = 0.5, length=estLength),
-                      control=list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
+    if (DEBUG) { cat("trying nls_4peak standard algorithm\n") }
+	try(model4 <- nls(y ~ ((2.0 * (1-d) * (1-(1-r)^k))            * dnbinom(x, size = kmercov   / bias, mu = kmercov)     * length +
+                          ((d*(1-(1-r)^k)^2) + (1-2*d)*((1-r)^k)) * dnbinom(x, size = kmercov*2 / bias, mu = kmercov * 2) * length + 
+                          (2*d*((1-r)^k)*(1-(1-r)^k))             * dnbinom(x, size = kmercov*3 / bias, mu = kmercov * 3) * length + 
+                          (d*(1-r)^(2*k))                         * dnbinom(x, size = kmercov*4 / bias, mu = kmercov * 4) * length), 
+                      start = list(d=0, r=0, kmercov=estKmercov, bias = 0.5, length=estLength),
+                      control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
 
 	if(class(model4) == "try-error"){
-        if (DEBUG) { print("retrying with port algorithm") }
-		try(model4 <- nls(y ~ ((2.0 * (1-d) * (1-(1-r)^k))*dnbinom(x,size=kmercov/(bias),mu=kmercov)*length + 
-                              ((d*(1-(1-r)^k)^2) + (1-2*d)*((1-r)^k))*dnbinom(x,size=kmercov*2/(bias),mu=kmercov*2)*length + 
-                              (2*d*((1-r)^k)*(1-(1-r)^k))*dnbinom(x,size = kmercov*3/(bias), mu = kmercov*3)*length + 
-                              (d*(1-r)^(2*k))*dnbinom(x, size = kmercov*4 / (bias), mu = kmercov*4)*length), 
-                          start=list(d=0,r=0,kmercov=estKmercov,bias = 0.5,length=estLength),
-                          algorithm="port", control=list(minFactor=1e-12,maxiter=max_iterations)), silent = TRUE)
+        if (DEBUG) { cat("retrying nls_4peak with port algorithm\n") }
+		try(model4 <- nls(y ~ ((2.0 * (1-d) * (1-(1-r)^k))            * dnbinom(x, size = kmercov   / bias, mu = kmercov)     * length + 
+                              ((d*(1-(1-r)^k)^2) + (1-2*d)*((1-r)^k)) * dnbinom(x, size = kmercov*2 / bias, mu = kmercov * 2) * length + 
+                              (2*d*((1-r)^k)*(1-(1-r)^k))             * dnbinom(x, size = kmercov*3 / bias, mu = kmercov * 3) * length + 
+                              (d*(1-r)^(2*k))                         * dnbinom(x, size = kmercov*4 / bias, mu = kmercov * 4) * length), 
+                          start = list(d=0, r=0, kmercov=estKmercov, bias = 0.5, length=estLength),
+                          algorithm = "port", control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
 	}
 
 	return(model4)
 }
 
 
-## Use nls to fit 2 peak model
-###############################################################################
-
-nls_2peak<-function(x, y, k, estKmercov, estLength, max_iterations){	
-	model2 = NULL
-
-    if (DEBUG) { print("trying standard algorithm") }
-	try(model2 <- nls(y ~ 2*(1-exp(-r*k))*dnbinom(x,size=(kmercov/2)/(bias+1),mu=kmercov/2)*length + 
-                          exp(-r*k)*dnbinom(x,size=kmercov/(bias+1),mu=kmercov)*length,
-                      start=list(length=estLength, r=0.0, kmercov=estKmercov, bias=1),
-                      control=list(minFactor=1e-12,maxiter=max_iterations)))
-
-	if(class(model2) == "try-error"){
-        if (DEBUG) { print("retrying with port algorithm") }
-		try(model2 <- nls(y ~ 2*(1-exp(-r*k))*dnbinom(x,size=(kmercov/2)/(bias+1),mu=kmercov/2)*length + 
-                              exp(-r*k)*dnbinom(x,size=kmercov/(bias+1),mu=kmercov)*length,
-                          start=list(length=estLength,r=0.0,kmercov=estKmercov,bias=1),
-                          algorithm="port", control=list(minFactor=1e-12,maxiter=max_iterations)))
-	}
-
-	return(model2)
-}
-
-
-## Use nls to fit 1 peak model as control
-###############################################################################
-
-nls_control<-function(x, y, k, estKmercov, estLength, max_iterations){
-    control = NULL
-
-    if (DEBUG) { print("trying standard algorithm") }
-	control <- try(nls(y ~ (dnbinom(x,size=kmercov/(bias),mu=kmercov)*length), 
-                            start=list(kmercov=estKmercov,bias = 0.5,length=estLength),
-                            control=list(minFactor=1e-12,maxiter=max_iterations)), silent = TRUE)
-
-	if(class(control) == "try-error"){
-        if (DEBUG) { print("retrying with port algorithm") }
-		control <- try(nls(y ~ (dnbinom(x,size=kmercov/(bias),mu=kmercov)*length),
-                           start=list(d=0,r=0,kmercov=estKmercov,bias = 0.5,length=estLength),
-                           algorithm="port",control=list(minFactor=1e-12,maxiter=max_iterations)), silent = TRUE)
-	}
-
-	return(control)
-}
-
 
 ## Pick between the two model forms, resolves ambiguity between which is the homozygous and which is the heterozygous peak
 ###############################################################################
 
-eval_model<-function(nls1, nls2, control){
- 	if(!is.null(nls1[[1]]) ){##&& (is.null(nls2[[1]]) || nls1$m$deviance() > nls2$m$deviance())){
-		return (list(nls1,(control$m$deviance()/nls1$m$deviance())))
-	}else if (!is.null(nls2[[1]])){ 
-		return (list(nls2,(control$m$deviance()/nls2$m$deviance())))
-	}else{	#No Model converged
-		return (list(NULL,0))
-	}
+eval_model<-function(kmer_hist_orig, nls1, nls2){
+    nls1score = -1
+    nls2score = -1
+
+    allkmers = sum(as.numeric(kmer_hist_orig[[2]]))
+    if(DEBUG){ cat(paste("allkmers: ", allkmers, "\n"))}
+
+    if (!is.null(nls1))
+    {
+      res1 <- predict(nls1, newdata=data.frame(kmer_hist_orig[[1]]))
+      if(DEBUG) { cat(paste("nls1 kmers: ", sum(as.numeric(res1)), "\n")) }
+
+      nls1score = sum(as.numeric(abs(kmer_hist_orig[[2]]-res1))) / allkmers
+      if(DEBUG){ cat(paste("nls1score: ", nls1score, "\n"))}
+    }
+    else
+    {
+      if (DEBUG) { cat("nls1score failed to converge\n") }
+    }
+
+    if (!is.null(nls2))
+    {
+      res2 <- predict(nls2, newdata=data.frame(kmer_hist_orig[[1]]))
+      if(DEBUG) { cat(paste("nls2 kmers: ", sum(as.numeric(res2)), "\n")) }
+
+      nls2score = sum(as.numeric(abs(kmer_hist_orig[[2]]-res2))) / allkmers
+      if(DEBUG){ cat(paste("nls2score: ", nls2score, "\n"))}
+    }
+    else
+    {
+      if (DEBUG) { cat("nls2score failed to converge\n") }
+    }
+
+    if (!is.null(nls1))
+    {
+      if (!is.null(nls2))
+      {
+        if (nls1score < nls2score)
+        {
+          if (DEBUG) { cat(paste("returning nls1, better score\n")) }
+          return (list(nls1, nls1score))
+        }
+      }
+      else
+      {
+        if (DEBUG) { cat(paste("returning nls1, nls2 fail\n")) }
+        return (list(nls1, nls1score))
+      }
+    }
+
+    if (DEBUG) { cat(paste("returning nls2 by default\n")) }
+    return (list(nls2, nls2score))
 }
 
 
 ## Wrapper function to try fitting 4 peak model with 2 forms
 ###############################################################################
 
-estimate_Genome_4peak2<-function(x, y, k, readlength, foldername){
+estimate_Genome_4peak2<-function(kmer_hist_orig, x, y, k, readlength, foldername){
 	## First we see what happens when the max peak is the kmercoverage (typically the homozygous peak) for the plot
 	numofReads   = sum(as.numeric(x*y))/(readlength-k+1) 
 	estKmercov1  = x[which(y==max(y))][1]
 	estCoverage1 = estKmercov1*readlength/(readlength-k)
 	estLength1   = numofReads*readlength/estCoverage1
 
-    if (DEBUG) { print(paste("trying with kmercov: ", estKmercov1)) }
+    if (DEBUG) { cat(paste("trying with kmercov: ", estKmercov1, "\n")) }
 	nls1    = nls_4peak(x, y, k, estKmercov1, estLength1, MAX_ITERATIONS)
     if (DEBUG) { print(summary(nls1)) }
 
@@ -139,16 +141,11 @@ estimate_Genome_4peak2<-function(x, y, k, readlength, foldername){
 	estCoverage2 = estKmercov2*readlength/(readlength-k)
 	estLength2   = numofReads*readlength/estCoverage2
 
-    if (DEBUG) { print(paste("trying with kmercov: ", estKmercov2)) }
+    if (DEBUG) { cat(paste("trying with kmercov: ", estKmercov2, "\n")) }
 	nls2 = nls_4peak(x, y, k, estKmercov2, estLength2, MAX_ITERATIONS)
     if (DEBUG) { print(summary(nls2)) }
 
-    ## Now try a simple control model
-    if (DEBUG) { print(paste("trying control with kmercov: ", estKmercov1)) }
-	control = nls_control(x, y, k, estKmercov1, estLength1, MAX_ITERATIONS)
-    if (DEBUG) { print(summary(control)) }
-
-	return(eval_model(nls1, nls2, control))
+	return(eval_model(kmer_hist_orig, nls1, nls2))
 }
 
 
@@ -172,7 +169,7 @@ estimate_Genome_2peak2<-function(x, y, k, readlength, foldername){
 	nls2=nls_2peak(x,y,k,estKmercov2,estLength2,MAX_ITERATIONS)
 
 	control=nls_control(x,y,k,estKmercov1,estLength1,MAX_ITERATIONS)
-	return(eval_model(nls1,nls2,control))
+	return(eval_model(nls1,nls2))
 }
 
 
@@ -187,7 +184,7 @@ report_results<-function(kmer_hist, k, container, foldername)
 
 	#automatically zoom into the relevant regions of the plot, ignore first 15 positions
     xmax=length(x)
-	start=which(y == min(y[1:15]))
+	start=which(y == min(y[1:TYPICAL_ERROR]))
 	zoomx=x[start:xmax-1]
 	zoomy=y[start:xmax-1]
 
@@ -273,8 +270,8 @@ report_results<-function(kmer_hist, k, container, foldername)
        total_len = (total_kmers-error_kmers)/(2*kcov)
        
        ## find kmers that fit the 2 peak model (no repeats)
-       unique_hist <- (2 * (1 - md[1]) * (1 - (1 - het[1])^k)) * dnbinom(x, size = kcov[1]/dups[1], mu = kcov[1]) * mlen[1] +
-                      ((md[1] * (1 - (1 - het[1])^k)^2) + (1 - 2 * md[1]) * ((1 - het[1])^k)) * dnbinom(x, size = kcov[1] * 2/(dups[1]), mu = kcov[1] * 2) * mlen[1]
+       unique_hist <- (2 * (1 - md[1]) * (1 - (1 - het[1])^k))                                * dnbinom(x, size = kcov[1]     / dups[1], mu = kcov[1])     * mlen[1] +
+                      ((md[1] * (1 - (1 - het[1])^k)^2) + (1 - 2 * md[1]) * ((1 - het[1])^k)) * dnbinom(x, size = kcov[1] * 2 / dups[1], mu = kcov[1] * 2) * mlen[1]
        
        unique_kmers = sum(as.numeric(x*unique_hist))
        repeat_kmers = total_kmers - unique_kmers - error_kmers
@@ -313,12 +310,19 @@ report_results<-function(kmer_hist, k, container, foldername)
        lines(x, unique_hist, col="red", lty=3, lwd=3)
        
        model_status="done"
+
+       cat(paste("Model converged het:", format(het[1], digits=3), 
+                 " kcov:", format(kcov[1], digits=3), 
+                 " err:", format(error_rate[1], digits=3), 
+                 " dup:", format(dups[1], digits=3), 
+                 " len:", round(total_len[1]), "\n", sep="")) 
 	}
     else
     {
       title("\nFailed to converge")
       dev.set(dev.next())
       title("\nFailed to converge")
+      cat("Failed to converge")
     }
 
 	dev.off()
@@ -351,27 +355,27 @@ report_results<-function(kmer_hist, k, container, foldername)
 args<-commandArgs(TRUE)
 
 if(length(args) < 4) {
-	cat("USAGE: genomescope.R histogram_file k-mer_length read_length output_dir\n")
+	cat("USAGE: genomescope.R histogram_file k-mer_length read_length output_dir [verbose]\n")
 } else{
-    #	options(show.error.messages = FALSE)
-    #	options(error=FALSE)
-    #	options(showWarnCalls=FALSE)
-    #	options(showNCalls=FALSE)
-	
+
+    ## Load the arguments from the user
 	histfile   <- args[[1]]
 	k          <- as.numeric(args[[2]])
 	readlength <- as.numeric(args[[3]])
-	title      <- args[[4]] #We dont really need this.
+	foldername <- args[[4]] 
 
-    print(paste("running on", histfile))
+    if ((length(args) == 5) && (as.numeric(args[[5]] == 1))) { DEBUG = 1 }
 
     ## values for testing
     #histfile <- "~/build/genomescope/simulation/simulation_results/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
     #k <- 21
     #readlength <- 100
-    #title <- "~/build/genomescope/simulation/simulation_analysis/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
+    #foldername <- "~/build/genomescope/simulation/simulation_analysis/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
 
-	foldername = paste(title, "_results", sep="")
+    if (k > readlength) { stop("K cannot be greater than readlength") }
+
+    cat(paste("GenomeScope analyzing ", histfile, " k=", k, " readlen=", readlength, " outdir=", foldername, "\n", sep=""))
+
 	dir.create(foldername, showWarnings=FALSE)
 
 	kmer_prof <- read.csv(file=histfile,sep=" ", header=FALSE) 
@@ -383,55 +387,44 @@ if(length(args) < 4) {
 	cat("starting", file=progressFilename, sep="\n")
 
     ## try to find the local minimum between errors and the first (heterozygous) peak
-    start <- which(kmer_prof[,2]==min(kmer_prof[1:15,2]))
+    start <- which(kmer_prof[,2]==min(kmer_prof[1:TYPICAL_ERROR,2]))
 
     ## terminate after num iterations or if the score becomes good enough, store best result so far in container
 	num <- 0
-	container <- c(-1,-1)
+	best_container <- list(NULL,0)
 
 	while(num < NUM_ROUNDS) 
     {
+        cat(paste("round", num, "trimming to", start, "trying 4peak model... "), file=progressFilename, sep="", append=TRUE)
+        if (DEBUG) { cat(paste("round", num, "trimming to", start, "trying 4peak model... \n")) }
+
         ## Reset the input trimming off low frequency error kmers
         max <- length(kmer_prof[,1])
         x <- kmer_prof[start:max,1]
         y <- kmer_prof[start:max,2]
 
-        cat(paste("round", num, "trimming to", start, "trying 4peak model... "), file=progressFilename, sep="", append=TRUE)
-        print(paste("round", num, "trimming to", start, "trying 4peak model... "))
+		model_4peaks <- estimate_Genome_4peak2(kmer_prof_orig, x, y, k, readlength, foldername) 
 
-		model_4peaks <- estimate_Genome_4peak2(x,y,k, readlength, foldername) 
-
-        if (!is.null(container[[1]])) { 
-          cat(paste("converged. score: ", container[[2]][[1]]), file=progressFilename, sep="\n", append=TRUE)
+        if (!is.null(model_4peaks[[1]])) { 
+          cat(paste("converged. score: ", model_4peaks[[2]][[1]]), file=progressFilename, sep="\n", append=TRUE)
         } else {
           cat(paste("unconverged"), file=progressFilename, sep="\n", append=TRUE)
         }
 
-        #cat(paste("trying 2peak model, round", num), file=progressFilename, sep="\n", append=TRUE)
-		#model_2peaks=estimate_Genome_2peak2(d,x,y,k, readlength, foldername) 
-
 		#check if this result is better than previous
-		if ((num==0) || (model_4peaks[2][[1]]>container[2][[1]])){
-			container = model_4peaks
-		}
-
-	    #if(model_2peaks[2][[1]]>container[2][[1]]){
-	    #	container=model_2peaks
-	    #	best_p=p
-	    #}
-
-		if (container[2][[1]] > GOOD_SCORE_THRESHOLD)
-        { 
-            ## Score is good enough, stop trying
-			break
-		}
+        if (!is.null(model_4peaks[[1]]))
+        {
+          if ((is.null(best_container[[1]])) || (model_4peaks[[2]][[1]] < best_container[[2]][[1]])){
+              best_container = model_4peaks
+          }
+        }
 
         ## If we didnt get a good score, try again with random noise added
         start <- start + START_SHIFT
 		kmer_prof[,2] <- kmer_prof[,2] + rnorm(length(kmer_prof[,2]), sd = RAND_ERROR) 
-		num <- num+1
+		num <- num + 1
 	}
 
     ## Report the results, note using the original full profile
-	report_results(kmer_prof_orig, k, container, foldername)
+	report_results(kmer_prof_orig, k, best_container, foldername)
 }
