@@ -12,9 +12,6 @@ START_SHIFT=5
 ## Typical cutoff for sequencing error
 TYPICAL_ERROR = 15
 
-## Amount of random noise to introduce
-RAND_ERROR = 0.0001
-
 ## Max rounds on NLS
 MAX_ITERATIONS=20
 
@@ -70,13 +67,16 @@ nls_4peak<-function(x, y, k, estKmercov, estLength, max_iterations){
 eval_model<-function(kmer_hist_orig, nls1, nls2){
     nls1score = -1
     nls2score = -1
-
+    
+    ## Count the kmers in the observed data in the interesting range
     ox = kmer_hist_orig[[1]]
     oy = kmer_hist_orig[[2]]
 
     allkmers = sum(as.numeric(ox * oy))
+
     if(DEBUG){ cat(paste("allkmers: ", allkmers, "\n"))}
 
+    ## Evaluate the score the nls1
     if (!is.null(nls1))
     {
       res1 <- predict(nls1, newdata=data.frame(ox))
@@ -90,6 +90,8 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
       if (DEBUG) { cat("nls1score failed to converge\n") }
     }
 
+    
+    ## Evaluate the score of nls2
     if (!is.null(nls2))
     {
       res2 <- predict(nls2, newdata=data.frame(ox))
@@ -103,6 +105,8 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
       if (DEBUG) { cat("nls2score failed to converge\n") }
     }
 
+
+    ## Return the better of the scores
     if (!is.null(nls1))
     {
       if (!is.null(nls2))
@@ -422,9 +426,8 @@ if(length(args) < 4) {
           }
         }
 
-        ## If we didnt get a good score, try again with random noise added
+        ## Ignore a larger number of kmers as errors
         start <- start + START_SHIFT
-		kmer_prof[,2] <- kmer_prof[,2] + rnorm(length(kmer_prof[,2]), sd = RAND_ERROR) 
 		num <- num + 1
 	}
 
