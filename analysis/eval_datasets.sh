@@ -16,7 +16,7 @@ do
     echo "Running results in parallel"
     #/bin/ls $INDIR/seabass*.hist | parallel -t Rscript $MODELBIN {} $K $READLEN {}
     #/bin/ls $INDIR/D*.hist | parallel -t Rscript $MODELBIN {} $K $READLEN {}
-    /bin/ls $INDIR/*.hist | parallel -t Rscript $MODELBIN {} $K $READLEN {}
+    /bin/ls $INDIR/*.hist | parallel -t Rscript $MODELBIN {} $K $READLEN {}_results
 
   else
     for hist in `/bin/ls $INDIR/*21.hist`
