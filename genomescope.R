@@ -71,15 +71,18 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
     nls1score = -1
     nls2score = -1
 
-    allkmers = sum(as.numeric(kmer_hist_orig[[2]]))
+    ox = kmer_hist_orig[[1]]
+    oy = kmer_hist_orig[[2]]
+
+    allkmers = sum(as.numeric(ox * oy))
     if(DEBUG){ cat(paste("allkmers: ", allkmers, "\n"))}
 
     if (!is.null(nls1))
     {
-      res1 <- predict(nls1, newdata=data.frame(kmer_hist_orig[[1]]))
-      if(DEBUG) { cat(paste("nls1 kmers: ", sum(as.numeric(res1)), "\n")) }
+      res1 <- predict(nls1, newdata=data.frame(ox))
+      if(DEBUG) { cat(paste("nls1 kmers: ", sum(as.numeric(ox*res1)), "\n")) }
 
-      nls1score = sum(as.numeric(abs(kmer_hist_orig[[2]]-res1))) / allkmers
+      nls1score = sum(as.numeric(abs(ox*oy-ox*res1))) / allkmers
       if(DEBUG){ cat(paste("nls1score: ", nls1score, "\n"))}
     }
     else
@@ -89,10 +92,10 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
 
     if (!is.null(nls2))
     {
-      res2 <- predict(nls2, newdata=data.frame(kmer_hist_orig[[1]]))
-      if(DEBUG) { cat(paste("nls2 kmers: ", sum(as.numeric(res2)), "\n")) }
+      res2 <- predict(nls2, newdata=data.frame(ox))
+      if(DEBUG) { cat(paste("nls2 kmers: ", sum(as.numeric(ox*res2)), "\n")) }
 
-      nls2score = sum(as.numeric(abs(kmer_hist_orig[[2]]-res2))) / allkmers
+      nls2score = sum(as.numeric(abs(ox*oy-ox*res2))) / allkmers
       if(DEBUG){ cat(paste("nls2score: ", nls2score, "\n"))}
     }
     else
