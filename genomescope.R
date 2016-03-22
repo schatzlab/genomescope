@@ -4,7 +4,7 @@
 ## This is the automated script for reading in a histogram file given the k-mer size, readlength and an optional parameter for what you want the x-axis limit to be.
 
 ## Number of rounds before giving up
-NUM_ROUNDS=5
+NUM_ROUNDS=4
 
 ## Coverage steps to trim off between rounds
 START_SHIFT=5
@@ -15,12 +15,19 @@ TYPICAL_ERROR = 15
 ## Max rounds on NLS
 MAX_ITERATIONS=20
 
-## Print out debugging messages (0/1)
-DEBUG = 0
+## Print out VERBOSEging messages (0/1)
+VERBOSE = 0
 
 ## Suppress the warnings if the modeling goes crazy, those are in try/catch blocks anyways
 options(warn=-1)
 
+## Colors for plots
+COLOR_BGCOLOR  = "light grey"
+COLOR_HIST     = "#56B4E9"
+COLOR_4PEAK    = "black"
+COLOR_2PEAK    = "#F0E442"
+COLOR_ERRORS   = "#D55E00"
+COLOR_KMERPEAK = "black"
 
 
 ## Helper Function
@@ -38,7 +45,7 @@ min_max <- function(table){
 nls_4peak<-function(x, y, k, estKmercov, estLength, max_iterations){
 	model4 = NULL
 
-    if (DEBUG) { cat("trying nls_4peak standard algorithm\n") }
+    if (VERBOSE) { cat("trying nls_4peak standard algorithm\n") }
 	try(model4 <- nls(y ~ ((2.0 * (1-d) * (1-(1-r)^k))            * dnbinom(x, size = kmercov   / bias, mu = kmercov)     * length +
                           ((d*(1-(1-r)^k)^2) + (1-2*d)*((1-r)^k)) * dnbinom(x, size = kmercov*2 / bias, mu = kmercov * 2) * length + 
                           (2*d*((1-r)^k)*(1-(1-r)^k))             * dnbinom(x, size = kmercov*3 / bias, mu = kmercov * 3) * length + 
@@ -47,7 +54,7 @@ nls_4peak<-function(x, y, k, estKmercov, estLength, max_iterations){
                       control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
 
 	if(class(model4) == "try-error"){
-        if (DEBUG) { cat("retrying nls_4peak with port algorithm\n") }
+        if (VERBOSE) { cat("retrying nls_4peak with port algorithm\n") }
 		try(model4 <- nls(y ~ ((2.0 * (1-d) * (1-(1-r)^k))            * dnbinom(x, size = kmercov   / bias, mu = kmercov)     * length + 
                               ((d*(1-(1-r)^k)^2) + (1-2*d)*((1-r)^k)) * dnbinom(x, size = kmercov*2 / bias, mu = kmercov * 2) * length + 
                               (2*d*((1-r)^k)*(1-(1-r)^k))             * dnbinom(x, size = kmercov*3 / bias, mu = kmercov * 3) * length + 
@@ -74,20 +81,20 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
 
     allkmers = sum(as.numeric(ox * oy))
 
-    if(DEBUG){ cat(paste("allkmers: ", allkmers, "\n"))}
+    if(VERBOSE){ cat(paste("allkmers: ", allkmers, "\n"))}
 
     ## Evaluate the score the nls1
     if (!is.null(nls1))
     {
       res1 <- predict(nls1, newdata=data.frame(ox))
-      if(DEBUG) { cat(paste("nls1 kmers: ", sum(as.numeric(ox*res1)), "\n")) }
+      if(VERBOSE) { cat(paste("nls1 kmers: ", sum(as.numeric(ox*res1)), "\n")) }
 
       nls1score = sum(as.numeric(abs(ox*oy-ox*res1))) / allkmers
-      if(DEBUG){ cat(paste("nls1score: ", nls1score, "\n"))}
+      if(VERBOSE){ cat(paste("nls1score: ", nls1score, "\n"))}
     }
     else
     {
-      if (DEBUG) { cat("nls1score failed to converge\n") }
+      if (VERBOSE) { cat("nls1score failed to converge\n") }
     }
 
     
@@ -95,14 +102,14 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
     if (!is.null(nls2))
     {
       res2 <- predict(nls2, newdata=data.frame(ox))
-      if(DEBUG) { cat(paste("nls2 kmers: ", sum(as.numeric(ox*res2)), "\n")) }
+      if(VERBOSE) { cat(paste("nls2 kmers: ", sum(as.numeric(ox*res2)), "\n")) }
 
       nls2score = sum(as.numeric(abs(ox*oy-ox*res2))) / allkmers
-      if(DEBUG){ cat(paste("nls2score: ", nls2score, "\n"))}
+      if(VERBOSE){ cat(paste("nls2score: ", nls2score, "\n"))}
     }
     else
     {
-      if (DEBUG) { cat("nls2score failed to converge\n") }
+      if (VERBOSE) { cat("nls2score failed to converge\n") }
     }
 
 
@@ -113,18 +120,18 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
       {
         if (nls1score < nls2score)
         {
-          if (DEBUG) { cat(paste("returning nls1, better score\n")) }
+          if (VERBOSE) { cat(paste("returning nls1, better score\n")) }
           return (list(nls1, nls1score))
         }
       }
       else
       {
-        if (DEBUG) { cat(paste("returning nls1, nls2 fail\n")) }
+        if (VERBOSE) { cat(paste("returning nls1, nls2 fail\n")) }
         return (list(nls1, nls1score))
       }
     }
 
-    if (DEBUG) { cat(paste("returning nls2 by default\n")) }
+    if (VERBOSE) { cat(paste("returning nls2 by default\n")) }
     return (list(nls2, nls2score))
 }
 
@@ -139,18 +146,18 @@ estimate_Genome_4peak2<-function(kmer_hist_orig, x, y, k, readlength, foldername
 	estCoverage1 = estKmercov1*readlength/(readlength-k)
 	estLength1   = numofReads*readlength/estCoverage1
 
-    if (DEBUG) { cat(paste("trying with kmercov: ", estKmercov1, "\n")) }
+    if (VERBOSE) { cat(paste("trying with kmercov: ", estKmercov1, "\n")) }
 	nls1    = nls_4peak(x, y, k, estKmercov1, estLength1, MAX_ITERATIONS)
-    if (DEBUG) { print(summary(nls1)) }
+    if (VERBOSE) { print(summary(nls1)) }
 
 	## Second we half the max kmercoverage (typically the heterozygous peak)
 	estKmercov2  = estKmercov1 / 2 ##2.5
 	estCoverage2 = estKmercov2*readlength/(readlength-k)
 	estLength2   = numofReads*readlength/estCoverage2
 
-    if (DEBUG) { cat(paste("trying with kmercov: ", estKmercov2, "\n")) }
+    if (VERBOSE) { cat(paste("trying with kmercov: ", estKmercov2, "\n")) }
 	nls2 = nls_4peak(x, y, k, estKmercov2, estLength2, MAX_ITERATIONS)
-    if (DEBUG) { print(summary(nls2)) }
+    if (VERBOSE) { print(summary(nls2)) }
 
 	return(eval_model(kmer_hist_orig, nls1, nls2))
 }
@@ -215,20 +222,22 @@ report_results<-function(kmer_hist, k, container, foldername)
 
     ## Plot the distribution, and hopefully with the model fit
 	pdf(paste(foldername, "/plot.pdf", sep=""))
-	plot(kmer_hist, type="h", main="GenomeScope profile\n", xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit))
+	plot(kmer_hist, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit))
+    rect(-1e10, -1e10, max(kmer_hist[[1]])*1.1 , max(kmer_hist[[2]])*1.1, col=COLOR_BGCOLOR)
+    points(kmer_hist, type="h", col=COLOR_HIST, lwd=2)
+    box(col="black")
 
     ## Make a second plot in log space over entire range
 	pdf(paste(foldername, "/plot.log.pdf", sep=""))
-	plot(kmer_hist, type="h", main="GenomeScope profile\n", xlab="Coverage", ylab="Frequency", log="xy")
+	plot(kmer_hist, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", log="xy")
+    rect(1e-10, 1e-10, max(kmer_hist[[1]])*10 , max(kmer_hist[[2]])*10, col=COLOR_BGCOLOR)
+	points(kmer_hist, type="h", col=COLOR_HIST, lwd=2)
+    box(col="black")
 
 	if(!is.null(container[[1]])) 
     { 
        ## The model converged!
-       res<-data.frame(x,pred=predict(container[[1]], newdata=data.frame(x)))
-       lines(x,res$pred,col="Blue",lwd=3)
-
-       dev.set(dev.next())
-       lines(x,res$pred,col="Blue",lwd=3)
+       pred=predict(container[[1]], newdata=data.frame(x))
 
        ## Compute the genome characteristics
        model_sum=summary(container[[1]])
@@ -247,74 +256,92 @@ report_results<-function(kmer_hist, k, container, foldername)
        error_xcutoff = floor(kcov[1])
        error_xcutoff_ind = which(x==error_xcutoff)
 
-       error_kmers = y[1:error_xcutoff_ind] - res$pred[1:error_xcutoff_ind]
-       error_kmers = pmax(error_kmers, 0)
+       error_kmers = y[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
+       error_kmers = pmax(error_kmers, 1e-10)
 
-       lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col="orange")
-       dev.set(dev.next())
-       lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col="orange")
-
-       error_kmers = sum(as.numeric(error_kmers * x[1:error_xcutoff_ind]))
+       total_error_kmers = sum(as.numeric(error_kmers * x[1:error_xcutoff_ind]))
        total_kmers = sum(as.numeric(x*y))
 
        f1 <- function(x){
              i=seq(1,k) 
              h=(1-x)^(k-i)*x^i*choose(k,i)
-             sum(h)*total_kmers-error_kmers
+             sum(h)*total_kmers-total_error_kmers
        }
 
-       error_rate_root = try( uniroot(f1, c(0,1))$root)
+       error_rate_root = try(uniroot(f1, c(0,1))$root)
 
        if (class(error_rate_root) == "try-error")
        {
-         error_rate  = c(error_kmers/total_kmers/k, error_kmers/total_kmers/k)
+         error_rate  = c(total_error_kmers/total_kmers/k, total_error_kmers/total_kmers/k)
        }
        else
        {
           error_rate  = c(error_rate_root, error_rate_root)
        }
 
-       total_len = (total_kmers-error_kmers)/(2*kcov)
+       total_len = (total_kmers-total_error_kmers)/(2*kcov)
        
        ## find kmers that fit the 2 peak model (no repeats)
        unique_hist <- (2 * (1 - md[1]) * (1 - (1 - het[1])^k))                                * dnbinom(x, size = kcov[1]     / dups[1], mu = kcov[1])     * mlen[1] +
                       ((md[1] * (1 - (1 - het[1])^k)^2) + (1 - 2 * md[1]) * ((1 - het[1])^k)) * dnbinom(x, size = kcov[1] * 2 / dups[1], mu = kcov[1] * 2) * mlen[1]
        
        unique_kmers = sum(as.numeric(x*unique_hist))
-       repeat_kmers = total_kmers - unique_kmers - error_kmers
+       repeat_kmers = total_kmers - unique_kmers - total_error_kmers
        
        repeat_len=repeat_kmers/(2*kcov)
        unique_len=unique_kmers/(2*kcov)
        
-       ## Add key values to plot
-       title(paste("\nhet:", format(het[1], digits=3), 
-                   " kcov:", format(kcov[1], digits=3), 
-                   " err:", format(error_rate[1], digits=3), 
-                   " dup:", format(dups[1], digits=3), 
-                   " len:", round(total_len[1]), sep=""), 
+       ## Finish Log plot
+       title(paste("\nlen:",  prettyNum(total_len[1], big.mark=","), 
+                   "bp uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
+                   "% het:",  format(100*het[1], digits=3), 
+                   "% kcov:", format(kcov[1], digits=3), 
+                   " err:",   format(100*error_rate[1], digits=3), 
+                   "% dup:",  format(dups[1], digits=3), sep=""), 
                    cex.main=.85)
        
        ## Mark the modes of the peaks
-       abline(v=kcov[1] * c(1,2,3,4), col="green", lty=2)
+       abline(v=kcov[1] * c(1,2,3,4), col=COLOR_KMERPEAK, lty=2)
        
        ## Draw just the unique portion of the model
-       lines(x, unique_hist, col="red", lty=3, lwd=3)
+       lines(x, unique_hist, col=COLOR_2PEAK, lty=1, lwd=3)
+       lines(x, pred, col=COLOR_4PEAK, lwd=3)
+       lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+
+       ## Add legend
+       legend(exp(.65 * log(max(x))), 1.0 * max(y), 
+              legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
+              lty=c("solid", "solid", "solid", "solid", "dashed"),
+              lwd=c(3,3,3,3,3),
+              col=c(COLOR_HIST, COLOR_4PEAK, COLOR_2PEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+              bg="white")
 
        dev.set(dev.next())
 
-       ## update the other plot
-       title(paste("\nhet:", format(het[1], digits=3), 
-                   " kcov:", format(kcov[1], digits=3), 
-                   " err:", format(error_rate[1], digits=3), 
-                   " dup:", format(dups[1], digits=3), 
-                   " len:", round(total_len[1]), sep=""), 
+       ## Finish Linear Plot
+       title(paste("\nlen:",  prettyNum(total_len[1], big.mark=","), 
+                   "bp uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
+                   "% het:",  format(100*het[1], digits=3), 
+                   "% kcov:", format(kcov[1], digits=3), 
+                   " err:",   format(100*error_rate[1], digits=3), 
+                   "% dup:",  format(dups[1], digits=3), sep=""), 
                    cex.main=.85)
-       
+
        ## Mark the modes of the peaks
-       abline(v=kcov[1] * c(1,2,3,4), col="green", lty=2)
+       abline(v=kcov[1] * c(1,2,3,4), col=COLOR_KMERPEAK, lty=2)
        
        ## Draw just the unique portion of the model
-       lines(x, unique_hist, col="red", lty=3, lwd=3)
+       lines(x, unique_hist, col=COLOR_2PEAK, lty=1, lwd=3)
+       lines(x, pred, col=COLOR_4PEAK, lwd=3)
+       lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+
+       ## Add legend
+       legend(.65 * x_limit, 1.0 * y_limit, 
+              legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
+              lty=c("solid", "solid", "solid", "solid", "dashed"),
+              lwd=c(3,3,3,3,3),
+              col=c(COLOR_HIST, COLOR_4PEAK, COLOR_2PEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+              bg="white")
        
        model_status="done"
 
@@ -371,7 +398,7 @@ if(length(args) < 4) {
 	readlength <- as.numeric(args[[3]])
 	foldername <- args[[4]] 
 
-    if ((length(args) == 5) && (as.numeric(args[[5]] == 1))) { DEBUG = 1 }
+    if ((length(args) == 5) && (as.numeric(args[[5]] == 1))) { VERBOSE = 1 }
 
     ## values for testing
     #histfile <- "~/build/genomescope/simulation/simulation_results/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
@@ -403,7 +430,7 @@ if(length(args) < 4) {
 	while(num < NUM_ROUNDS) 
     {
         cat(paste("round", num, "trimming to", start, "trying 4peak model... "), file=progressFilename, sep="", append=TRUE)
-        if (DEBUG) { cat(paste("round", num, "trimming to", start, "trying 4peak model... \n")) }
+        if (VERBOSE) { cat(paste("round", num, "trimming to", start, "trying 4peak model... \n")) }
 
         ## Reset the input trimming off low frequency error kmers
         max <- length(kmer_prof[,1])
