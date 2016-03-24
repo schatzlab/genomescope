@@ -81,16 +81,16 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
 
     allkmers = sum(as.numeric(ox * oy))
 
-    if(VERBOSE){ cat(paste("allkmers: ", allkmers, "\n"))}
+    if(VERBOSE){ cat(paste("allkmers:\t", allkmers, "\n"))}
 
     ## Evaluate the score the nls1
     if (!is.null(nls1))
     {
       res1 <- predict(nls1, newdata=data.frame(ox))
-      if(VERBOSE) { cat(paste("nls1 kmers: ", sum(as.numeric(ox*res1)), "\n")) }
+      if(VERBOSE) { cat(paste("nls1 kmers:\t", sum(as.numeric(ox*res1)), "\n")) }
 
       nls1score = sum(as.numeric(abs(ox*oy-ox*res1))) / allkmers
-      if(VERBOSE){ cat(paste("nls1score: ", nls1score, "\n"))}
+      if(VERBOSE){ cat(paste("nls1score:\t", nls1score, "\n"))}
     }
     else
     {
@@ -102,10 +102,10 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
     if (!is.null(nls2))
     {
       res2 <- predict(nls2, newdata=data.frame(ox))
-      if(VERBOSE) { cat(paste("nls2 kmers: ", sum(as.numeric(ox*res2)), "\n")) }
+      if(VERBOSE) { cat(paste("nls2 kmers:\t", sum(as.numeric(ox*res2)), "\n")) }
 
       nls2score = sum(as.numeric(abs(ox*oy-ox*res2))) / allkmers
-      if(VERBOSE){ cat(paste("nls2score: ", nls2score, "\n"))}
+      if(VERBOSE){ cat(paste("nls2score:\t", nls2score, "\n"))}
     }
     else
     {
@@ -211,6 +211,13 @@ report_results<-function(kmer_hist, k, container, foldername)
 		x_limit=max(which(zoomy<zoomy[1])[2],600)
 	}
 
+    if (!is.null(container[[1]]))
+    {
+       model_sum=summary(container[[1]])
+       kcov = min_max(model_sum$coefficients['kmercov',])[1]
+       x_limit = max(kcov*5.1, x_limit)
+    }
+
     ## Features to report
     het=c(-1,-1)
     total_len=c(-1,-1)
@@ -252,11 +259,32 @@ report_results<-function(kmer_hist, k, container, foldername)
        mlen = min_max(model_sum$coefficients['length',])
        md   = min_max(model_sum$coefficients['d',])
        
-       ## Compute error rate 
+       ## Compute error rate, by counting kmers unexplained by model through first peak
+       ## truncate errors as soon as it goes to zero, dont allow it to go back up
        error_xcutoff = floor(kcov[1])
        error_xcutoff_ind = which(x==error_xcutoff)
 
        error_kmers = y[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
+
+       first_zero = -1
+
+       for (i in 1:error_xcutoff_ind)
+       {
+         if (first_zero == -1)
+         {
+           if (error_kmers[i] < 1.0)
+           {
+             first_zero = i
+             if (VERBOSE) { cat(paste("Truncating errors at", i, "\n")) }
+           }
+         }
+         else
+         {
+           error_kmers[i] = 0
+         }
+       }
+
+       ## Rather than "0", set to be some very small number so log-log plot looks okay
        error_kmers = pmax(error_kmers, 1e-10)
 
        total_error_kmers = sum(as.numeric(error_kmers * x[1:error_xcutoff_ind]))
@@ -441,6 +469,13 @@ if(length(args) < 4) {
 
         if (!is.null(model_4peaks[[1]])) { 
           cat(paste("converged. score: ", model_4peaks[[2]][[1]]), file=progressFilename, sep="\n", append=TRUE)
+
+          if (VERBOSE)
+          {
+            mdir = paste(foldername, "/round", num, sep="")
+	        dir.create(mdir, showWarnings=FALSE)
+	        report_results(kmer_prof_orig, k, model_4peaks, mdir)
+          }
         } else {
           cat(paste("unconverged"), file=progressFilename, sep="\n", append=TRUE)
         }
