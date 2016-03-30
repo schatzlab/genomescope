@@ -7,11 +7,13 @@
 <?php include "title.html";?>
  
 <div class="center">
-    <div class="panel panel-info">
+    <div class="panel panel-default">
       <div class="panel-heading">
-	<h3 class="panel-title">Contact information</h3>
+	<h3 class="panel-title">Information</h3>
       </div>
       <div class="panel-body">
+        <p>The code is open source on Github: <a href="https://github.com/schatzlab/genomescope" target="_blank">github.com/schatzlab/genomescope</a></p>
+        <br>
         <p>Statistical work by Gregory Vurture and <a href="http://schatzlab.cshl.edu/people/fsedlaze/" target="_blank">Fritz Sedlazeck</a><p>
         <p>Web application by <a href="http://marianattestad.com" target="_blank">Maria Nattestad</a></p>
         <p>Principal investigator / The Boss: <a href="http://schatzlab.cshl.edu" target="_blank">Mike Schatz</a></p>
