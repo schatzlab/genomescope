@@ -4,18 +4,7 @@
     $filename="user_data/" . $code . "/progress.txt";
     
     if (file_exists($filename)) {
-        $myfile = fopen($filename, "r") or die("error");
-        
-        $progress_stats = "in progress";
-        
-        while(!feof($myfile)) {
-            $line=fgets($myfile);
-            $line=trim(preg_replace( '/\s+/', ' ', $line ));
-            if (strlen($line)>0) {
-                $progress_stats = $line;
-            }
-        }
-        fclose($myfile);
+        $progress_stats = file($filename);
         echo json_encode($progress_stats);
     }
     else {

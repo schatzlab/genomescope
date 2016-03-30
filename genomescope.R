@@ -186,6 +186,19 @@ estimate_Genome_2peak2<-function(x, y, k, readlength, foldername){
 	return(eval_model(nls1,nls2))
 }
 
+## Format numbers
+###############################################################################
+bp_format<-function(num) {
+  paste(formatC(round(num),format="d",big.mark=","), "bp",sep=" ")
+}
+
+percentage_format<-function(num) {
+  paste(signif(num,6)*100,"%",sep="")
+}
+X_format<-function(num) {
+  paste(signif(num,4),"X",sep="")  
+}
+
 
 ## Report results and make plots
 ###############################################################################
@@ -227,16 +240,18 @@ report_results<-function(kmer_hist, k, container, foldername)
     error_rate=c(-1,-1)
     model_status="fail"
 
+    plot_size=500
+    font_size=1.2
     ## Plot the distribution, and hopefully with the model fit
-	pdf(paste(foldername, "/plot.pdf", sep=""))
-	plot(kmer_hist, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit))
+	png(paste(foldername, "/plot.png", sep=""),width=plot_size,height=plot_size)
+	plot(kmer_hist, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit),cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
     rect(-1e10, -1e10, max(kmer_hist[[1]])*1.1 , max(kmer_hist[[2]])*1.1, col=COLOR_BGCOLOR)
     points(kmer_hist, type="h", col=COLOR_HIST, lwd=2)
     box(col="black")
 
     ## Make a second plot in log space over entire range
-	pdf(paste(foldername, "/plot.log.pdf", sep=""))
-	plot(kmer_hist, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", log="xy")
+	png(paste(foldername, "/plot.log.png", sep=""),width=plot_size,height=plot_size)
+	plot(kmer_hist, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", log="xy",cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
     rect(1e-10, 1e-10, max(kmer_hist[[1]])*10 , max(kmer_hist[[2]])*10, col=COLOR_BGCOLOR)
 	points(kmer_hist, type="h", col=COLOR_HIST, lwd=2)
     box(col="black")
@@ -393,15 +408,33 @@ report_results<-function(kmer_hist, k, container, foldername)
     ## Write key values to summary file
 	summaryFile <- paste(foldername,"/summary.txt",sep="")
 
-	cat(paste("property", "min", "max", sep="\t"),                                      file=summaryFile, sep="\n")
-	cat(paste("k", k, k, sep="\t"),                                                     file=summaryFile, sep="\n", append=TRUE) 
-	cat(paste("Heterozygosity", het[1], het[2], sep="\t"),                              file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("GenomeHaploidLen", round(total_len[1]), round(total_len[2]), sep="\t"),  file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("GenomeRepeatLen", round(repeat_len[1]), round(repeat_len[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("GenomeUniqueLen", round(unique_len[1]), round(unique_len[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("ReadDuplicationLevel", dups[1], dups[2], sep="\t"),                      file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("ReadErrorRate", error_rate[1], error_rate[2], sep="\t"),                 file=summaryFile, sep="\n", append=TRUE)
-	cat(paste("ModelScore", container[2], container[2], sep="\t"),                      file=summaryFile, sep="\n", append=TRUE)
+	
+	# cat(paste("k = ", k,sep=""),                                                        file=summaryFile, sep="\n") 
+ #  cat(paste("property", "min", "max", sep="\t"),                                      file=summaryFile, sep="\n", append=TRUE)
+	# cat(paste("Heterozygosity", het[1], het[2], sep="\t"),                              file=summaryFile, sep="\n", append=TRUE)
+	# cat(paste("GenomeHaploidLen", round(total_len[1]), round(total_len[2]), sep="\t"),  file=summaryFile, sep="\n", append=TRUE)
+	# cat(paste("GenomeRepeatLen", round(repeat_len[1]), round(repeat_len[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
+	# cat(paste("GenomeUniqueLen", round(unique_len[1]), round(unique_len[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
+	# cat(paste("ReadDuplicationLevel", dups[1], dups[2], sep="\t"),                      file=summaryFile, sep="\n", append=TRUE)
+	# cat(paste("ReadErrorRate", error_rate[1], error_rate[2], sep="\t"),                 file=summaryFile, sep="\n", append=TRUE)
+	# cat(paste("ModelScore", container[2], container[2], sep="\t"),                      file=summaryFile, sep="\n", append=TRUE)
+
+  format_column_1 = "%-30s"
+  format_column_2 = "%-18s"
+  format_column_3 = "%-18s"
+  
+
+  
+  cat(paste("k = ", k,sep=""),                                                                                                                                                          file=summaryFile, sep="\n") 
+  cat(paste("\n",sprintf(format_column_1,"property"), sprintf(format_column_2,"min"), sprintf(format_column_3,"max"), sep=""),                                                          file=summaryFile, sep="\n", append=TRUE)
+  cat(paste(sprintf(format_column_1,"Heterozygosity"), sprintf(format_column_2,percentage_format(het[1])), sprintf(format_column_3,percentage_format(het[2])), sep=""),                 file=summaryFile, sep="\n", append=TRUE)
+  cat(paste(sprintf(format_column_1,"Genome Haploid Length"), sprintf(format_column_2,bp_format(total_len[1])), sprintf(format_column_3,bp_format(total_len[2])), sep=""),              file=summaryFile, sep="\n", append=TRUE)
+  cat(paste(sprintf(format_column_1,"Genome Repeat Length"), sprintf(format_column_2,bp_format(repeat_len[1])), sprintf(format_column_3,bp_format(repeat_len[2])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
+  cat(paste(sprintf(format_column_1,"Genome Unique Length"), sprintf(format_column_2,bp_format(unique_len[1])), sprintf(format_column_3,bp_format(unique_len[2])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
+  cat(paste(sprintf(format_column_1,"Read Duplication Level"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
+  cat(paste(sprintf(format_column_1,"Read Error Rate"), sprintf(format_column_2,percentage_format(error_rate[1])), sprintf(format_column_3,percentage_format(error_rate[2])), sep=""),  file=summaryFile, sep="\n", append=TRUE)
+  
+  cat(paste("\nModel Score = ", container[2], sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
 
     ## Finalize the progress
     progressFilename=paste(foldername,"/progress.txt",sep="")

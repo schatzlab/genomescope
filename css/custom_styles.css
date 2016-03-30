@@ -1,18 +1,25 @@
 <style>
+    .inner-pre {
+      font-size:0.4em;
+    }
     .center {
         margin:2% 2% 2% 2%;
     }
     
-    .jumbotron {
-        margin-top:-20px; padding-top:10px;
-        /*background-color:#6f5499;*/
-        background-color:#3CB5DE;
+    #header_bar{
+        margin-top:-20px; 
+        padding-top:5px;
+        padding-bottom:5px;
+        background-color:#3094FF; /*#3D0030;*/
     }
-    h3 {
-        color: black;
-    }
-    .jumbotron>h1 {
+    
+    #header_bar>h1 {
         color:black;
+        font-size:3.5em;
+    }
+    #header_bar>h3 {
+        color:black;
+        font-size:1.5em;
     }
     .kitty_icon {width:50px; float:left; padding:4px 4px 4px 4px; margin-left:80px;}
 
@@ -36,14 +43,17 @@
 	    visibility: hidden;
 	}
    
+    .frame {
+        margin:0% 2% 2% 2%;
+    }
     .plot_frame {
         margin:2% 2% 2% 2%;
     }
 
     /*    Navigation bar   */
     .navbar-default {
-      background-color: #ffffff;
-      border-color: #d2d2d2;
+      /*background-color: #ffffff;*/
+      /*border-color: #d2d2d2;*/
     }
     .navbar-default .navbar-brand {
       color: #000000;
@@ -102,16 +112,25 @@
     }
 
 
-    .panel-info {
+    .panel {
         margin:2% 2% 2% 2%;
-        border-color:#E8E8E8;
+        #border-color:#E8E8E8;
     }
-    .panel-info > .panel-heading{
-        background-color: #E8E8E8;
-        background-image:none;
-        border-color:#E8E8E8;
-        color:black;
+    .panel > .panel-heading{
+        #background-color: #E8E8E8;
+        #background-image:none;
+        #border-color:#E8E8E8;
+        #color:black;
     }
+
+
+    a.fancybox img {
+        border: none;
+        -o-transform: scale(1,1); -ms-transform: scale(1,1); -moz-transform: scale(1,1); -webkit-transform: scale(1,1); transform: scale(1,1); -o-transition: all 0.2s ease-in-out; -ms-transition: all 0.2s ease-in-out; -moz-transition: all 0.2s ease-in-out; -webkit-transition: all 0.2s ease-in-out; transition: all 0.2s ease-in-out;
+    } 
+    /*a.fancybox:hover img {
+        position: relative; z-index: 999; -o-transform: scale(1.03,1.03); -ms-transform: scale(1.03,1.03); -moz-transform: scale(1.03,1.03); -webkit-transform: scale(1.03,1.03); transform: scale(1.03,1.03);
+    }*/
 
 </style>
 

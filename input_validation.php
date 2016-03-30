@@ -9,10 +9,10 @@
 <?php
     $debug=""; //put -d here when testing    
     $aResult = array();
-    if( !isset($_POST['code']) ) { $aResult['error'] = 'ERROR: No code passed to run.php';}
+    if( !isset($_POST['code']) ) { $aResult['error'] = 'ERROR: No code passed to input_validation.php';}
     $code=$_POST["code"];
-    if( !isset($_POST['kmer_length']) ) { echo shell_exec('echo ERROR: No kmer_length passed to run.php >> user_data/$code/run.log');}
-    if( !isset($_POST['read_length']) ) { echo shell_exec('echo ERROR: No read_length passed to run.php >> user_data/$code/run.log');}
+    if( !isset($_POST['kmer_length']) ) { echo shell_exec('echo ERROR: No kmer_length passed to input_validation.php >> user_data/$code/input_validation.log');}
+    if( !isset($_POST['read_length']) ) { echo shell_exec('echo ERROR: No read_length passed to input_validation.php >> user_data/$code/input_validation.log');}
     $kmer_length = $_POST["kmer_length"];
     $read_length = $_POST["read_length"];
 

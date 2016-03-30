@@ -5,44 +5,51 @@
 
 <!--    NAVIGATION BAR-->
     <?php include "header.html";?>
-    
-        <!-- <div class="row"> -->
+    <link rel="stylesheet" type="text/css" media="screen" href="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.css" />
 
-            <!--LEFT-->
-            <!-- <div class="col-lg-8"> -->
-                    <!-- ////////////////////////////////////////////////// -->
-                    <!-- ////////////////      RESULTS     //////////////// -->
-                    <!-- ////////////////////////////////////////////////// -->
-                    <div class = "center" id="results">
-                        
-                        <div class="thumbnail plot_frame">
-                            <div id="landing_for_plot1" class="plot_img">
-                                <!-- Landing spot for plot image -->
-                            </div>
-                                <p>
-                                    <div class="caption">
-                                        <h4>Genome statistics</h4>
-                                        <p id="landing_for_plot1_details">Plot details</p>
-                                        <p><a href="" download class="btn btn-primary" class="download_btn" id="down_img_1" role="button">Download plot image</a>
-                                            <a href="" download class="btn btn-default" class="download_btn" id="down_txt_1"  role="button">Download summary stats</a>
-                                        </p>
-                                    </div>
-                                </p>
-                            </div>     
+            <!-- ////////////////////////////////////////////////// -->
+            <!-- ////////////////      RESULTS     //////////////// -->
+            <!-- ////////////////////////////////////////////////// -->
+            
+
+            <div id="results">
+               
+                <!--  All plots  -->
+                <div class="thumbnail plot_frame frame">
+                    <div style="display:inline-block" id="landing_for_plot1" class="plot_img">
+                        <!-- Landing spot for plot image -->
                     </div>
-                    
-            <!-- </div> -->
+                    <div style="display:inline-block" id="landing_for_plot2" class="plot_img">
+                        <!-- Landing spot for plot image -->
+                    </div>
+                </div>
 
-            <!-- RIGHT-->   
-            <!-- <div class="col-lg-4">   -->
+                <div class="row">
+                    <div class="col-lg-6"> 
+
+                        <!-- Assembly statistics N50 etc. -->
+                        <div class="thumbnail frame plot_frame">
+                            <div class="caption">
+                                <h4>Results</h4>
+                                <p id="landing_for_text1"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6"> 
+                        <!-- Variant statistics -->
+                        <div class="thumbnail frame plot_frame">
+                            <div class="caption">
+                                <h4>Model</h4>
+                                <p id="landing_for_text2"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
-            <!-- </div>  -->
-    <!-- </div> -->
-
-    
-    <!-- </div>    end of centered middle of body -->
+            </div>
+   
     <!--View analysis later-->
-    <div id="codepanel" class="center">
+    <div id="codepanel" >
         <div class="panel panel-info">
           <div class="panel-heading">
             <h3 class="panel-title">View analysis later</h3>
@@ -61,7 +68,7 @@
     <!-- ////////////////////////////////////////////////// -->
     <!-- /////////////      Progress info     ///////////// -->
     <!-- ////////////////////////////////////////////////// -->
-    <div id="progress_panel" class="panel panel-info center">
+    <div class="panel panel-info center" id="progress_panel">
       <div class="panel-heading">
         <h3 class="panel-title">Progress</h3>
       </div>
@@ -79,15 +86,15 @@
 <!--   jquery must be first because bootstrap depends on it   -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<script src="js/dygraph-combined.js"></script>
 
 
 <script src="js/jquery.csv-0.71.min.js"></script>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script src="js/kmer_analysis.js"></script>
+<script type='text/javascript' src="js/analysis_page_script.js?rndstr="<?php rand(100000,999999) ?> ></script>
 
-
+<script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.pack.min.js"></script>
 
 </body>
 </html>
