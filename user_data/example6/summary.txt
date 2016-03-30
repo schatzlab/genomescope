@@ -2,9 +2,9 @@ k = 21
 
 property                      min               max               
 Heterozygosity                1.07489%          1.07595%          
-Genome Haploid Length         152,727,721 bp    152,706,039 bp    
-Genome Repeat Length          47,844,558 bp     47,837,766 bp     
-Genome Unique Length          104,883,163 bp    104,868,274 bp    
+Genome Haploid Length         152,706,039 bp    152,727,721 bp    
+Genome Repeat Length          47,837,766 bp     47,844,558 bp     
+Genome Unique Length          104,868,274 bp    104,883,163 bp    
 Read Duplication Level        0.4626X           0.4642X           
 Read Error Rate               0.336968%         0.336968%         
 
