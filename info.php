@@ -18,8 +18,8 @@
         <p>Web application by <a href="http://marianattestad.com" target="_blank">Maria Nattestad</a></p>
         <p>Principal investigator / The Boss: <a href="http://schatzlab.cshl.edu" target="_blank">Mike Schatz</a></p>
         <br>
-        <p>For questions about the science, email: <a href="mailto:fritz.sedlazeck@gmail.com?Subject=Question%20About%20GenomeScope" target="_top">fritz.sedlazeck@gmail.com</a></p>
-        <p>For questions about the web application, email: <a href="mailto:mnattest@cshl.edu?Subject=Question%20About%20GenomeScope" target="_top">mnattest@cshl.edu</a></p>
+        <p>For questions about the science, email: <a href="mailto:mschatz@cshl.edu?Subject=Question%20About%20GenomeScope" target="_top">Mike Schatz at mschatz@cshl.edu</a></p>
+        <p>For questions about the web application, email: <a href="mailto:mnattest@cshl.edu?Subject=Question%20About%20GenomeScope" target="_top">Maria Nattestad at mnattest@cshl.edu</a></p>
       </div>
     </div>
 </div>
