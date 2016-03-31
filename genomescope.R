@@ -240,17 +240,19 @@ report_results<-function(kmer_hist, k, container, foldername)
     error_rate=c(-1,-1)
     model_status="fail"
 
-    plot_size=500
+    plot_size=2000
     font_size=1.2
+    resolution=300
+    
     ## Plot the distribution, and hopefully with the model fit
-	png(paste(foldername, "/plot.png", sep=""),width=plot_size,height=plot_size)
+	png(paste(foldername, "/plot.png", sep=""),width=plot_size,height=plot_size, res=resolution)
 	plot(kmer_hist, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit),cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
     rect(-1e10, -1e10, max(kmer_hist[[1]])*1.1 , max(kmer_hist[[2]])*1.1, col=COLOR_BGCOLOR)
     points(kmer_hist, type="h", col=COLOR_HIST, lwd=2)
     box(col="black")
 
     ## Make a second plot in log space over entire range
-	png(paste(foldername, "/plot.log.png", sep=""),width=plot_size,height=plot_size)
+	png(paste(foldername, "/plot.log.png", sep=""),width=plot_size,height=plot_size,res=resolution)
 	plot(kmer_hist, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", log="xy",cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
     rect(1e-10, 1e-10, max(kmer_hist[[1]])*10 , max(kmer_hist[[2]])*10, col=COLOR_BGCOLOR)
 	points(kmer_hist, type="h", col=COLOR_HIST, lwd=2)

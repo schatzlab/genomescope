@@ -113,7 +113,7 @@ function imageresize() {
     var top_padding = 100;
     var side_padding = 0.05;
     var aspect_ratio = 1;
-    var max_size = 500;
+    var max_size = 1000;
 
     var height = Math.min(content_width/aspect_ratio*(1-side_padding), $( window ).height()-top_padding)/size_fraction;
     height = Math.min(height,max_size);
