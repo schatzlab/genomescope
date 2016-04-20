@@ -36,10 +36,11 @@ function showProgress() {
 
                 if (last_line.indexOf('done') > -1) {
                     document.getElementById("progress_panel").className = "panel panel-success center";
-                    check_plot_exists(0);
+                    check_plot_exists(0, true);
                 }
                 else if (last_line.indexOf("fail") > -1) { // SOMETHING FAILED
                     document.getElementById("progress_panel").className = "panel panel-danger center";
+                    check_plot_exists(0, false);
                 }
                 else {
                     setTimeout(function(){showProgress();},500);
@@ -70,11 +71,11 @@ var content_width = $( window ).width();
 
 
 
-function check_plot_exists(counter) {
+function check_plot_exists(counter,bool_succeeded) {
     
     var run_id_code=getUrlVars()["code"];
     var file_url_prefix="user_data/"+run_id_code + "/";
-    var file_to_check_for=file_url_prefix + "model.txt";
+    var file_to_check_for=file_url_prefix + "plot.png";
     
     if (counter>100) {
         alert("Taking too long to find "+ file_to_check_for + " counter: " + counter);
@@ -84,7 +85,7 @@ function check_plot_exists(counter) {
             url: file_to_check_for,
             error: function() {
                 console.log(counter+1);
-                setTimeout(function(){check_plot_exists(counter+1);},500);
+                setTimeout(function(){check_plot_exists(counter+1,bool_succeeded);},500);
             },
             success: function () {
                 document.getElementById("results").style.visibility= 'visible';
@@ -95,8 +96,13 @@ function check_plot_exists(counter) {
                 document.getElementById("landing_for_plot1").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "plot.png" + ' "/>'; 
                 document.getElementById("landing_for_plot2").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "plot.log.png" + ' "/>'; 
 
-                document.getElementById("landing_for_text1").innerHTML='<iframe width="' + 600 + ' " height="200" src="' + file_url_prefix + "summary.txt" + '" frameborder="0"></iframe>';
-                document.getElementById("landing_for_text2").innerHTML='<iframe width="' + 600 + ' " height="400" src="' + file_url_prefix + "model.txt" + '" frameborder="0"></iframe>';
+                if (bool_succeeded) {
+                    document.getElementById("landing_for_text1").innerHTML='<iframe width="' + 600 + ' " height="200" src="' + file_url_prefix + "summary.txt" + '" frameborder="0"></iframe>';
+                    document.getElementById("landing_for_text2").innerHTML='<iframe width="' + 600 + ' " height="400" src="' + file_url_prefix + "model.txt" + '" frameborder="0"></iframe>';
+                } else {
+                    document.getElementById("landing_for_text1").innerHTML='Model did not converge';
+                    document.getElementById("landing_for_text2").innerHTML='Model did not converge';
+                }
                 
                 imageresize();
             }
