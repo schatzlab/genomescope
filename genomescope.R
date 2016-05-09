@@ -67,8 +67,8 @@ nls_4peak<-function(x, y, k, estKmercov, estLength, max_iterations){
 }
 
 
-## score model by number and percent of residual errors
-###############################################################################
+## score model by number and percent of residual errors after excluding sequencing errors
+#########################################################################################
 
 score_model<-function(kmer_hist_orig, nls, round, foldername){
   x = kmer_hist_orig[[1]]
@@ -76,11 +76,11 @@ score_model<-function(kmer_hist_orig, nls, round, foldername){
 
   pred=predict(nls, newdata=data.frame(x))
   model_sum=summary(nls)
-  kcov = min_max(model_sum$coefficients['kmercov',])
+  kcovfloor = floor(min_max(model_sum$coefficients['kmercov',])[[1]])
   
   ## Compute error rate, by counting kmers unexplained by model through first peak
   ## truncate errors as soon as it goes to zero, dont allow it to go back up
-  error_xcutoff = floor(kcov[1])
+  error_xcutoff = kcovfloor
   error_xcutoff_ind = which(x==error_xcutoff)
 
   error_kmers = y[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
@@ -108,142 +108,23 @@ score_model<-function(kmer_hist_orig, nls, round, foldername){
     first_zero = error_xcutoff_ind
   }
 
-  suby = y[first_zero:length(y)]
-  subp = pred[first_zero:length(y)]
-  residual = as.numeric(suby)-as.numeric(subp)
-
-  residualslow = y
-  for (i in 1:length(residualslow))
-  {
-    residualslow[[i]] = y[[i]] - pred[[i]]
-  }
-  
-  str(head(y[first_zero:length(y)]))
-  str(head(pred[first_zero:length(y)]))
-  str(head(residual))
-  cat(head(residualslow))
-  cat(suby[[1]]-subp[[1]], suby[[2]]-subp[[2]], suby[[3]] - subp[[3]], suby[[4]]-subp[[4]])
-
   ## The fit is residual sum of square error, excluding sequencing errors
-  model_fit_all         = c(sum(as.numeric(y[first_zero:length(y)] - pred[first_zero:length(y)]) ** 2), first_zero, x[length(y)])
-  model_fit_full        = c(sum(as.numeric(y[first_zero:5*kcov[1]] - pred[first_zero:5*kcov[1]]) ** 2), first_zero, 5*kcov[1])
-  model_fit_unique      = c(sum(as.numeric(y[first_zero:3*kcov[1]] - pred[first_zero:3*kcov[1]]) ** 2), first_zero, 3*kcov[1])
+  model_fit_all    = c(sum(as.numeric(y[first_zero:length(y)]     - pred[first_zero:length(y)]) ** 2),     first_zero, x[length(y)])
+  model_fit_full   = c(sum(as.numeric(y[first_zero:(5*kcovfloor)] - pred[first_zero:(5*kcovfloor)]) ** 2), first_zero, (5*kcovfloor))
+  model_fit_unique = c(sum(as.numeric(y[first_zero:(3*kcovfloor)] - pred[first_zero:(3*kcovfloor)]) ** 2), first_zero, (3*kcovfloor))
 
   ## The score is the percentage of unexplained kmers, excluding sequencing errors
-  model_fit_allscore    = c(sum(abs(as.numeric(y[first_zero:length(y)] - pred[first_zero:length(y)]))) / sum(as.numeric(y[first_zero:length(y)])), first_zero, x[length(y)])
-  model_fit_fullscore   = c(sum(abs(as.numeric(y[first_zero:5*kcov[1]] - pred[first_zero:5*kcov[1]]))) / sum(as.numeric(y[first_zero:5*kcov[1]])), first_zero, 5*kcov[1])
-  model_fit_uniquescore = c(sum(abs(as.numeric(y[first_zero:3*kcov[1]] - pred[first_zero:3*kcov[1]]))) / sum(as.numeric(y[first_zero:3*kcov[1]])), first_zero, 3*kcov[1])
+  model_fit_allscore    = c(100*(1-sum(abs(as.numeric(y[first_zero:length(y)]     - pred[first_zero:length(y)])))     / sum(as.numeric(y[first_zero:length(y)]))),     first_zero, x[length(y)])
+  model_fit_fullscore   = c(100*(1-sum(abs(as.numeric(y[first_zero:(5*kcovfloor)] - pred[first_zero:(5*kcovfloor)]))) / sum(as.numeric(y[first_zero:(5*kcovfloor)]))), first_zero, (5*kcovfloor))
+  model_fit_uniquescore = c(100*(1-sum(abs(as.numeric(y[first_zero:(3*kcovfloor)] - pred[first_zero:(3*kcovfloor)]))) / sum(as.numeric(y[first_zero:(3*kcovfloor)]))), first_zero, (3*kcovfloor))
 
   fit = data.frame(all  = model_fit_all,      allscore  = model_fit_allscore,
                    full = model_fit_full,     fullscore = model_fit_fullscore, 
                    unique = model_fit_unique, uniquescore = model_fit_uniquescore)
 
-  pdf(paste(foldername, "/score.", round, ".pdf", sep=""))
-  plot(x, y, xlim=c(0,150), ylim=c(0,5e6), typ="n", col=COLOR_HIST)
-  lines(x, y, typ="l",  xlim=c(0,150), ylim=c(0,5e6), lwd=2, col=COLOR_HIST)
-  lines(x, pred, typ="l", lwd=2, col=COLOR_4PEAK)
-  lines(x[first_zero:length(y)], residual, col="purple")
-  lines(x, residualslow, col="green", lty=2)
-  abline(v=c(first_zero, 3*kcov[1], 5*kcov[1]), col="red")
-  abline(h=0, col="grey")
-  abline(v=seq(0,150,5), col="grey")
-  dev.off()
-
   return (fit)
 }
 
-
-
-## ## Pick n the two model forms, resolves ambiguity between which is the homozygous and which is the heterozygous peak
-## ###############################################################################
-## 
-## eval_model<-function(kmer_hist_orig, nls1, nls2, round, foldername){
-##     nls1score = -1
-##     nls2score = -1
-##     
-##     ## Count the kmers in the observed data in the interesting range
-##     ox = kmer_hist_orig[[1]]
-##     oy = kmer_hist_orig[[2]]
-## 
-##     allkmers = sum(as.numeric(ox * oy))
-##     #allkmers = sum(as.numeric(oy))
-## 
-##     if(VERBOSE){ cat(paste("allkmers:\t", allkmers, "\n"))}
-## 
-##     ## Evaluate the score the nls1
-##     if (!is.null(nls1))
-##     {
-##       res1 <- predict(nls1, newdata=data.frame(ox))
-##       if(VERBOSE) { cat(paste("nls1 kmers:\t", sum(as.numeric(ox*res1)), "\n")) }
-##      # if(VERBOSE) { cat(paste("nls1 kmers:\t", sum(as.numeric(res1)), "\n")) }
-## 
-##       nls1score = sum(as.numeric(abs(ox*oy-ox*res1))) / allkmers
-##       #nls1score = sum(as.numeric(abs(oy-res1))) / allkmers
-##       if(VERBOSE){ cat(paste("nls1score:\t", nls1score, "\n"))}
-## 
-##       if (VERBOSE)
-##       {
-##         mdir = paste(foldername, "/round", round, ".1", sep="")
-##         dir.create(mdir, showWarnings=FALSE)
-##         report_results(kmer_prof_orig, k, (list(nls1, nls1score)) , mdir)
-##       }
-##     }
-##     else
-##     {
-##       if (VERBOSE) { cat("nls1score failed to converge\n") }
-##     }
-## 
-##     
-##     ## Evaluate the score of nls2
-##     if (!is.null(nls2))
-##     {
-##       res2 <- predict(nls2, newdata=data.frame(ox))
-##       if(VERBOSE) { cat(paste("nls2 kmers:\t", sum(as.numeric(ox*res2)), "\n")) }
-##       # if(VERBOSE) { cat(paste("nls2 kmers:\t", sum(as.numeric(res2)), "\n")) }
-## 
-##       nls2score = sum(as.numeric(abs(ox*oy-ox*res2))) / allkmers
-##       #nls2score = sum(as.numeric(abs(oy-res2))) / allkmers
-##       if(VERBOSE){ cat(paste("nls2score:\t", nls2score, "\n"))}
-## 
-##       if (VERBOSE)
-##       {
-##         mdir = paste(foldername, "/round", round, ".2", sep="")
-##         dir.create(mdir, showWarnings=FALSE)
-##         report_results(kmer_prof_orig, k, (list(nls2, nls2score)) , mdir)
-##       }
-##     }
-##     else
-##     {
-##       if (VERBOSE) { cat("nls2score failed to converge\n") }
-##     }
-## 
-## 
-##     ## Return the better of the scores
-##     if (!is.null(nls1))
-##     {
-##       if (!is.null(nls2))
-##       {
-##         if (nls1score < nls2score)
-##         {
-##           if (VERBOSE) { cat(paste("returning nls1, better score\n")) }
-##           return (list(nls1, nls1score))
-##         }
-##         else
-##         {
-##           if (VERBOSE) { cat(paste("returning nls2, better score\n")) }
-##           return (list(nls2, nls2score))
-##         }
-##       }
-##       else
-##       {
-##         if (VERBOSE) { cat(paste("returning nls1, nls2 fail\n")) }
-##         return (list(nls1, nls1score))
-##       }
-##     }
-## 
-##     if (VERBOSE) { cat(paste("returning nls2 by default\n")) }
-##     return (list(nls2, nls2score))
-## }
 
 ## Pick between the two model forms, resolves ambiguity between which is the homozygous and which is the heterozygous peak
 ###############################################################################
@@ -368,13 +249,12 @@ report_results<-function(kmer_hist, k, container, foldername)
 {
     x=kmer_hist[[1]]
     y=kmer_hist[[2]]
-	#d=data.frame(x=x, y=y)
 
 	#automatically zoom into the relevant regions of the plot, ignore first 15 positions
     xmax=length(x)
 	start=which(y == min(y[1:TYPICAL_ERROR]))
-	zoomx=x[start:xmax-1]
-	zoomy=y[start:xmax-1]
+	zoomx=x[start:(xmax-1)]
+	zoomy=y[start:(xmax-1)]
 
     ## allow for a little space above max value past the noise
 	y_limit = max(zoomy[start:length(zoomy)])*1.1
@@ -609,13 +489,13 @@ report_results<-function(kmer_hist, k, container, foldername)
     cat(paste(sprintf(format_column_1,"Read Duplication Level"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Read Error Rate"), sprintf(format_column_2,percentage_format(error_rate[1])), sprintf(format_column_3,percentage_format(error_rate[2])), sep=""),  file=summaryFile, sep="\n", append=TRUE)
     
-    cat(paste("\nModel Score (All Kmers) = ",  model_fit_allscore[1],    " [", model_fit_allscore[2],    " ", model_fit_allscore[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model Score (Full Model) = ",   model_fit_fullscore[1],   " [", model_fit_fullscore[2],   " ", model_fit_fullscore[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model Score (Unique Kmers) = ", model_fit_uniquescore[1], " [", model_fit_uniquescore[2], " ", model_fit_uniquescore[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("\nPercent Kmers Modeled (All Kmers) = ",  model_fit_allscore[1],    " [", model_fit_allscore[2],    " ", model_fit_allscore[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Percent Kmers Modeled (Full Model) = ",   model_fit_fullscore[1],   " [", model_fit_fullscore[2],   " ", model_fit_fullscore[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Percent Kmers Modeled (Unique Kmers) = ", model_fit_uniquescore[1], " [", model_fit_uniquescore[2], " ", model_fit_uniquescore[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
 
-    cat(paste("Model Error (All Kmers) = ",    model_fit_all[1],    " [", model_fit_all[2],    " ", model_fit_all[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model Error (Full Model) = ",   model_fit_full[1],   " [", model_fit_full[2],   " ", model_fit_full[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model Error (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], " ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("\nModel RSSE (All Kmers) = ",  model_fit_all[1],    " [", model_fit_all[2],    " ", model_fit_all[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model RSSE (Full Model) = ",   model_fit_full[1],   " [", model_fit_full[2],   " ", model_fit_full[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model RSSE (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], " ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
 
     ## Finalize the progress
     progressFilename=paste(foldername,"/progress.txt",sep="")
@@ -655,7 +535,7 @@ if(length(args) < 4) {
 	dir.create(foldername, showWarnings=FALSE)
 
 	kmer_prof <- read.csv(file=histfile,sep=" ", header=FALSE) 
-	kmer_prof <- kmer_prof[c(1:length(kmer_prof[,2])-1),] #get rid of the last position
+	kmer_prof <- kmer_prof[c(1:(length(kmer_prof[,2])-1)),] #get rid of the last position
     kmer_prof_orig <- kmer_prof
 
     ## Initialize the status
