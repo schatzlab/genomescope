@@ -70,7 +70,7 @@ nls_4peak<-function(x, y, k, estKmercov, estLength, max_iterations){
 ## score model by number and percent of residual errors
 ###############################################################################
 
-score_model<-function(kmer_hist_orig, nls){
+score_model<-function(kmer_hist_orig, nls, round, foldername){
   x = kmer_hist_orig[[1]]
   y = kmer_hist_orig[[2]]
 
@@ -108,6 +108,22 @@ score_model<-function(kmer_hist_orig, nls){
     first_zero = error_xcutoff_ind
   }
 
+  suby = y[first_zero:length(y)]
+  subp = pred[first_zero:length(y)]
+  residual = as.numeric(suby)-as.numeric(subp)
+
+  residualslow = y
+  for (i in 1:length(residualslow))
+  {
+    residualslow[[i]] = y[[i]] - pred[[i]]
+  }
+  
+  str(head(y[first_zero:length(y)]))
+  str(head(pred[first_zero:length(y)]))
+  str(head(residual))
+  cat(head(residualslow))
+  cat(suby[[1]]-subp[[1]], suby[[2]]-subp[[2]], suby[[3]] - subp[[3]], suby[[4]]-subp[[4]])
+
   ## The fit is residual sum of square error, excluding sequencing errors
   model_fit_all         = c(sum(as.numeric(y[first_zero:length(y)] - pred[first_zero:length(y)]) ** 2), first_zero, x[length(y)])
   model_fit_full        = c(sum(as.numeric(y[first_zero:5*kcov[1]] - pred[first_zero:5*kcov[1]]) ** 2), first_zero, 5*kcov[1])
@@ -121,12 +137,24 @@ score_model<-function(kmer_hist_orig, nls){
   fit = data.frame(all  = model_fit_all,      allscore  = model_fit_allscore,
                    full = model_fit_full,     fullscore = model_fit_fullscore, 
                    unique = model_fit_unique, uniquescore = model_fit_uniquescore)
+
+  pdf(paste(foldername, "/score.", round, ".pdf", sep=""))
+  plot(x, y, xlim=c(0,150), ylim=c(0,5e6), typ="n", col=COLOR_HIST)
+  lines(x, y, typ="l",  xlim=c(0,150), ylim=c(0,5e6), lwd=2, col=COLOR_HIST)
+  lines(x, pred, typ="l", lwd=2, col=COLOR_4PEAK)
+  lines(x[first_zero:length(y)], residual, col="purple")
+  lines(x, residualslow, col="green", lty=2)
+  abline(v=c(first_zero, 3*kcov[1], 5*kcov[1]), col="red")
+  abline(h=0, col="grey")
+  abline(v=seq(0,150,5), col="grey")
+  dev.off()
+
   return (fit)
 }
 
 
 
-## ## Pick between the two model forms, resolves ambiguity between which is the homozygous and which is the heterozygous peak
+## ## Pick n the two model forms, resolves ambiguity between which is the homozygous and which is the heterozygous peak
 ## ###############################################################################
 ## 
 ## eval_model<-function(kmer_hist_orig, nls1, nls2, round, foldername){
@@ -227,7 +255,7 @@ eval_model<-function(kmer_hist_orig, nls1, nls2, round, foldername){
     ## Evaluate the score the nls1
     if (!is.null(nls1))
     {
-      nls1score = score_model(kmer_hist_orig, nls1)
+      nls1score = score_model(kmer_hist_orig, nls1, round+0.1, foldername)
 
       if(VERBOSE){ cat(paste("nls1score$all:\t", nls1score$all[[1]], "\n"))}
 
@@ -247,7 +275,7 @@ eval_model<-function(kmer_hist_orig, nls1, nls2, round, foldername){
     ## Evaluate the score of nls2
     if (!is.null(nls2))
     {
-      nls2score = score_model(kmer_hist_orig, nls2)
+      nls2score = score_model(kmer_hist_orig, nls2, round+0.2, foldername)
 
       if(VERBOSE){ cat(paste("nls2score$all:\t", nls2score$all[[1]], "\n"))}
 
@@ -581,13 +609,13 @@ report_results<-function(kmer_hist, k, container, foldername)
     cat(paste(sprintf(format_column_1,"Read Duplication Level"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Read Error Rate"), sprintf(format_column_2,percentage_format(error_rate[1])), sprintf(format_column_3,percentage_format(error_rate[2])), sep=""),  file=summaryFile, sep="\n", append=TRUE)
     
-    cat(paste("\nModel Score (All Kmers) = ",  model_fit_allscore[1], sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model Score (Full Model) = ",   model_fit_fullscore[1], sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model Score (Unique Kmers) = ", model_fit_uniquescore[1], sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("\nModel Score (All Kmers) = ",  model_fit_allscore[1],    " [", model_fit_allscore[2],    " ", model_fit_allscore[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model Score (Full Model) = ",   model_fit_fullscore[1],   " [", model_fit_fullscore[2],   " ", model_fit_fullscore[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model Score (Unique Kmers) = ", model_fit_uniquescore[1], " [", model_fit_uniquescore[2], " ", model_fit_uniquescore[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
 
-    cat(paste("Model Error (All Kmers) = ",    model_fit_all[1],    " [", model_fit_all[2],    " ", model_fit_all[3],    "]", sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model Error (Full Model) = ",   model_fit_full[1],   " [", model_fit_full[2],   " ", model_fit_full[3],   "]", sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model Error (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], " ", model_fit_unique[3], "]", sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model Error (All Kmers) = ",    model_fit_all[1],    " [", model_fit_all[2],    " ", model_fit_all[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model Error (Full Model) = ",   model_fit_full[1],   " [", model_fit_full[2],   " ", model_fit_full[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model Error (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], " ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
 
     ## Finalize the progress
     progressFilename=paste(foldername,"/progress.txt",sep="")
