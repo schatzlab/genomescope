@@ -1,7 +1,7 @@
 #!/bin/env Rscript
 
 ## GenomeScope: Fast Genome Analysis from Unassembled Short Reads
-## This is the automated script for reading in a histogram file given the k-mer size, readlength and an optional parameter for what you want the x-axis limit to be.
+## This is the automated script for computing genome characteristics from a histogram file, k-mer size, and readlength
 
 ## Number of rounds before giving up
 NUM_ROUNDS=4
@@ -71,7 +71,7 @@ nls_4peak<-function(x, y, k, estKmercov, estLength, max_iterations){
 ## Pick between the two model forms, resolves ambiguity between which is the homozygous and which is the heterozygous peak
 ###############################################################################
 
-eval_model<-function(kmer_hist_orig, nls1, nls2){
+eval_model<-function(kmer_hist_orig, nls1, nls2, round, foldername){
     nls1score = -1
     nls2score = -1
     
@@ -80,6 +80,7 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
     oy = kmer_hist_orig[[2]]
 
     allkmers = sum(as.numeric(ox * oy))
+    #allkmers = sum(as.numeric(oy))
 
     if(VERBOSE){ cat(paste("allkmers:\t", allkmers, "\n"))}
 
@@ -88,9 +89,18 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
     {
       res1 <- predict(nls1, newdata=data.frame(ox))
       if(VERBOSE) { cat(paste("nls1 kmers:\t", sum(as.numeric(ox*res1)), "\n")) }
+     # if(VERBOSE) { cat(paste("nls1 kmers:\t", sum(as.numeric(res1)), "\n")) }
 
       nls1score = sum(as.numeric(abs(ox*oy-ox*res1))) / allkmers
+      #nls1score = sum(as.numeric(abs(oy-res1))) / allkmers
       if(VERBOSE){ cat(paste("nls1score:\t", nls1score, "\n"))}
+
+      if (VERBOSE)
+      {
+        mdir = paste(foldername, "/round", round, ".1", sep="")
+        dir.create(mdir, showWarnings=FALSE)
+        report_results(kmer_prof_orig, k, (list(nls1, nls1score)) , mdir)
+      }
     }
     else
     {
@@ -103,9 +113,18 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
     {
       res2 <- predict(nls2, newdata=data.frame(ox))
       if(VERBOSE) { cat(paste("nls2 kmers:\t", sum(as.numeric(ox*res2)), "\n")) }
+      # if(VERBOSE) { cat(paste("nls2 kmers:\t", sum(as.numeric(res2)), "\n")) }
 
       nls2score = sum(as.numeric(abs(ox*oy-ox*res2))) / allkmers
+      #nls2score = sum(as.numeric(abs(oy-res2))) / allkmers
       if(VERBOSE){ cat(paste("nls2score:\t", nls2score, "\n"))}
+
+      if (VERBOSE)
+      {
+        mdir = paste(foldername, "/round", round, ".2", sep="")
+        dir.create(mdir, showWarnings=FALSE)
+        report_results(kmer_prof_orig, k, (list(nls2, nls2score)) , mdir)
+      }
     }
     else
     {
@@ -123,6 +142,11 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
           if (VERBOSE) { cat(paste("returning nls1, better score\n")) }
           return (list(nls1, nls1score))
         }
+        else
+        {
+          if (VERBOSE) { cat(paste("returning nls2, better score\n")) }
+          return (list(nls2, nls2score))
+        }
       }
       else
       {
@@ -139,7 +163,7 @@ eval_model<-function(kmer_hist_orig, nls1, nls2){
 ## Wrapper function to try fitting 4 peak model with 2 forms
 ###############################################################################
 
-estimate_Genome_4peak2<-function(kmer_hist_orig, x, y, k, readlength, foldername){
+estimate_Genome_4peak2<-function(kmer_hist_orig, x, y, k, readlength, round, foldername){
 	## First we see what happens when the max peak is the kmercoverage (typically the homozygous peak) for the plot
 	numofReads   = sum(as.numeric(x*y))/(readlength-k+1) 
 	estKmercov1  = x[which(y==max(y))][1]
@@ -159,32 +183,9 @@ estimate_Genome_4peak2<-function(kmer_hist_orig, x, y, k, readlength, foldername
 	nls2 = nls_4peak(x, y, k, estKmercov2, estLength2, MAX_ITERATIONS)
     if (VERBOSE) { print(summary(nls2)) }
 
-	return(eval_model(kmer_hist_orig, nls1, nls2))
+	return(eval_model(kmer_hist_orig, nls1, nls2, round, foldername))
 }
 
-
-## Wrapper function to try fitting 2 peak model with 2 forms
-###############################################################################
-
-estimate_Genome_2peak2<-function(x, y, k, readlength, foldername){
-	## First we see what happens when the max peak is the kmercoverage (typically the homozygous peak) for the plot
-	numofReads   = sum(as.numeric(x*y))/(readlength-k+1) 
-	estKmercov1  = x[which(y==max(y))][1]
-	estCoverage1 = estKmercov1*readlength/(readlength-k)
-	estLength1   = numofReads*readlength/estCoverage1
-
-	nls1=nls_2peak(x,y,k,estKmercov1,estLength1,MAX_ITERATIONS)
-
-	## Second we double the max kmercoverage
-	estKmercov2 = estKmercov1*2
-	estCoverage2= estKmercov2*readlength/(readlength-k)
-	estLength2 = numofReads*readlength/estCoverage2
-
-	nls2=nls_2peak(x,y,k,estKmercov2,estLength2,MAX_ITERATIONS)
-
-	control=nls_control(x,y,k,estKmercov1,estLength1,MAX_ITERATIONS)
-	return(eval_model(nls1,nls2))
-}
 
 ## Format numbers
 ###############################################################################
@@ -231,6 +232,8 @@ report_results<-function(kmer_hist, k, container, foldername)
        x_limit = max(kcov*5.1, x_limit)
     }
 
+    x_limit=150
+
     ## Features to report
     het=c(-1,-1)
     total_len=c(-1,-1)
@@ -239,6 +242,9 @@ report_results<-function(kmer_hist, k, container, foldername)
     dups=c(-1,-1)
     error_rate=c(-1,-1)
     model_status="fail"
+    model_fit_unique = c(0,0,0)
+    model_fit_simple = c(0,0,0)
+    model_fit_all    = c(0,0,0)
 
     plot_size=2000
     font_size=1.2
@@ -301,6 +307,11 @@ report_results<-function(kmer_hist, k, container, foldername)
          }
        }
 
+       if (first_zero == -1)
+       {
+         first_zero = error_xcutoff_ind
+       }
+
        ## Rather than "0", set to be some very small number so log-log plot looks okay
        error_kmers = pmax(error_kmers, 1e-10)
 
@@ -335,6 +346,24 @@ report_results<-function(kmer_hist, k, container, foldername)
        
        repeat_len=repeat_kmers/(2*kcov)
        unique_len=unique_kmers/(2*kcov)
+
+       ## model_fit_unique = c(sum(abs(as.numeric(y[first_zero:3*kcov[1]] - pred[first_zero:3*kcov[1]])) ** 2)  / sum(as.numeric(y[first_zero:3*kcov[1]])),
+       ##                      first_zero, 3*kcov[1])
+
+       ## model_fit_simple = c(sum(abs(as.numeric(y[first_zero:5*kcov[1]] - pred[first_zero:5*kcov[1]])) ** 2)  / sum(as.numeric(y[first_zero:5*kcov[1]])),
+       ##                      first_zero, 5*kcov[1])
+
+       ## model_fit_all    = c(sum(abs(as.numeric(y[first_zero:length(y)] - pred[first_zero:length(y)])) ** 2)  / sum(as.numeric(y[first_zero:length(y)])),
+       ##                      first_zero, x[length(y)])
+
+       model_fit_unique = c(sqrt(sum(abs(as.numeric(y[first_zero:3*kcov[1]] - pred[first_zero:3*kcov[1]])) ** 2)),
+                            first_zero, 3*kcov[1])
+
+       model_fit_simple = c(sqrt(sum(abs(as.numeric(y[first_zero:5*kcov[1]] - pred[first_zero:5*kcov[1]])) ** 2)),
+                            first_zero, 5*kcov[1])
+
+       model_fit_all    = c(sqrt(sum(abs(as.numeric(y[first_zero:length(y)] - pred[first_zero:length(y)])) ** 2)),
+                            first_zero, x[length(y)])
        
        ## Finish Log plot
        title(paste("\nlen:",  prettyNum(total_len[1], big.mark=","), 
@@ -409,34 +438,24 @@ report_results<-function(kmer_hist, k, container, foldername)
 
     ## Write key values to summary file
 	summaryFile <- paste(foldername,"/summary.txt",sep="")
-
 	
-	# cat(paste("k = ", k,sep=""),                                                        file=summaryFile, sep="\n") 
- #  cat(paste("property", "min", "max", sep="\t"),                                      file=summaryFile, sep="\n", append=TRUE)
-	# cat(paste("Heterozygosity", het[1], het[2], sep="\t"),                              file=summaryFile, sep="\n", append=TRUE)
-	# cat(paste("GenomeHaploidLen", round(total_len[1]), round(total_len[2]), sep="\t"),  file=summaryFile, sep="\n", append=TRUE)
-	# cat(paste("GenomeRepeatLen", round(repeat_len[1]), round(repeat_len[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
-	# cat(paste("GenomeUniqueLen", round(unique_len[1]), round(unique_len[2]), sep="\t"), file=summaryFile, sep="\n", append=TRUE)
-	# cat(paste("ReadDuplicationLevel", dups[1], dups[2], sep="\t"),                      file=summaryFile, sep="\n", append=TRUE)
-	# cat(paste("ReadErrorRate", error_rate[1], error_rate[2], sep="\t"),                 file=summaryFile, sep="\n", append=TRUE)
-	# cat(paste("ModelScore", container[2], container[2], sep="\t"),                      file=summaryFile, sep="\n", append=TRUE)
-
-  format_column_1 = "%-30s"
-  format_column_2 = "%-18s"
-  format_column_3 = "%-18s"
-  
-
-  
-  cat(paste("k = ", k,sep=""),                                                                                                                                                          file=summaryFile, sep="\n") 
-  cat(paste("\n",sprintf(format_column_1,"property"), sprintf(format_column_2,"min"), sprintf(format_column_3,"max"), sep=""),                                                          file=summaryFile, sep="\n", append=TRUE)
-  cat(paste(sprintf(format_column_1,"Heterozygosity"), sprintf(format_column_2,percentage_format(het[1])), sprintf(format_column_3,percentage_format(het[2])), sep=""),                 file=summaryFile, sep="\n", append=TRUE)
-  cat(paste(sprintf(format_column_1,"Genome Haploid Length"), sprintf(format_column_2,bp_format(total_len[2])), sprintf(format_column_3,bp_format(total_len[1])), sep=""),              file=summaryFile, sep="\n", append=TRUE)
-  cat(paste(sprintf(format_column_1,"Genome Repeat Length"), sprintf(format_column_2,bp_format(repeat_len[2])), sprintf(format_column_3,bp_format(repeat_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
-  cat(paste(sprintf(format_column_1,"Genome Unique Length"), sprintf(format_column_2,bp_format(unique_len[2])), sprintf(format_column_3,bp_format(unique_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
-  cat(paste(sprintf(format_column_1,"Read Duplication Level"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
-  cat(paste(sprintf(format_column_1,"Read Error Rate"), sprintf(format_column_2,percentage_format(error_rate[1])), sprintf(format_column_3,percentage_format(error_rate[2])), sep=""),  file=summaryFile, sep="\n", append=TRUE)
-  
-  cat(paste("\nModel Score = ", container[2], sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
+    format_column_1 = "%-30s"
+    format_column_2 = "%-18s"
+    format_column_3 = "%-18s"
+    
+    cat(paste("k = ", k,sep=""),                                                                                                                                                          file=summaryFile, sep="\n") 
+    cat(paste("\n",sprintf(format_column_1,"property"), sprintf(format_column_2,"min"), sprintf(format_column_3,"max"), sep=""),                                                          file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Heterozygosity"), sprintf(format_column_2,percentage_format(het[1])), sprintf(format_column_3,percentage_format(het[2])), sep=""),                 file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Genome Haploid Length"), sprintf(format_column_2,bp_format(total_len[2])), sprintf(format_column_3,bp_format(total_len[1])), sep=""),              file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Genome Repeat Length"), sprintf(format_column_2,bp_format(repeat_len[2])), sprintf(format_column_3,bp_format(repeat_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Genome Unique Length"), sprintf(format_column_2,bp_format(unique_len[2])), sprintf(format_column_3,bp_format(unique_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Read Duplication Level"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Read Error Rate"), sprintf(format_column_2,percentage_format(error_rate[1])), sprintf(format_column_3,percentage_format(error_rate[2])), sep=""),  file=summaryFile, sep="\n", append=TRUE)
+    
+    cat(paste("\nModel Score = ",      container[2], sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model Fit (Double) = ", model_fit_simple[1], "[", model_fit_simple[2], " ", model_fit_simple[3], "]", sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model Fit (Unique) = ", model_fit_unique[1], "[", model_fit_unique[2], " ", model_fit_unique[3], "]", sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model Fit (All) = ",    model_fit_all[1],    "[", model_fit_all[2],    " ", model_fit_all[3],    "]", sep=""),                                                                                                                                  file=summaryFile, sep="\n", append=TRUE)
 
     ## Finalize the progress
     progressFilename=paste(foldername,"/progress.txt",sep="")
@@ -486,28 +505,28 @@ if(length(args) < 4) {
     ## try to find the local minimum between errors and the first (heterozygous) peak
     start <- which(kmer_prof[,2]==min(kmer_prof[1:TYPICAL_ERROR,2]))
 
-    ## terminate after num iterations or if the score becomes good enough, store best result so far in container
-	num <- 0
+    ## terminate after NUM_ROUND iterations, store best result so far in container
+	round <- 0
 	best_container <- list(NULL,0)
 
-	while(num < NUM_ROUNDS) 
+	while(round < NUM_ROUNDS) 
     {
-        cat(paste("round", num, "trimming to", start, "trying 4peak model... "), file=progressFilename, sep="", append=TRUE)
-        if (VERBOSE) { cat(paste("round", num, "trimming to", start, "trying 4peak model... \n")) }
+        cat(paste("round", round, "trimming to", start, "trying 4peak model... "), file=progressFilename, sep="", append=TRUE)
+        if (VERBOSE) { cat(paste("round", round, "trimming to", start, "trying 4peak model... \n")) }
 
         ## Reset the input trimming off low frequency error kmers
         max <- length(kmer_prof[,1])
         x <- kmer_prof[start:max,1]
         y <- kmer_prof[start:max,2]
 
-		model_4peaks <- estimate_Genome_4peak2(kmer_prof_orig, x, y, k, readlength, foldername) 
+		model_4peaks <- estimate_Genome_4peak2(kmer_prof_orig, x, y, k, readlength, round, foldername) 
 
         if (!is.null(model_4peaks[[1]])) { 
           cat(paste("converged. score: ", model_4peaks[[2]][[1]]), file=progressFilename, sep="\n", append=TRUE)
 
           if (VERBOSE)
           {
-            mdir = paste(foldername, "/round", num, sep="")
+            mdir = paste(foldername, "/round", round, sep="")
 	        dir.create(mdir, showWarnings=FALSE)
 	        report_results(kmer_prof_orig, k, model_4peaks, mdir)
           }
@@ -525,7 +544,7 @@ if(length(args) < 4) {
 
         ## Ignore a larger number of kmers as errors
         start <- start + START_SHIFT
-		num <- num + 1
+		round <- round + 1
 	}
 
     ## Report the results, note using the original full profile
