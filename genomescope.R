@@ -15,6 +15,12 @@ TYPICAL_ERROR = 15
 ## Max rounds on NLS
 MAX_ITERATIONS=20
 
+## Overrule heterozygosity if two scores are within this percent (0.05 = 5%)
+SCORE_CLOSE = 0.05
+
+## Overrule heterozygosity if there is a large difference in het rate
+SCORE_HET_FOLD_DIFFERENCE = 10
+
 ## Print out VERBOSEging messages (0/1)
 VERBOSE = 0
 
@@ -28,6 +34,7 @@ COLOR_4PEAK    = "black"
 COLOR_2PEAK    = "#F0E442"
 COLOR_ERRORS   = "#D55E00"
 COLOR_KMERPEAK = "black"
+COLOR_RESIDUAL = "purple"
 
 
 ## Helper Function
@@ -109,7 +116,7 @@ score_model<-function(kmer_hist_orig, nls, round, foldername){
   }
 
   ## The fit is residual sum of square error, excluding sequencing errors
-  model_fit_all    = c(sum(as.numeric(y[first_zero:length(y)]     - pred[first_zero:length(y)]) ** 2),     first_zero, x[length(y)])
+  model_fit_all    = c(sum(as.numeric(y[first_zero:length(y)]     - pred[first_zero:length(y)])     ** 2),     first_zero, x[length(y)])
   model_fit_full   = c(sum(as.numeric(y[first_zero:(5*kcovfloor)] - pred[first_zero:(5*kcovfloor)]) ** 2), first_zero, (5*kcovfloor))
   model_fit_unique = c(sum(as.numeric(y[first_zero:(3*kcovfloor)] - pred[first_zero:(3*kcovfloor)]) ** 2), first_zero, (3*kcovfloor))
 
@@ -172,12 +179,30 @@ eval_model<-function(kmer_hist_orig, nls1, nls2, round, foldername){
       if (VERBOSE) { cat("nls2score failed to converge\n") }
     }
 
-
     ## Return the better of the scores
     if (!is.null(nls1))
     {
       if (!is.null(nls2))
       {
+        pdiff = abs(nls1score$all[[1]] - nls2score$all[[1]]) / max(nls1score$all[[1]], nls2score$all[[1]])
+
+        if (pdiff < SCORE_CLOSE)
+        {
+          het1 = summary(nls1)$coefficients['r',][[1]]
+          het2 = summary(nls2)$coefficients['r',][[1]]
+
+          if (het2 * SCORE_HET_FOLD_DIFFERENCE < het1)
+          {
+            if (VERBOSE) { cat(paste("returning nls1, similar score, higher het\n")) }
+            return (list(nls1, nls1score))
+          }
+          else if (het1 * SCORE_HET_FOLD_DIFFERENCE < het2)
+          {
+            if (VERBOSE) { cat(paste("returning nls2, similar score, higher het\n")) }
+            return (list(nls2, nls2score))
+          }
+        }
+
         if (nls1score$all[[1]] < nls2score$all[[1]])
         {
           if (VERBOSE) { cat(paste("returning nls1, better score\n")) }
@@ -401,6 +426,8 @@ report_results<-function(kmer_hist, k, container, foldername)
        model_fit_all    = score$all
        model_fit_full   = score$full
        model_fit_unique = score$unique
+
+       residual = y - pred
        
        ## Finish Log plot
        title(paste("\nlen:",  prettyNum(total_len[1], big.mark=","), 
@@ -418,6 +445,8 @@ report_results<-function(kmer_hist, k, container, foldername)
        lines(x, unique_hist, col=COLOR_2PEAK, lty=1, lwd=3)
        lines(x, pred, col=COLOR_4PEAK, lwd=3)
        lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+
+       if (VERBOSE) { lines(x, residual, col=COLOR_RESIDUAL, lwd=3) }
 
        ## Add legend
        legend(exp(.65 * log(max(x))), 1.0 * max(y), 
@@ -445,6 +474,8 @@ report_results<-function(kmer_hist, k, container, foldername)
        lines(x, unique_hist, col=COLOR_2PEAK, lty=1, lwd=3)
        lines(x, pred, col=COLOR_4PEAK, lwd=3)
        lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+
+       if (VERBOSE) { lines(x, residual, col=COLOR_RESIDUAL, lwd=3) }
 
        ## Add legend
        legend(.65 * x_limit, 1.0 * y_limit, 
@@ -577,8 +608,33 @@ if(length(args) < 4) {
 		#check if this result is better than previous
         if (!is.null(model_4peaks[[1]]))
         {
-          if ((is.null(best_container[[1]])) || (model_4peaks[[2]]$all[[1]] < best_container[[2]]$all[[1]])){
+          if (is.null(best_container[[1]]))
+          {
+            best_container = model_4peaks
+          }
+          else
+          {
+            pdiff = abs(model_4peaks[[2]]$all[[1]] - best_container[[2]]$all[[1]]) / max(model_4peaks[[2]]$all[[1]], best_container[[2]]$all[[1]])
+
+            if (pdiff < SCORE_CLOSE)
+            {
+              hetm = summary(model_4peaks[[1]])$coefficients['r',][[1]]
+              hetb = summary(best_container[[1]])$coefficients['r',][[1]]
+
+              if (hetb * SCORE_HET_FOLD_DIFFERENCE < hetm)
+              {
+                if (VERBOSE) { cat(paste("model has significantly higher heterozygosity but similar score, overruling")) }
+                best_container = model_4peaks
+              }
+              else if (hetm * SCORE_HET_FOLD_DIFFERENCE < hetb)
+              {
+                if (VERBOSE) { cat(paste("previous best has significantly higher heterozygosity and similar score, keeping")) }
+              }
+            }
+            else if (model_4peaks[[2]]$all[[1]] < best_container[[2]]$all[[1]])
+            {
               best_container = model_4peaks
+            }
           }
         }
 
