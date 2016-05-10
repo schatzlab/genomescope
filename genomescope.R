@@ -15,8 +15,8 @@ TYPICAL_ERROR = 15
 ## Max rounds on NLS
 MAX_ITERATIONS=20
 
-## Overrule heterozygosity if two scores are within this percent (0.05 = 5%)
-SCORE_CLOSE = 0.05
+## Overrule if two scores are within this percent (0.05 = 5%) but larger difference in het
+SCORE_CLOSE = 0.20
 
 ## Overrule heterozygosity if there is a large difference in het rate
 SCORE_HET_FOLD_DIFFERENCE = 10
@@ -610,6 +610,7 @@ if(length(args) < 4) {
         {
           if (is.null(best_container[[1]]))
           {
+            if (VERBOSE) { cat(paste("no previous best, updating best")) }
             best_container = model_4peaks
           }
           else
@@ -630,9 +631,15 @@ if(length(args) < 4) {
               {
                 if (VERBOSE) { cat(paste("previous best has significantly higher heterozygosity and similar score, keeping")) }
               }
+              else if (model_4peaks[[2]]$all[[1]] < best_container[[2]]$all[[1]])
+              {
+                if (VERBOSE) { cat(paste("score is marginally better but het rate is not extremely different, upating")) }
+                best_container = model_4peaks
+              }
             }
             else if (model_4peaks[[2]]$all[[1]] < best_container[[2]]$all[[1]])
             {
+              if (VERBOSE) { cat(paste("score is significantly better, upating")) }
               best_container = model_4peaks
             }
           }
