@@ -37,11 +37,11 @@ COLOR_KMERPEAK = "black"
 COLOR_RESIDUAL = "purple"
 
 
-## Helper Function
+## Given mean +/- stderr, report min and max value within 2 SE
 ###############################################################################
 
 min_max <- function(table){
-	return (c( abs(table[1]) - abs(table[2]) , abs(table[1])+abs(table[2])))
+	return (c( abs(table[1]) - 2*abs(table[2]) , abs(table[1])+ 2*abs(table[2])))
 }
 
 
@@ -116,14 +116,14 @@ score_model<-function(kmer_hist_orig, nls, round, foldername){
   }
 
   ## The fit is residual sum of square error, excluding sequencing errors
-  model_fit_all    = c(sum(as.numeric(y[first_zero:length(y)]     - pred[first_zero:length(y)])     ** 2),     first_zero, x[length(y)])
+  model_fit_all    = c(sum(as.numeric(y[first_zero:length(y)]     - pred[first_zero:length(y)])     ** 2), first_zero, x[length(y)])
   model_fit_full   = c(sum(as.numeric(y[first_zero:(5*kcovfloor)] - pred[first_zero:(5*kcovfloor)]) ** 2), first_zero, (5*kcovfloor))
   model_fit_unique = c(sum(as.numeric(y[first_zero:(3*kcovfloor)] - pred[first_zero:(3*kcovfloor)]) ** 2), first_zero, (3*kcovfloor))
 
   ## The score is the percentage of unexplained kmers, excluding sequencing errors
-  model_fit_allscore    = c(100*(1-sum(abs(as.numeric(y[first_zero:length(y)]     - pred[first_zero:length(y)])))     / sum(as.numeric(y[first_zero:length(y)]))),     first_zero, x[length(y)])
-  model_fit_fullscore   = c(100*(1-sum(abs(as.numeric(y[first_zero:(5*kcovfloor)] - pred[first_zero:(5*kcovfloor)]))) / sum(as.numeric(y[first_zero:(5*kcovfloor)]))), first_zero, (5*kcovfloor))
-  model_fit_uniquescore = c(100*(1-sum(abs(as.numeric(y[first_zero:(3*kcovfloor)] - pred[first_zero:(3*kcovfloor)]))) / sum(as.numeric(y[first_zero:(3*kcovfloor)]))), first_zero, (3*kcovfloor))
+  model_fit_allscore    = c(1-sum(abs(as.numeric(y[first_zero:length(y)]     - pred[first_zero:length(y)])))     / sum(as.numeric(y[first_zero:length(y)])),     first_zero, x[length(y)])
+  model_fit_fullscore   = c(1-sum(abs(as.numeric(y[first_zero:(5*kcovfloor)] - pred[first_zero:(5*kcovfloor)]))) / sum(as.numeric(y[first_zero:(5*kcovfloor)])), first_zero, (5*kcovfloor))
+  model_fit_uniquescore = c(1-sum(abs(as.numeric(y[first_zero:(3*kcovfloor)] - pred[first_zero:(3*kcovfloor)]))) / sum(as.numeric(y[first_zero:(3*kcovfloor)])), first_zero, (3*kcovfloor))
 
   fit = data.frame(all  = model_fit_all,      allscore  = model_fit_allscore,
                    full = model_fit_full,     fullscore = model_fit_fullscore, 
@@ -520,13 +520,13 @@ report_results<-function(kmer_hist, k, container, foldername)
     cat(paste(sprintf(format_column_1,"Read Duplication Level"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Read Error Rate"), sprintf(format_column_2,percentage_format(error_rate[1])), sprintf(format_column_3,percentage_format(error_rate[2])), sep=""),  file=summaryFile, sep="\n", append=TRUE)
     
-    cat(paste("\nPercent Kmers Modeled (All Kmers) = ",  model_fit_allscore[1],    " [", model_fit_allscore[2],    " ", model_fit_allscore[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Percent Kmers Modeled (Full Model) = ",   model_fit_fullscore[1],   " [", model_fit_fullscore[2],   " ", model_fit_fullscore[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Percent Kmers Modeled (Unique Kmers) = ", model_fit_uniquescore[1], " [", model_fit_uniquescore[2], " ", model_fit_uniquescore[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("\nPercent Kmers Modeled (All Kmers) = ",  percentage_format(model_fit_allscore[1]),    " [", model_fit_allscore[2],    ", ", model_fit_allscore[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Percent Kmers Modeled (Full Model) = ",   percentage_format(model_fit_fullscore[1]),   " [", model_fit_fullscore[2],   ", ", model_fit_fullscore[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Percent Kmers Modeled (Unique Kmers) = ", percentage_format(model_fit_uniquescore[1]), " [", model_fit_uniquescore[2], ", ", model_fit_uniquescore[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
 
-    cat(paste("\nModel RSSE (All Kmers) = ",  model_fit_all[1],    " [", model_fit_all[2],    " ", model_fit_all[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model RSSE (Full Model) = ",   model_fit_full[1],   " [", model_fit_full[2],   " ", model_fit_full[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model RSSE (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], " ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("\nModel RSSE (All Kmers) = ",  model_fit_all[1],    " [", model_fit_all[2],    ", ", model_fit_all[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model RSSE (Full Model) = ",   model_fit_full[1],   " [", model_fit_full[2],   ", ", model_fit_full[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("Model RSSE (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], ", ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
 
     ## Finalize the progress
     progressFilename=paste(foldername,"/progress.txt",sep="")
