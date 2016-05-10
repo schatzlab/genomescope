@@ -1,9 +1,17 @@
-property	min	max
-k	21	21
-Heterozygosity	0.00167629777268344	0.00168470790383684
-GenomeHaploidLen	136556049	136538360
-GenomeRepeatLen	20679921	20677242
-GenomeUniqueLen	115876128	115861118
-ReadDuplicationLevel	2.38956924926648	2.39353271032721
-ReadErrorRate	0.0096990082185037	0.0096990082185037
-ModelScore	69.8210874719305	69.8210874719305
+k = 21
+
+property                      min               max               
+Heterozygosity                0.159462%         0.160601%         
+Genome Haploid Length         136,548,356 bp    136,569,644 bp    
+Genome Repeat Length          20,739,383 bp     20,742,617 bp     
+Genome Unique Length          115,808,973 bp    115,827,028 bp    
+Read Duplication Level        2.397X            2.402X            
+Read Error Rate               0.97059%          0.97059%          
+
+Percent Kmers Modeled (All Kmers) = 97.2633% [25, 362457]
+Percent Kmers Modeled (Full Model) = 98.6654% [25, 160]
+Percent Kmers Modeled (Unique Kmers) = 99.0823% [25, 96]
+
+Model RSSE (All Kmers) = 31085389036.4978 [25, 362457]
+Model RSSE (Full Model) = 25624227524.7635 [25, 160]
+Model RSSE (Unique Model) = 18935392609.7595 [25, 96]

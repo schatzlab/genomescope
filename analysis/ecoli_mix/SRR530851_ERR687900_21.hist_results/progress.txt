@@ -1,6 +1,6 @@
 starting
-round 0 trimming to 10 trying 4peak model... converged. score:  0.901675068555284
-round 1 trimming to 15 trying 4peak model... converged. score:  13.8938987507877
-round 2 trimming to 20 trying 4peak model... converged. score:  60.7201033772132
-round 3 trimming to 25 trying 4peak model... converged. score:  87.2120473419569
+round 0 trimming to 10 trying 4peak model... converged. score:  264495563.915762
+round 1 trimming to 15 trying 4peak model... converged. score:  263186987.265628
+round 2 trimming to 20 trying 4peak model... converged. score:  236687375.978149
+round 3 trimming to 25 trying 4peak model... converged. score:  179045847.131464
 done

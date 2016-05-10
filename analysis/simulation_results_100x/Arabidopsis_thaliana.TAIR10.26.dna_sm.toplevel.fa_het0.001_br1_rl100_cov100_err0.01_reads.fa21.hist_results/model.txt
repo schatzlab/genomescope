@@ -9,16 +9,16 @@ Formula: y ~ ((2 * (1 - d) * (1 - (1 - r)^k)) * dnbinom(x, size = kmercov/bias,
 
 Parameters:
          Estimate Std. Error t value Pr(>|t|)    
-d       2.682e-02  1.051e-04   255.2   <2e-16 ***
-r       1.091e-03  1.910e-06   571.3   <2e-16 ***
-kmercov 3.248e+01  7.730e-04 42020.4   <2e-16 ***
-bias    8.219e-01  5.033e-04  1633.2   <2e-16 ***
-length  1.105e+08  2.700e+04  4093.8   <2e-16 ***
+d       2.682e-02  8.868e-05   302.4   <2e-16 ***
+r       1.083e-03  1.681e-06   644.5   <2e-16 ***
+kmercov 3.248e+01  6.524e-04 49789.2   <2e-16 ***
+bias    8.218e-01  4.250e-04  1933.6   <2e-16 ***
+length  1.105e+08  2.280e+04  4846.1   <2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
 
-Residual standard error: 1611 on 7895 degrees of freedom
+Residual standard error: 1359 on 7885 degrees of freedom
 
 Number of iterations to convergence: 5 
-Achieved convergence tolerance: 3.505e-07 
+Achieved convergence tolerance: 3.967e-07 
 

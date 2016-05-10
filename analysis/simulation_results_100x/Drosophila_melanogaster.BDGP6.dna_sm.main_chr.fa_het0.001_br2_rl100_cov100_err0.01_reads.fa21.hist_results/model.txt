@@ -8,17 +8,17 @@ Formula: y ~ ((2 * (1 - d) * (1 - (1 - r)^k)) * dnbinom(x, size = kmercov/bias,
     4/bias, mu = kmercov * 4) * length)
 
 Parameters:
-         Estimate Std. Error  t value Pr(>|t|)    
-d       1.320e-02  2.149e-04    61.41   <2e-16 ***
-r       1.456e-03  3.980e-06   365.92   <2e-16 ***
-kmercov 3.258e+01  1.848e-03 17627.00   <2e-16 ***
-bias    1.618e+00  1.468e-03  1102.07   <2e-16 ***
-length  1.191e+08  5.572e+04  2138.02   <2e-16 ***
+         Estimate Std. Error t value Pr(>|t|)    
+d       1.316e-02  1.082e-04   121.7   <2e-16 ***
+r       1.379e-03  2.167e-06   636.3   <2e-16 ***
+kmercov 3.258e+01  9.308e-04 34997.5   <2e-16 ***
+bias    1.622e+00  7.444e-04  2178.4   <2e-16 ***
+length  1.190e+08  2.808e+04  4239.1   <2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
 
-Residual standard error: 3120 on 10959 degrees of freedom
+Residual standard error: 1571 on 10949 degrees of freedom
 
 Number of iterations to convergence: 6 
-Achieved convergence tolerance: 5.548e-07 
+Achieved convergence tolerance: 6.502e-07 
 
