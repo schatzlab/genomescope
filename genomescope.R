@@ -517,17 +517,18 @@ report_results<-function(kmer_hist, k, container, foldername)
     cat(paste(sprintf(format_column_1,"Genome Haploid Length"), sprintf(format_column_2,bp_format(total_len[2])), sprintf(format_column_3,bp_format(total_len[1])), sep=""),              file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Genome Repeat Length"), sprintf(format_column_2,bp_format(repeat_len[2])), sprintf(format_column_3,bp_format(repeat_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Genome Unique Length"), sprintf(format_column_2,bp_format(unique_len[2])), sprintf(format_column_3,bp_format(unique_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"Model Fit (100%==best)"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Model Fit "), sprintf(percentage_format(model_fit_allscore[1])), sprintf(percentage_format(model_fit_fullscore[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
+    #cat(paste(sprintf(format_column_1,"Model Fit (100%==best)"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Read Error Rate"), sprintf(format_column_2,percentage_format(error_rate[1])), sprintf(format_column_3,percentage_format(error_rate[2])), sep=""),  file=summaryFile, sep="\n", append=TRUE)
-    
-    cat(paste("\nPercent Kmers Modeled (All Kmers) = ",  percentage_format(model_fit_allscore[1]),    " [", model_fit_allscore[2],    ", ", model_fit_allscore[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Percent Kmers Modeled (Full Model) = ",   percentage_format(model_fit_fullscore[1]),   " [", model_fit_fullscore[2],   ", ", model_fit_fullscore[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Percent Kmers Modeled (Unique Kmers) = ", percentage_format(model_fit_uniquescore[1]), " [", model_fit_uniquescore[2], ", ", model_fit_uniquescore[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    if (VERBOSE) {
+    	cat(paste("\nPercent Kmers Modeled (All Kmers) = ",  percentage_format(model_fit_allscore[1]),    " [", model_fit_allscore[2],    ", ", model_fit_allscore[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    	cat(paste("Percent Kmers Modeled (Full Model) = ",   percentage_format(model_fit_fullscore[1]),   " [", model_fit_fullscore[2],   ", ", model_fit_fullscore[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    	cat(paste("Percent Kmers Modeled (Unique Kmers) = ", percentage_format(model_fit_uniquescore[1]), " [", model_fit_uniquescore[2], ", ", model_fit_uniquescore[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
 
-    cat(paste("\nModel RSSE (All Kmers) = ",  model_fit_all[1],    " [", model_fit_all[2],    ", ", model_fit_all[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model RSSE (Full Model) = ",   model_fit_full[1],   " [", model_fit_full[2],   ", ", model_fit_full[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model RSSE (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], ", ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-
+    	cat(paste("\nModel RSSE (All Kmers) = ",  model_fit_all[1],    " [", model_fit_all[2],    ", ", model_fit_all[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    	cat(paste("Model RSSE (Full Model) = ",   model_fit_full[1],   " [", model_fit_full[2],   ", ", model_fit_full[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
+    	cat(paste("Model RSSE (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], ", ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)	
+    }
     ## Finalize the progress
     progressFilename=paste(foldername,"/progress.txt",sep="")
 	cat(model_status, file=progressFilename, sep="\n", append=TRUE)
