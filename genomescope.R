@@ -490,7 +490,7 @@ report_results<-function(kmer_hist, k, container, foldername)
        cat(paste("Model converged het:", format(het[1], digits=3), 
                  " kcov:", format(kcov[1], digits=3), 
                  " err:", format(error_rate[1], digits=3), 
-                 " dup:", format(dups[1], digits=3), 
+                 " model fit:", format(dups[1], digits=3), 
                  " len:", round(total_len[1]), "\n", sep="")) 
 	}
     else
@@ -517,7 +517,7 @@ report_results<-function(kmer_hist, k, container, foldername)
     cat(paste(sprintf(format_column_1,"Genome Haploid Length"), sprintf(format_column_2,bp_format(total_len[2])), sprintf(format_column_3,bp_format(total_len[1])), sep=""),              file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Genome Repeat Length"), sprintf(format_column_2,bp_format(repeat_len[2])), sprintf(format_column_3,bp_format(repeat_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Genome Unique Length"), sprintf(format_column_2,bp_format(unique_len[2])), sprintf(format_column_3,bp_format(unique_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"Read Duplication Level"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Model Fit (100%==best)"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Read Error Rate"), sprintf(format_column_2,percentage_format(error_rate[1])), sprintf(format_column_3,percentage_format(error_rate[2])), sep=""),  file=summaryFile, sep="\n", append=TRUE)
     
     cat(paste("\nPercent Kmers Modeled (All Kmers) = ",  percentage_format(model_fit_allscore[1]),    " [", model_fit_allscore[2],    ", ", model_fit_allscore[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
