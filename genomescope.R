@@ -512,12 +512,12 @@ report_results<-function(kmer_hist, k, container, foldername)
     format_column_3 = "%-18s"
     
     cat(paste("k = ", k,sep=""),                                                                                                                                                          file=summaryFile, sep="\n") 
-    cat(paste("\n",sprintf(format_column_1,"property"), sprintf(format_column_2,"min"), sprintf(format_column_3,"max"), sep=""),                                                          file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"Heterozygosity"), sprintf(format_column_2,percentage_format(het[1])), sprintf(format_column_3,percentage_format(het[2])), sep=""),                 file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("\n",sprintf(format_column_1,"property"),         sprintf(format_column_2,"min"), sprintf(format_column_3,"max"), sep=""),                                                          file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Heterozygosity"),        sprintf(format_column_2,percentage_format(het[1])), sprintf(format_column_3,percentage_format(het[2])), sep=""),                 file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Genome Haploid Length"), sprintf(format_column_2,bp_format(total_len[2])), sprintf(format_column_3,bp_format(total_len[1])), sep=""),              file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"Genome Repeat Length"), sprintf(format_column_2,bp_format(repeat_len[2])), sprintf(format_column_3,bp_format(repeat_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"Genome Unique Length"), sprintf(format_column_2,bp_format(unique_len[2])), sprintf(format_column_3,bp_format(unique_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"Model Fit "), sprintf(percentage_format(model_fit_allscore[1])), sprintf(percentage_format(model_fit_fullscore[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Genome Repeat Length"),  sprintf(format_column_2,bp_format(repeat_len[2])), sprintf(format_column_3,bp_format(repeat_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Genome Unique Length"),  sprintf(format_column_2,bp_format(unique_len[2])), sprintf(format_column_3,bp_format(unique_len[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Model Fit "),            sprintf(format_column_2,percentage_format(model_fit_allscore[1])), sprintf(format_column_3,percentage_format(model_fit_fullscore[1])), sep=""),             file=summaryFile, sep="\n", append=TRUE)
     #cat(paste(sprintf(format_column_1,"Model Fit (100%==best)"), sprintf(format_column_2,X_format(dups[1])), sprintf(format_column_3,X_format(dups[2])), sep=""),                         file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Read Error Rate"), sprintf(format_column_2,percentage_format(error_rate[1])), sprintf(format_column_3,percentage_format(error_rate[2])), sep=""),  file=summaryFile, sep="\n", append=TRUE)
     if (VERBOSE) {
