@@ -35,7 +35,7 @@ COLOR_2PEAK    = "#F0E442"
 COLOR_ERRORS   = "#D55E00"
 COLOR_KMERPEAK = "black"
 COLOR_RESIDUAL = "purple"
-
+COLOR_COVTHRES = "red"
 
 ## Given mean +/- stderr, report min and max value within 2 SE
 ###############################################################################
@@ -151,7 +151,7 @@ eval_model<-function(kmer_hist_orig, nls1, nls2, round, foldername){
       {
         mdir = paste(foldername, "/round", round, ".1", sep="")
         dir.create(mdir, showWarnings=FALSE)
-        report_results(kmer_prof_orig, k, (list(nls1, nls1score)) , mdir)
+        report_results(kmer_prof_orig,kmer_prof_orig, k, (list(nls1, nls1score)) , mdir)
       }
     }
     else
@@ -171,7 +171,7 @@ eval_model<-function(kmer_hist_orig, nls1, nls2, round, foldername){
       {
         mdir = paste(foldername, "/round", round, ".2", sep="")
         dir.create(mdir, showWarnings=FALSE)
-        report_results(kmer_prof_orig, k, (list(nls2, nls2score)) , mdir)
+        report_results(kmer_prof_orig, kmer_prof_orig, k, (list(nls2, nls2score)) , mdir)
       }
     }
     else
@@ -270,10 +270,10 @@ X_format<-function(num) {
 ## Report results and make plots
 ###############################################################################
 
-report_results<-function(kmer_hist, k, container, foldername)
+report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
 {
-    x=kmer_hist[[1]]
-    y=kmer_hist[[2]]
+    x=kmer_hist_orig[[1]]
+    y=kmer_hist_orig[[2]]
 
 	#automatically zoom into the relevant regions of the plot, ignore first 15 positions
     xmax=length(x)
@@ -322,20 +322,29 @@ report_results<-function(kmer_hist, k, container, foldername)
     
     ## Plot the distribution, and hopefully with the model fit
 	png(paste(foldername, "/plot.png", sep=""),width=plot_size,height=plot_size, res=resolution)
-	plot(kmer_hist, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit),cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
-    rect(-1e10, -1e10, max(kmer_hist[[1]])*1.1 , max(kmer_hist[[2]])*1.1, col=COLOR_BGCOLOR)
-    points(kmer_hist, type="h", col=COLOR_HIST, lwd=2)
+	plot(kmer_hist_orig, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit),cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
+    rect(-1e10, -1e10, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
+    points(kmer_hist_orig, type="h", col=COLOR_HIST, lwd=2)
+    ## if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
+    ##    abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
+    ##}
     box(col="black")
 
     ## Make a second plot in log space over entire range
 	png(paste(foldername, "/plot.log.png", sep=""),width=plot_size,height=plot_size,res=resolution)
-	plot(kmer_hist, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", log="xy",cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
-    rect(1e-10, 1e-10, max(kmer_hist[[1]])*10 , max(kmer_hist[[2]])*10, col=COLOR_BGCOLOR)
-	points(kmer_hist, type="h", col=COLOR_HIST, lwd=2)
+	plot(kmer_hist_orig, type="n", main="GenomeScope Profile\n", xlab="Coverage", ylab="Frequency", log="xy",cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
+    rect(1e-10, 1e-10, max(kmer_hist_orig[[1]])*10 , max(kmer_hist_orig[[2]])*10, col=COLOR_BGCOLOR)
+	points(kmer_hist_orig, type="h", col=COLOR_HIST, lwd=2)
+    if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
+        abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
+    }
     box(col="black")
 
 	if(!is.null(container[[1]])) 
-    { 
+    {
+       x=kmer_hist[[1]]
+       y=kmer_hist[[2]]
+
        ## The model converged!
        pred=predict(container[[1]], newdata=data.frame(x))
 
@@ -449,12 +458,26 @@ report_results<-function(kmer_hist, k, container, foldername)
        if (VERBOSE) { lines(x, residual, col=COLOR_RESIDUAL, lwd=3) }
 
        ## Add legend
-       legend(exp(.65 * log(max(x))), 1.0 * max(y), 
+       if(length(kmer_hist[,1])==length(kmer_hist_orig[,1])){
+           legend(exp(.65 * log(max(x))), 1.0 * max(y),
+           
               legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
               lty=c("solid", "solid", "solid", "solid", "dashed"),
               lwd=c(3,3,3,3,3),
               col=c(COLOR_HIST, COLOR_4PEAK, COLOR_2PEAK, COLOR_ERRORS, COLOR_KMERPEAK),
               bg="white")
+              
+       }
+       else
+       {
+           legend("topright",
+            ##legend(exp(.65 * log(max(x))), 1.0 * max(y),
+           legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks","cov-threshold"),
+           lty=c("solid", "solid", "solid", "solid", "dashed", "dashed"),
+           lwd=c(3,3,3,3,2,3),
+           col=c(COLOR_HIST, COLOR_4PEAK, COLOR_2PEAK, COLOR_ERRORS, COLOR_KMERPEAK, COLOR_COVTHRES),
+           bg="white")
+       }
 
        dev.set(dev.next())
 
@@ -478,13 +501,13 @@ report_results<-function(kmer_hist, k, container, foldername)
        if (VERBOSE) { lines(x, residual, col=COLOR_RESIDUAL, lwd=3) }
 
        ## Add legend
-       legend(.65 * x_limit, 1.0 * y_limit, 
+        legend(.65 * x_limit, 1.0 * y_limit,
               legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
               lty=c("solid", "solid", "solid", "solid", "dashed"),
-              lwd=c(3,3,3,3,3),
+              lwd=c(3,3,3,3,2),
               col=c(COLOR_HIST, COLOR_4PEAK, COLOR_2PEAK, COLOR_ERRORS, COLOR_KMERPEAK),
               bg="white")
-       
+            
        model_status="done"
 
        cat(paste("Model converged het:", format(het[1], digits=3), 
@@ -552,7 +575,13 @@ if(length(args) < 4) {
 	readlength <- as.numeric(args[[3]])
 	foldername <- args[[4]] 
 
-    if ((length(args) == 5) && (as.numeric(args[[5]] == 1))) { VERBOSE = 1 }
+    max=-1
+
+    if ((length(args) == 5)) {
+        max = as.numeric(args[[5]])
+    }
+
+    if ((length(args) == 6) && (as.numeric(args[[6]] == 1))) { VERBOSE = 1 }
 
     ## values for testing
     #histfile <- "~/build/genomescope/simulation/simulation_results/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
@@ -581,26 +610,29 @@ if(length(args) < 4) {
 	round <- 0
 	best_container <- list(NULL,0)
 
-	while(round < NUM_ROUNDS) 
+	while(round < NUM_ROUNDS)
     {
         cat(paste("round", round, "trimming to", start, "trying 4peak model... "), file=progressFilename, sep="", append=TRUE)
         if (VERBOSE) { cat(paste("round", round, "trimming to", start, "trying 4peak model... \n")) }
 
         ## Reset the input trimming off low frequency error kmers
-        max <- length(kmer_prof[,1])
+        if(max==-1){
+            max <- length(kmer_prof[,1])
+        }
+        kmer_prof=kmer_prof_orig[1:max,]
         x <- kmer_prof[start:max,1]
         y <- kmer_prof[start:max,2]
 
-		model_4peaks <- estimate_Genome_4peak2(kmer_prof_orig, x, y, k, readlength, round, foldername) 
+        model_4peaks <- estimate_Genome_4peak2(kmer_prof, x, y, k, readlength, round, foldername)
 
-        if (!is.null(model_4peaks[[1]])) { 
+        if (!is.null(model_4peaks[[1]])) {
           cat(paste("converged. score: ", model_4peaks[[2]]$all[[1]]), file=progressFilename, sep="\n", append=TRUE)
 
           if (VERBOSE)
           {
             mdir = paste(foldername, "/round", round, sep="")
 	        dir.create(mdir, showWarnings=FALSE)
-	        report_results(kmer_prof_orig, k, model_4peaks, mdir)
+	        report_results(kmer_prof,kmer_prof_orig, k, model_4peaks, mdir)
           }
         } else {
           cat(paste("unconverged"), file=progressFilename, sep="\n", append=TRUE)
@@ -650,7 +682,6 @@ if(length(args) < 4) {
         start <- start + START_SHIFT
 		round <- round + 1
 	}
-
     ## Report the results, note using the original full profile
-	report_results(kmer_prof_orig, k, best_container, foldername)
+	report_results(kmer_prof,kmer_prof_orig, k, best_container, foldername)
 }
