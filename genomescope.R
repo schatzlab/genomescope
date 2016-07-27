@@ -566,7 +566,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
 args<-commandArgs(TRUE)
 
 if(length(args) < 4) {
-	cat("USAGE: genomescope.R histogram_file k-mer_length read_length output_dir [verbose]\n")
+	cat("USAGE: genomescope.R histogram_file k-mer_length read_length output_dir [kmer_max] [verbose]\n")
 } else{
 
     ## Load the arguments from the user
@@ -577,7 +577,7 @@ if(length(args) < 4) {
 
     max=-1
 
-    if ((length(args) == 5)) {
+    if ((length(args) >= 5)) {
         max = as.numeric(args[[5]])
     }
 
