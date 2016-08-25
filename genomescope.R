@@ -41,7 +41,8 @@ COLOR_COVTHRES = "red"
 ###############################################################################
 
 min_max <- function(table){
-	return (c( abs(table[1]) - 2*abs(table[2]) , abs(table[1])+ 2*abs(table[2])))
+	##return (c( abs(table[1]) - 2*abs(table[2]) , abs(table[1])+ 2*abs(table[2])))
+	return (c(table[1] - 2*table[2], table[1]+ 2*table[2]))
 }
 
 
@@ -360,6 +361,12 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
        kcov = min_max(model_sum$coefficients['kmercov',])
        mlen = min_max(model_sum$coefficients['length',])
        md   = min_max(model_sum$coefficients['d',])
+
+       amlen = (mlen[1] + mlen[2]) / 2
+       ahet  = (het[1]  + het[2])  / 2
+       amd   = (md[1]   + md[2])   / 2
+       akcov = (kcov[1] + kcov[2]) / 2
+       adups = (dups[1] + dups[2]) / 2
        
        ## Compute error rate, by counting kmers unexplained by model through first peak
        ## truncate errors as soon as it goes to zero, dont allow it to go back up
@@ -417,9 +424,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
        total_len = (total_kmers-total_error_kmers)/(2*kcov)
        
        ## find kmers that fit the 2 peak model (no repeats)
-       unique_hist <- (2 * (1 - md[1]) * (1 - (1 - het[1])^k))                                * dnbinom(x, size = kcov[1]     / dups[1], mu = kcov[1])     * mlen[1] +
-                      ((md[1] * (1 - (1 - het[1])^k)^2) + (1 - 2 * md[1]) * ((1 - het[1])^k)) * dnbinom(x, size = kcov[1] * 2 / dups[1], mu = kcov[1] * 2) * mlen[1]
-       
+       unique_hist <- (2 * (1 - amd) * (1 - (1 - ahet)^k))                                * dnbinom(x, size = akcov     / adups, mu = akcov)     * amlen +
+                      ((amd * (1 - (1 - ahet)^k)^2) + (1 - 2 * amd) * ((1 - ahet)^k))     * dnbinom(x, size = akcov * 2 / adups, mu = akcov * 2) * amlen 
+
        unique_kmers = sum(as.numeric(x*unique_hist))
        repeat_kmers = total_kmers - unique_kmers - total_error_kmers
        
@@ -441,14 +448,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
        ## Finish Log plot
        title(paste("\nlen:",  prettyNum(total_len[1], big.mark=","), 
                    "bp uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
-                   "% het:",  format(100*het[1], digits=3), 
-                   "% kcov:", format(kcov[1], digits=3), 
+                   "% het:",  format(100*ahet, digits=3), 
+                   "% kcov:", format(akcov, digits=3), 
                    " err:",   format(100*error_rate[1], digits=3), 
-                   "% dup:",  format(dups[1], digits=3), sep=""), 
+                   "% dup:",  format(adups, digits=3), sep=""), 
                    cex.main=.85)
        
        ## Mark the modes of the peaks
-       abline(v=kcov[1] * c(1,2,3,4), col=COLOR_KMERPEAK, lty=2)
+       abline(v=akcov * c(1,2,3,4), col=COLOR_KMERPEAK, lty=2)
        
        ## Draw just the unique portion of the model
        lines(x, unique_hist, col=COLOR_2PEAK, lty=1, lwd=3)
@@ -466,7 +473,6 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
               lwd=c(3,3,3,3,3),
               col=c(COLOR_HIST, COLOR_4PEAK, COLOR_2PEAK, COLOR_ERRORS, COLOR_KMERPEAK),
               bg="white")
-              
        }
        else
        {
@@ -484,14 +490,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
        ## Finish Linear Plot
        title(paste("\nlen:",  prettyNum(total_len[1], big.mark=","), 
                    "bp uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
-                   "% het:",  format(100*het[1], digits=3), 
-                   "% kcov:", format(kcov[1], digits=3), 
+                   "% het:",  format(100*ahet, digits=3), 
+                   "% kcov:", format(akcov, digits=3), 
                    " err:",   format(100*error_rate[1], digits=3), 
-                   "% dup:",  format(dups[1], digits=3), sep=""), 
+                   "% dup:",  format(adups, digits=3), sep=""), 
                    cex.main=.85)
 
        ## Mark the modes of the peaks
-       abline(v=kcov[1] * c(1,2,3,4), col=COLOR_KMERPEAK, lty=2)
+       abline(v=akcov * c(1,2,3,4), col=COLOR_KMERPEAK, lty=2)
        
        ## Draw just the unique portion of the model
        lines(x, unique_hist, col=COLOR_2PEAK, lty=1, lwd=3)
@@ -510,10 +516,10 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
             
        model_status="done"
 
-       cat(paste("Model converged het:", format(het[1], digits=3), 
-                 " kcov:", format(kcov[1], digits=3), 
+       cat(paste("Model converged het:", format(ahet, digits=3), 
+                 " kcov:", format(akcov, digits=3), 
                  " err:", format(error_rate[1], digits=3), 
-                 " model fit:", format(dups[1], digits=3), 
+                 " model fit:", format(adups, digits=3), 
                  " len:", round(total_len[1]), "\n", sep="")) 
 	}
     else
