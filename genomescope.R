@@ -575,10 +575,10 @@ if(length(args) < 4) {
 	readlength <- as.numeric(args[[3]])
 	foldername <- args[[4]] 
 
-    max=-1
+    maxCovGenomeLen = -1
 
     if ((length(args) >= 5)) {
-        max = as.numeric(args[[5]])
+        maxCovGenomeLen = as.numeric(args[[5]])
     }
 
     if ((length(args) == 6) && (as.numeric(args[[6]] == 1))) { VERBOSE = 1 }
@@ -606,6 +606,21 @@ if(length(args) < 4) {
     ## try to find the local minimum between errors and the first (heterozygous) peak
     start <- which(kmer_prof[,2]==min(kmer_prof[1:TYPICAL_ERROR,2]))
 
+    maxCovIndex = -1
+
+    ## Figure out which kmers to exclude, if any
+    if(maxCovGenomeLen == -1){
+        maxCovIndex <- length(kmer_prof[,1])
+    }
+    else
+    {
+        ## Figure out the index we should use for this coverage length
+        x <- kmer_prof[,1]
+        maxCovIndex <- length(x[x<=maxCovGenomeLen])
+    }
+
+    if (VERBOSE) { cat(paste("using maxCovGenomeLen:", maxCovGenomeLen, " with index:", maxCovIndex, "trying 4peak model... \n")) }
+
     ## terminate after NUM_ROUND iterations, store best result so far in container
 	round <- 0
 	best_container <- list(NULL,0)
@@ -616,12 +631,9 @@ if(length(args) < 4) {
         if (VERBOSE) { cat(paste("round", round, "trimming to", start, "trying 4peak model... \n")) }
 
         ## Reset the input trimming off low frequency error kmers
-        if(max==-1){
-            max <- length(kmer_prof[,1])
-        }
-        kmer_prof=kmer_prof_orig[1:max,]
-        x <- kmer_prof[start:max,1]
-        y <- kmer_prof[start:max,2]
+        kmer_prof=kmer_prof_orig[1:maxCovIndex,]
+        x <- kmer_prof[start:maxCovIndex,1]
+        y <- kmer_prof[start:maxCovIndex,2]
 
         model_4peaks <- estimate_Genome_4peak2(kmer_prof, x, y, k, readlength, round, foldername)
 
