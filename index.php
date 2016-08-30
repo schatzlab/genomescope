@@ -37,6 +37,12 @@
                                                <input type="number" step="1" name="read_length" class="form-control" value = "100">
                                             </div>
                                           </p>
+                                          <p>
+                                            <div class="input-group input-group-lg">
+                                              <span class="input-group-addon">Max kmer coverage</span>
+                                               <input type="number" step="1" name="max_kmer_cov" class="form-control" value = "-1">
+                                            </div>
+                                          </p>
                                           <p id="analysis_form">
                                         <!--  submit button set from within kmers.js --> 
                                           </p>
@@ -65,6 +71,8 @@
                         <p>Again the thread count (-t) should be scaled according to your server.</p></li>
                         <li>Upload reads.histo to GenomeScope</li>
                         </ol>
+
+                        Note: High copy-number DNA such as chloroplasts can confuse the model. Set a max kmer coverage to avoid this. Default is -1 meaning no filter. 
                         </p>
                     </div>
               </div>
