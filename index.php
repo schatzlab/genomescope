@@ -37,12 +37,12 @@
                                                <input type="number" step="1" name="read_length" class="form-control" value = "100">
                                             </div>
                                           </p>
-                                          <p>
+                                          <!-- <p>
                                             <div class="input-group input-group-lg">
                                               <span class="input-group-addon">Max kmer coverage</span>
                                                <input type="number" step="1" name="max_kmer_cov" class="form-control" value = "-1">
                                             </div>
-                                          </p>
+                                          </p> -->
                                           <p id="analysis_form">
                                         <!--  submit button set from within kmers.js --> 
                                           </p>
