@@ -40,7 +40,7 @@
                                           <p>
                                             <div class="input-group input-group-lg">
                                               <span class="input-group-addon">Max kmer coverage</span>
-                                               <input type="number" step="1" name="max_kmer_cov" class="form-control" value = "-1">
+                                               <input type="number" step="1" name="max_kmer_cov" class="form-control" min="-1" value = "1000">
                                             </div>
                                           </p>
                                           <p id="analysis_form">
