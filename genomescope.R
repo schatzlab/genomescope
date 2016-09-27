@@ -257,7 +257,7 @@ estimate_Genome_4peak2<-function(kmer_hist_orig, x, y, k, readlength, round, fol
 ## Format numbers
 ###############################################################################
 bp_format<-function(num) {
-  paste(formatC(round(num),format="d",big.mark=","), "bp",sep=" ")
+  paste(formatC(round(num),format="f",big.mark=",", digits=0), "bp",sep=" ")
 }
 
 percentage_format<-function(num) {
