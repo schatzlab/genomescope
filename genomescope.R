@@ -1,4 +1,4 @@
-#!/bin/env Rscript
+#!/usr/bin/env Rscript
 
 ## GenomeScope: Fast Genome Analysis from Unassembled Short Reads
 ## This is the automated script for computing genome characteristics from a histogram file, k-mer size, and readlength
@@ -602,7 +602,14 @@ if(length(args) < 4) {
 	dir.create(foldername, showWarnings=FALSE)
 
 	kmer_prof <- read.csv(file=histfile,sep=" ", header=FALSE) 
-	kmer_prof <- kmer_prof[c(1:(length(kmer_prof[,2])-1)),] #get rid of the last position
+
+    minkmerx = 1;
+    if (kmer_prof[1,1] == 0) {
+        if (VERBOSE) { cat("Histogram starts with zero, reseting minkmerx\n");  }
+        minkmerx = 2;
+    }
+
+	kmer_prof <- kmer_prof[c(minkmerx:(length(kmer_prof[,2])-1)),] #get rid of the last position
     kmer_prof_orig <- kmer_prof
 
     ## Initialize the status
