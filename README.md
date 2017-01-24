@@ -1,5 +1,4 @@
-# GenomeScope
-Fast genome analysis from unassembled short reads
+# GenomeScope: Fast genome analysis from unassembled short reads
 
 Current developments in de novo assembly technologies have been focused on relatively simple genomes. Even the human genome, with a heterozygosity rate of only ~0.1% and 2n diploid structure, is significantly simpler than many other species, especially plants. However, genomics is rapidly advancing towards sequencing more complex species such as pineapple, sugarcane, or wheat that have much higher rates of heterozygosity (>1% for pineapple), much higher ploidy (8n for sugarcane), and much larger genomes (16Gbp for wheat).
 
@@ -39,7 +38,7 @@ https://raw.githubusercontent.com/schatzlab/genomescope/master/analysis/real_dat
 
 Then run GenomeScope like this:
     
-    $ Rscript ../genomescope.R ara_F1_21.hist 21 150 output
+    $ /PATH/TO/Rscript /PATH/TO/genomescope.R ara_F1_21.hist 21 150 output
     
 This should complete in less than 1 minute, and report:
 
