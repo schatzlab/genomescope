@@ -1,5 +1,7 @@
 var analysis_path="analysis.php?code=";
+var description = "";
 
+var num_fails_getting_progress_file = 0;
 
 //////////////////////////////////////////////////////////////
 /////// For analysis page:
@@ -8,7 +10,19 @@ var analysis_path="analysis.php?code=";
 function showProgress() {
     var run_id_code=getUrlVars()["code"];
     var prog=0;
-    
+
+    if (description == "") {
+        jQuery.ajax({ 
+            type:"POST",
+            url: "user_data/" + run_id_code + "/description.txt",
+            success: function (obj) {
+                alert("inside success");
+                description = obj;
+                document.getElementById("description_header").innerHTML = description;
+            }
+        });
+    }
+
 //  remember ajax is asynchronous, so only the stuff inside the success: part will be called after retrieving information. If I put something after the statement, it can't use the info from check_progress.php because it is executed before this php script is called
     //alert('before ajax');
     jQuery.ajax({ 
@@ -22,7 +36,12 @@ function showProgress() {
             prog=obj;
             last_line = prog[prog.length-1];
             if (last_line==undefined) {
-                console.log("No progress file found, may be an error on the server");
+                console.log("No progress file found, may be an error on the server.");
+                num_fails_getting_progress_file++;
+                if (num_fails_getting_progress_file > 10) {
+                    document.getElementById("progress_panel").className = "panel panel-danger center";
+                    document.getElementById("plot_info").innerHTML = "No progress file found, may be an error on the server";
+                }
                 setTimeout(function(){showProgress();},500);
             } else {
                 output_array = prog; //.slice(1,prog.length);
@@ -32,7 +51,7 @@ function showProgress() {
                     output_info += "<p>" + line + "</p>";
                 }
 
-                document.getElementById("plot_info").innerHTML = output_info
+                document.getElementById("plot_info").innerHTML = output_info;
 
                 if (last_line.indexOf('done') > -1) {
                     document.getElementById("progress_panel").className = "panel panel-success center";

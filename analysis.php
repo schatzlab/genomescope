@@ -10,7 +10,9 @@
             <!-- ////////////////////////////////////////////////// -->
             <!-- ////////////////      RESULTS     //////////////// -->
             <!-- ////////////////////////////////////////////////// -->
-            
+            <div class="thumbnail frame">
+                <div class = "caption" style="text-align: center"><h3 id="description_header"></h3></div>
+            </div>
 
             <div id="results">
                

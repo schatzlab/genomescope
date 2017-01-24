@@ -7,16 +7,16 @@
 <?php include "title.html";?>
 
 <?php
-    $debug=""; //put -d here when testing    
     $aResult = array();
     if( !isset($_POST['code']) ) { $aResult['error'] = 'ERROR: No code passed to input_validation.php';}
     $code=$_POST["code"];
     if( !isset($_POST['kmer_length']) ) { echo shell_exec('echo ERROR: No kmer_length passed to input_validation.php >> user_data/$code/input_validation.log');}
     if( !isset($_POST['read_length']) ) { echo shell_exec('echo ERROR: No read_length passed to input_validation.php >> user_data/$code/input_validation.log');}
+    if( !isset($_POST['description']) ) { echo shell_exec('echo ERROR: No description passed to input_validation.php >> user_data/$code/input_validation.log');}
 
     if( !isset($_POST['max_kmer_cov']) ) { echo shell_exec('echo ERROR: No max_kmer_cov passed to input_validation.php >> user_data/$code/input_validation.log');}
 
-
+    $description = $_POST["description"];
     $kmer_length = $_POST["kmer_length"];
     $read_length = $_POST["read_length"];
     $max_kmer_cov = $_POST["max_kmer_cov"];
@@ -29,7 +29,7 @@
     $back_button= "<form action=\"./\" method=GET><button type=\"submit\" class=\"center btn btn-danger\">Back</button></form>";
     //$continue_button= "<form action=\"$url\"><input type=\"hidden\" name = \"code\" value=\"$code\"><button type=\"submit\" class=\"center btn btn-success\">Continue</button></form>";
     
-    $continue_button= "<form action=\"$run_url\" method=\"post\"><input type=\"hidden\" name = \"code\" value=\"$code\">   <input type=\"hidden\" name=\"kmer_length\" value=\"$kmer_length\">  <input type=\"hidden\" name=\"max_kmer_cov\" value=\"$max_kmer_cov\">  <input type=\"hidden\" name=\"read_length\" value=\"$read_length\">   <button type=\"submit\" class=\"center btn btn-success\">Continue</button></form>";
+    $continue_button= "<form action=\"$run_url\" method=\"post\"><input type=\"hidden\" name = \"code\" value=\"$code\">   <input type=\"hidden\" name=\"kmer_length\" value=\"$kmer_length\"> <input type=\"hidden\" name=\"description\" value=\"$description\"> <input type=\"hidden\" name=\"max_kmer_cov\" value=\"$max_kmer_cov\">  <input type=\"hidden\" name=\"read_length\" value=\"$read_length\">   <button type=\"submit\" class=\"center btn btn-success\">Continue</button></form>";
     
     
     if (!file_exists ($filename)) {

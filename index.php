@@ -24,7 +24,12 @@
                                     
                                     <!--    SUBMIT BUTTON with hidden field to transport code to next page   -->
                                     <form name="input_code_form" action="input_validation.php"  method="post">
-                                          
+                                          <p>
+                                            <div class="input-group input-group-lg">
+                                              <span class="input-group-addon">Description</span>
+                                               <input type="text" name="description" class="form-control" value = "my sample">
+                                            </div>
+                                          </p>
                                           <p>
                                             <div class="input-group input-group-lg">
                                               <span class="input-group-addon">Kmer length</span>
