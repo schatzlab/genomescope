@@ -78,6 +78,49 @@
                 <!--<li><a href="#">One more separated link</a></li>-->
               </ul>
             </li>
+
+                  <?php
+                      $my_datasets = array();
+
+                      if(isset($_COOKIE["results"])) {
+                        echo '<li class="dropdown">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown">My results <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">';
+
+                        $my_datasets = json_decode($_COOKIE["results"], true);
+
+                        $arrlength = count($my_datasets);
+                        $start_at = 0;
+                        if ($arrlength > 20) {
+                          $start_at = $arrlength - 20;
+                        }
+                        for($x = $start_at; $x < $arrlength; $x++) {
+                          $seconds_ago = time() - $my_datasets[$x]["date"];
+                          
+                          $time_ago = $seconds_ago;
+                          if ($seconds_ago > 60) {
+                            $minutes_ago = $seconds_ago/60;
+                            if ($minutes_ago > 60) {
+                              $hours_ago = $minutes_ago/60;
+                              if ($hours_ago > 24) {
+                                $days_ago = $hours_ago/24;
+                                $time_ago = "" . floor($days_ago) . " days";
+                              } else {
+                                $time_ago = "" . floor($hours_ago) . " hours";
+                              }
+                            } else {
+                              $time_ago = "" . floor($minutes_ago) . " minutes";
+                            }
+                          } else {
+                            $time_ago = "" . floor($seconds_ago) . " seconds";
+                          }
+                          
+                          echo "<li><a href='analysis.php?code=" . $my_datasets[$x]["codename"] . "'>" . $my_datasets[$x]["description"] . " (" . $time_ago . " ago) </a></li>";
+                        }
+
+                        echo '</ul>';
+                      } 
+                  ?>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

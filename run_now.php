@@ -32,6 +32,19 @@
     // genomescope.R histogram_file k-mer_length read_length output_dir
     echo shell_exec("Rscript genomescope.R $filename $kmer_length $read_length user_data/$code $max_kmer_cov &> user_data/$code/run.log &"); 
 
+    $new_dataset = array( "date"=>time(), "codename"=>$code, "description"=> $description );
+
+    $my_datasets = array();
+    if(isset($_COOKIE["results"])) {
+      // echo "cookie is already there, adding to it.";
+      $my_datasets = json_decode($_COOKIE["results"], true);
+    } else {
+      // echo "cookie not set, creating new one";
+    }
+    array_push($my_datasets, $new_dataset);
+    setcookie("results", json_encode($my_datasets));
+
+
     header('Location: '.$url);
 ?>
     </body>
