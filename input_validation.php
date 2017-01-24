@@ -41,13 +41,13 @@
     $myfile = fopen($filename, "r") or die("Unable to open file!");
     
     $line_counter=0;
-    $previous_bins=0;
+    $num_columns=0;
     $bin_history=array();
     $consistent=true;
     while(!feof($myfile)) {
         $bin_counter=0;
         $line=fgets($myfile);
-        $line =trim(preg_replace( '/\s+/', ' ', $line ));
+        // $line =trim(preg_replace( '/\s+/', ' ', $line ));
         if ($line=="" or $line==" ") {
             continue;
         }
@@ -55,46 +55,39 @@
         //var_dump($array);
         $bin_counter=count($array);
         //echo $bin_counter . "<br>";
-        //echo $previous_bins. "<br>";
+        //echo $num_columns. "<br>";
         
-        if ($previous_bins != 0 and $previous_bins != $bin_counter) {
+        if ($num_columns != 0 and $num_columns != $bin_counter) {
             $consistent=false;
-            echo $line;
-            var_dump($array);
+            // echo $line;
+            // var_dump($array);
         }
-        $previous_bins=$bin_counter;
+        $num_columns=$bin_counter;
         $line_counter=$line_counter+1;
         $bin_history[]=$bin_counter;
     }
     fclose($myfile);
     
     if ($consistent) {
-        // if ($previous_bins > 500) {
-            echo "<div class=\"alert center alert-success\" role=\"alert\">Great! File was uploaded and has acceptable dimensions:  $line_counter rows by $previous_bins columns</div>";
-        // } else {
-            // echo "<div class=\"alert center alert-warning\" role=\"alert\">File was uploaded and has acceptable dimensions:  $line_counter samples by $previous_bins bins, but the analysis is unlikely to work optimally without more bins. We recommend at least 500 bins for higher accuracy.</div>";
-        // }
-        
-        if (!file_exists("user_data/$code")) {
-            //$oldmask = umask(0);
-            //mkdir("user_data/$code");
-            //umask($oldmask);
-            //
-            //echo shell_exec("./prepare_copycat -c $code &> user_data/$code/prepare_copycat.log"); 
-            //echo shell_exec("./run_copycat $debug -c $code &> user_data/$code/run_copycat.log &");
-            
+        if ($line_counter >= 100 and $num_columns == 2) {
+            echo "<div class=\"alert center alert-success\" role=\"alert\">Great! File was uploaded and has acceptable dimensions: $line_counter rows by $num_columns columns</div>";
+            echo "<div style=\"margin-left:1%;\"><div class=\"col-sm-1\">";
+            echo "$back_button";
+            echo "</div><div class=\"col-sm-1\">";
+            echo "$continue_button";
+            echo "</div></div>";
+        } else {
+            if ($num_columns != 2) {
+                echo "<div class=\"alert center alert-danger\" role=\"alert\">File was uploaded but it has $num_columns column(s). The file must have 2 columns separated by a single space, which is the default in Jellyfish</div>";    
+            }
+            if ($line_counter < 100) {
+                echo "<div class=\"alert center alert-danger\" role=\"alert\">File was uploaded but it only has $line_counter rows, are you sure this is the right file?</div>";        
+            }
+            echo "$back_button";
         }
-        else {
-            echo "<div class=\"alert center alert-info\" role=\"alert\">File already submitted once. Please continue.</div>";
-        }
-        echo "<div style=\"margin-left:1%;\"><div class=\"col-sm-1\">";
-        echo "$back_button";
-        echo "</div><div class=\"col-sm-1\">";
-        echo "$continue_button";
-        echo "</div></div>";
     }
     else {
-        echo "<div class=\"alert center alert-danger\" role=\"alert\">All lines in file must have the same number of elements (separated by spaces). This file had the following numbers of elements per line: ";
+        echo "<div class=\"alert center alert-danger\" role=\"alert\">All lines in file must have the same number of elements (separated by single spaces). This file had the following numbers of elements per line: ";
         foreach ($bin_history as $num)
             echo $num . ", ";
         echo "</div>";
