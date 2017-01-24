@@ -5,6 +5,8 @@
 
     if( !isset($_POST['code']) ) { echo shell_exec('echo ERROR: No code passed to run.php >> user_data/ERRORS/input_validation.log');}
     $code=$_POST["code"];
+    mkdir("user_data/$code");
+
     if( !isset($_POST['kmer_length']) ) { echo shell_exec("echo ERROR: No kmer_length passed to run_now.php >> user_data/$code/input_validation.log");}
     if( !isset($_POST['read_length']) ) { echo shell_exec("echo ERROR: No read_length passed to run_now.php >> user_data/$code/input_validation.log");}
     if( !isset($_POST['max_kmer_cov']) ) { echo shell_exec("echo ERROR: No max_kmer_cov passed to run_now.php >> user_data/$code/input_validation.log");}
@@ -22,7 +24,6 @@
     $url="analysis.php?code=$code";
     $filename="user_uploads/$code";
     $oldmask = umask(0);
-    mkdir("user_data/$code");
     umask($oldmask);
 
     // For old version:

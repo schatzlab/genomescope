@@ -16,7 +16,6 @@ function showProgress() {
             type:"POST",
             url: "user_data/" + run_id_code + "/description.txt",
             success: function (obj) {
-                alert("inside success");
                 description = obj;
                 document.getElementById("description_header").innerHTML = description;
             }
