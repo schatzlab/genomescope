@@ -23,7 +23,7 @@ Again the thread count (-t) should be scaled according to your server. After you
 ### Running GenomeScope Online
 
 Users may prefer to use the online version, which offers all of the same functionality within an easy to use web interface:
-http://qb.cshl.edu/genomescope/
+http://genomescope.org/
 
 ### Running GenomeScope on the Command Line
 
