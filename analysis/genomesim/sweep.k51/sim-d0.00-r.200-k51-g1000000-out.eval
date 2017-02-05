@@ -1,0 +1,5 @@
+model:	1999977	11	0	0
+obs:	1999898	1	0	0
+diff:	79	10	0	0
+diffp:	0.00	1000.00	0.00	0.00
+#sweep.k51//sim-d0.00-r.200-k51-g1000000-out	sumkmer	1999899	sumdiff:	89	score:	99.996

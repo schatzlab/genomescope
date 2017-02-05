@@ -1,0 +1,5 @@
+model:	1999967	300001	9	0
+obs:	1999980	299980	0	0
+diff:	-13	21	9	0
+diffp:	-0.00	0.01	0.00	0.00
+#sweep.k31//sim-d0.30-r.300-k31-g1000000-out	sumkmer	2299960	sumdiff:	17	score:	99.999

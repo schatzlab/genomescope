@@ -1,0 +1,18 @@
+Simulating G=1000000, d=0.30, r=.010, k=31
+ ... simulating progenitor
+ ... duplicated 0.30, newlen=1300000
+ ... add heterozygosity r=.010
+Simulated 1300000 total bases, 12973 mutations (1.00%), G=1000000, d=0.30, r=.010
+
+Model:
+1 535393
+2 534110
+3 117621
+4 160880
+
+
+Observed Counts:
+1 535671
+2 533377
+3 115213
+4 162969
