@@ -1,17 +1,10 @@
+GenomeScope version 1.0
 k = 21
 
 property                      min               max               
 Heterozygosity                1.1199%           1.14912%          
 Genome Haploid Length         4,492,711 bp      4,508,113 bp      
-Genome Repeat Length          132,478 bp        132,932 bp        
-Genome Unique Length          4,360,233 bp      4,375,181 bp      
-Read Duplication Level        1.471X            1.527X            
+Genome Repeat Length          46,326 bp         46,485 bp         
+Genome Unique Length          4,446,385 bp      4,461,628 bp      
+Model Fit                     98.8446%          99.1953%          
 Read Error Rate               0.999467%         0.999467%         
-
-Percent Kmers Modeled (All Kmers) = 98.8446% [4, 1156]
-Percent Kmers Modeled (Full Model) = 99.1953% [4, 40]
-Percent Kmers Modeled (Unique Kmers) = 99.2382% [4, 24]
-
-Model RSSE (All Kmers) = 111845891.548969 [4, 1156]
-Model RSSE (Full Model) = 107987175.86234 [4, 40]
-Model RSSE (Unique Model) = 105504838.680672 [4, 24]
