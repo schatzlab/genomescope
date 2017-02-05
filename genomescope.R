@@ -1,7 +1,9 @@
 #!/usr/bin/env Rscript
 
 ## GenomeScope: Fast Genome Analysis from Unassembled Short Reads
-## This is the automated script for computing genome characteristics from a histogram file, k-mer size, and readlength
+##
+## This is the automated script for computing genome characteristics 
+## from a kmer histogram file, k-mer size, and readlength
 
 ## Number of rounds before giving up
 NUM_ROUNDS=4
@@ -54,21 +56,23 @@ nls_4peak<-function(x, y, k, estKmercov, estLength, max_iterations){
 	model4 = NULL
 
     if (VERBOSE) { cat("trying nls_4peak standard algorithm\n") }
-	try(model4 <- nls(y ~ ((2.0 * (1-d) * (1-(1-r)^k))            * dnbinom(x, size = kmercov   / bias, mu = kmercov)     * length +
-                          ((d*(1-(1-r)^k)^2) + (1-2*d)*((1-r)^k)) * dnbinom(x, size = kmercov*2 / bias, mu = kmercov * 2) * length + 
-                          (2*d*((1-r)^k)*(1-(1-r)^k))             * dnbinom(x, size = kmercov*3 / bias, mu = kmercov * 3) * length + 
-                          (d*(1-r)^(2*k))                         * dnbinom(x, size = kmercov*4 / bias, mu = kmercov * 4) * length), 
+
+	try(model4 <- nls(y ~ (((2*(1-d)*(1-(1-r)^k)) + (2*d*(1-(1-r)^k)^2) + (2*d*((1-r)^k)*(1-(1-r)^k))) * dnbinom(x, size = kmercov   / bias, mu = kmercov)     * length +
+                          (((1-d)*((1-r)^k)) + (d*(1-(1-r)^k)^2))                                      * dnbinom(x, size = kmercov*2 / bias, mu = kmercov * 2) * length + 
+                          (2*d*((1-r)^k)*(1-(1-r)^k))                                                  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov * 3) * length + 
+                          (d*(1-r)^(2*k))                                                              * dnbinom(x, size = kmercov*4 / bias, mu = kmercov * 4) * length), 
                       start = list(d=0, r=0, kmercov=estKmercov, bias = 0.5, length=estLength),
                       control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
 
 	if(class(model4) == "try-error"){
         if (VERBOSE) { cat("retrying nls_4peak with port algorithm\n") }
-		try(model4 <- nls(y ~ ((2.0 * (1-d) * (1-(1-r)^k))            * dnbinom(x, size = kmercov   / bias, mu = kmercov)     * length + 
-                              ((d*(1-(1-r)^k)^2) + (1-2*d)*((1-r)^k)) * dnbinom(x, size = kmercov*2 / bias, mu = kmercov * 2) * length + 
-                              (2*d*((1-r)^k)*(1-(1-r)^k))             * dnbinom(x, size = kmercov*3 / bias, mu = kmercov * 3) * length + 
-                              (d*(1-r)^(2*k))                         * dnbinom(x, size = kmercov*4 / bias, mu = kmercov * 4) * length), 
+
+        try(model4 <- nls(y ~ (((2*(1-d)*(1-(1-r)^k)) + (2*d*(1-(1-r)^k)^2) + (2*d*((1-r)^k)*(1-(1-r)^k))) * dnbinom(x, size = kmercov   / bias, mu = kmercov)     * length +
+                              (((1-d)*((1-r)^k)) + (d*(1-(1-r)^k)^2))                                      * dnbinom(x, size = kmercov*2 / bias, mu = kmercov * 2) * length + 
+                              (2*d*((1-r)^k)*(1-(1-r)^k))                                                  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov * 3) * length + 
+                              (d*(1-r)^(2*k))                                                              * dnbinom(x, size = kmercov*4 / bias, mu = kmercov * 4) * length), 
                           start = list(d=0, r=0, kmercov=estKmercov, bias = 0.5, length=estLength),
-                          algorithm = "port", control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
+                          algorithm="port", control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
 	}
 
 	return(model4)
@@ -424,8 +428,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
        total_len = (total_kmers-total_error_kmers)/(2*kcov)
        
        ## find kmers that fit the 2 peak model (no repeats)
-       unique_hist <- (2 * (1 - amd) * (1 - (1 - ahet)^k))                                * dnbinom(x, size = akcov     / adups, mu = akcov)     * amlen +
-                      ((amd * (1 - (1 - ahet)^k)^2) + (1 - 2 * amd) * ((1 - ahet)^k))     * dnbinom(x, size = akcov * 2 / adups, mu = akcov * 2) * amlen 
+       unique_hist <- (2 * (1 - amd) * (1 - (1 - ahet)^k))                         * dnbinom(x, size = akcov     / adups, mu = akcov)     * amlen +
+                      ((amd * (1 - (1 - ahet)^k)^2) + (1 - amd) * ((1 - ahet)^k))  * dnbinom(x, size = akcov * 2 / adups, mu = akcov * 2) * amlen 
 
        unique_kmers = sum(as.numeric(x*unique_hist))
        repeat_kmers = total_kmers - unique_kmers - total_error_kmers
