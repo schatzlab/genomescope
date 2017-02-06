@@ -1,1 +1,7 @@
 .DS_Store
+user_data/*
+!user_data/example*
+
+user_uploads/*
+!user_uploads/index.html
+
