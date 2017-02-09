@@ -69,7 +69,7 @@
     fclose($myfile);
     
     if ($consistent) {
-        if ($line_counter >= 100 and $num_columns == 2) {
+        if ($line_counter >= 50 and $num_columns == 2) {
             echo "<div class=\"alert center alert-success\" role=\"alert\">Great! File was uploaded and has acceptable dimensions: $line_counter rows by $num_columns columns</div>";
             echo "<div style=\"margin-left:1%;\"><div class=\"col-sm-1\">";
             echo "$back_button";
@@ -80,7 +80,7 @@
             if ($num_columns != 2) {
                 echo "<div class=\"alert center alert-danger\" role=\"alert\">File was uploaded but it has $num_columns column(s). The file must have 2 columns separated by a single space, which is the default in Jellyfish</div>";    
             }
-            if ($line_counter < 100) {
+            if ($line_counter < 50) {
                 echo "<div class=\"alert center alert-danger\" role=\"alert\">File was uploaded but it only has $line_counter rows, are you sure this is the right file?</div>";        
             }
             echo "$back_button";
