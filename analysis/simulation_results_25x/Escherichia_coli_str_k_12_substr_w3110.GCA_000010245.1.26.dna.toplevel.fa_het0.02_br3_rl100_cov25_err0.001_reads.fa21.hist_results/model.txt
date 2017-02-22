@@ -10,16 +10,16 @@ Formula: y ~ (((2 * (1 - d) * (1 - (1 - r)^k)) + (2 * d * (1 - (1 - r)^k)^2) +
 
 Parameters:
           Estimate Std. Error t value Pr(>|t|)    
-d       -9.205e-03  3.051e-03  -3.017  0.00272 ** 
-r        1.387e-02  2.110e-04  65.721  < 2e-16 ***
-kmercov  9.341e+00  3.187e-02 293.115  < 2e-16 ***
-bias     3.294e+00  2.430e-02 135.571  < 2e-16 ***
-length   4.843e+06  1.404e+04 344.856  < 2e-16 ***
+d       -9.205e-03  3.083e-03  -2.986  0.00301 ** 
+r        1.387e-02  2.132e-04  65.050  < 2e-16 ***
+kmercov  9.341e+00  3.220e-02 290.124  < 2e-16 ***
+bias     3.294e+00  2.455e-02 134.187  < 2e-16 ***
+length   4.843e+06  1.419e+04 341.337  < 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
 
-Residual standard error: 667.3 on 394 degrees of freedom
+Residual standard error: 674.1 on 386 degrees of freedom
 
 Number of iterations to convergence: 15 
-Achieved convergence tolerance: 7.833e-06 
+Achieved convergence tolerance: 8.417e-06 
 

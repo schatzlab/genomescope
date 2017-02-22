@@ -6,8 +6,8 @@ MODELBIN=../genomescope.R
 
 
 #for INDIR in simulation_results
-for INDIR in real_data
-#for INDIR in simulation_results_100x simulation_results_50x simulation_results_25x simulation_results_15x simulation_results_10x real_data ecoli_mix
+#for INDIR in real_data
+for INDIR in simulation_results_100x simulation_results_50x simulation_results_25x simulation_results_15x simulation_results_10x real_data ecoli_mix
 do
   echo "Processing $INDIR"
 
