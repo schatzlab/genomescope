@@ -451,11 +451,18 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
        
        ## Finish Log plot
        title(paste("\nlen:",  prettyNum(total_len[1], big.mark=","), 
-                   "bp uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
-                   "% het:",  format(100*ahet, digits=3), 
-                   "% kcov:", format(akcov, digits=3), 
-                   " err:",   format(100*error_rate[1], digits=3), 
-                   "% dup:",  format(adups, digits=3), sep=""), 
+                   "bp", 
+                   " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
+                   "% ", 
+                   " het:",  format(100*ahet, digits=3), 
+                   "%", 
+                   " kcov:", format(akcov, digits=3), 
+                   " err:",   format(100*error_rate[1], digits=3),
+                   "% ", 
+                   " dup:",  format(adups, digits=3),
+                   "% ",  
+                   " k:",   format(k, digits=3), 
+                   sep=""), 
                    cex.main=.85)
        
        ## Mark the modes of the peaks
@@ -493,11 +500,18 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
 
        ## Finish Linear Plot
        title(paste("\nlen:",  prettyNum(total_len[1], big.mark=","), 
-                   "bp uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
-                   "% het:",  format(100*ahet, digits=3), 
-                   "% kcov:", format(akcov, digits=3), 
-                   " err:",   format(100*error_rate[1], digits=3), 
-                   "% dup:",  format(adups, digits=3), sep=""), 
+                   "bp", 
+                   " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
+                   "% ", 
+                   " het:",  format(100*ahet, digits=3), 
+                   "%", 
+                   " kcov:", format(akcov, digits=3), 
+                   " err:",   format(100*error_rate[1], digits=3),
+                   "% ", 
+                   " dup:",  format(adups, digits=3),
+                   "% ",  
+                   " k:",   format(k, digits=3), 
+                   sep=""), 
                    cex.main=.85)
 
        ## Mark the modes of the peaks
