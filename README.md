@@ -46,6 +46,8 @@ This should complete in less than 1 minute, and report:
 
 The plots and the full results will be in output directory, showing the estimated genome size to be 151.9Mbp and a 1.04% heterozygosity rate (the exact values may slightly differ due to the randomization within the modeling)
 
+## Tutorial
+A tutorial by Andrew Severin on running GenomeScope is available here http://gif.biotech.iastate.edu/genomescope
 
 ## Frequently Asked Questions (FAQ)
 
