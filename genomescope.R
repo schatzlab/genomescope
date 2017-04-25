@@ -52,25 +52,21 @@ min_max <- function(table){
 ## Use nls to fit 4 peak model
 ###############################################################################
 
-nls_4peak<-function(x, y, k, estKmercov, estLength, max_iterations){
+model<-function(d,r,k,p,x,kmercov,bias,length){rowSums(sweep(sapply(1:(2*p), function (i) dnbinom(x, size = kmercov * i  / bias, mu = kmercov * i)),2,(1-d)*rowSums(cbind(sapply(0:(p-1), function (i) (diag(2*p)[i+1,] + (p-1-i)*diag(2*p)[1,])*choose(p-1,i)*sum(sapply(0:(p-1-i), function (l) (-1)^l*choose(p-1-i,l)*(r*((4^(p-1-i-l)-1)/(4^(p-1)-1))+(1-r))^k)))))+d*rowSums(cbind(sapply(0:(p-1), function (i) rowSums(cbind(sapply(0:(p-1), function (j) (diag(2*p)[i+j+2,] + (2*p-1-(i+j+1))*diag(2*p)[1,])*choose(p-1,i)*choose(p-1,j)*sum(sapply(0:(p-1-i), function (l) sum(sapply(0:(p-1-j), function (m) (-1)^(l+m)*choose(p-1-i,l)*choose(p-1-j,m)*(r^2*(((4^(p-1-i-l)-1)*(4^(p-1-j-m)-1))/((4^(p-1)-1)^2)) + r*(1-r)*((4^(p-1-i-l)+4^(p-1-j-m)-2)/(4^(p-1)-1)) + (1-r)^2)^k)))))))))),'*')  * length)}
+
+nls_4peak<-function(x, y, k, p, estKmercov, estLength, max_iterations){
 	model4 = NULL
 
     if (VERBOSE) { cat("trying nls_4peak standard algorithm\n") }
 
-	try(model4 <- nls(y ~ (((2*(1-d)*(1-(1-r)^k)) + (2*d*(1-(1-r)^k)^2) + (2*d*((1-r)^k)*(1-(1-r)^k))) * dnbinom(x, size = kmercov   / bias, mu = kmercov)     * length +
-                          (((1-d)*((1-r)^k)) + (d*(1-(1-r)^k)^2))                                      * dnbinom(x, size = kmercov*2 / bias, mu = kmercov * 2) * length + 
-                          (2*d*((1-r)^k)*(1-(1-r)^k))                                                  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov * 3) * length + 
-                          (d*(1-r)^(2*k))                                                              * dnbinom(x, size = kmercov*4 / bias, mu = kmercov * 4) * length), 
+	try(model4 <- nls(y ~ model(d,r,k,p,x,kmercov,bias,length), 
                       start = list(d=0, r=0, kmercov=estKmercov, bias = 0.5, length=estLength),
                       control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
 
 	if(class(model4) == "try-error"){
         if (VERBOSE) { cat("retrying nls_4peak with port algorithm\n") }
 
-        try(model4 <- nls(y ~ (((2*(1-d)*(1-(1-r)^k)) + (2*d*(1-(1-r)^k)^2) + (2*d*((1-r)^k)*(1-(1-r)^k))) * dnbinom(x, size = kmercov   / bias, mu = kmercov)     * length +
-                              (((1-d)*((1-r)^k)) + (d*(1-(1-r)^k)^2))                                      * dnbinom(x, size = kmercov*2 / bias, mu = kmercov * 2) * length + 
-                              (2*d*((1-r)^k)*(1-(1-r)^k))                                                  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov * 3) * length + 
-                              (d*(1-r)^(2*k))                                                              * dnbinom(x, size = kmercov*4 / bias, mu = kmercov * 4) * length), 
+        try(model4 <- nls(y ~ model(d,r,k,p,x,kmercov,bias,length), 
                           start = list(d=0, r=0, kmercov=estKmercov, bias = 0.5, length=estLength),
                           algorithm="port", control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
 	}
@@ -234,7 +230,7 @@ eval_model<-function(kmer_hist_orig, nls1, nls2, round, foldername){
 ## Wrapper function to try fitting 4 peak model with 2 forms
 ###############################################################################
 
-estimate_Genome_4peak2<-function(kmer_hist_orig, x, y, k, readlength, round, foldername){
+estimate_Genome_4peak2<-function(kmer_hist_orig, x, y, k, p, readlength, round, foldername){
 	## First we see what happens when the max peak is the kmercoverage (typically the homozygous peak) for the plot
 	numofReads   = sum(as.numeric(x*y))/(readlength-k+1) 
 	estKmercov1  = x[which(y==max(y))][1]
@@ -242,7 +238,7 @@ estimate_Genome_4peak2<-function(kmer_hist_orig, x, y, k, readlength, round, fol
 	estLength1   = numofReads*readlength/estCoverage1
 
     if (VERBOSE) { cat(paste("trying with kmercov: ", estKmercov1, "\n")) }
-	nls1    = nls_4peak(x, y, k, estKmercov1, estLength1, MAX_ITERATIONS)
+	nls1    = nls_4peak(x, y, k, p, estKmercov1, estLength1, MAX_ITERATIONS)
     if (VERBOSE) { print(summary(nls1)) }
 
 	## Second we half the max kmercoverage (typically the heterozygous peak)
@@ -251,7 +247,7 @@ estimate_Genome_4peak2<-function(kmer_hist_orig, x, y, k, readlength, round, fol
 	estLength2   = numofReads*readlength/estCoverage2
 
     if (VERBOSE) { cat(paste("trying with kmercov: ", estKmercov2, "\n")) }
-	nls2 = nls_4peak(x, y, k, estKmercov2, estLength2, MAX_ITERATIONS)
+	nls2 = nls_4peak(x, y, k, p, estKmercov2, estLength2, MAX_ITERATIONS)
     if (VERBOSE) { print(summary(nls2)) }
 
 	return(eval_model(kmer_hist_orig, nls1, nls2, round, foldername))
@@ -589,23 +585,24 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, container, foldername)
 
 args<-commandArgs(TRUE)
 
-if(length(args) < 4) {
-	cat("USAGE: genomescope.R histogram_file k-mer_length read_length output_dir [kmer_max] [verbose]\n")
+if(length(args) < 5) {
+	cat("USAGE: genomescope.R histogram_file k-mer_length ploidy read_length output_dir [kmer_max] [verbose]\n")
 } else{
 
     ## Load the arguments from the user
 	histfile   <- args[[1]]
 	k          <- as.numeric(args[[2]])
-	readlength <- as.numeric(args[[3]])
-	foldername <- args[[4]] 
+	p          <- as.numeric(args[[3]])
+	readlength <- as.numeric(args[[4]])
+	foldername <- args[[5]] 
 
     maxCovGenomeLen = -1
 
-    if ((length(args) >= 5)) {
-        maxCovGenomeLen = as.numeric(args[[5]])
+    if ((length(args) >= 6)) {
+        maxCovGenomeLen = as.numeric(args[[6]])
     }
 
-    if ((length(args) == 6) && (as.numeric(args[[6]] == 1))) { VERBOSE = 1 }
+    if ((length(args) == 7) && (as.numeric(args[[7]] == 1))) { VERBOSE = 1 }
 
     ## values for testing
     #histfile <- "~/build/genomescope/simulation/simulation_results/Arabidopsis_thaliana.TAIR10.26.dna_sm.toplevel.fa_het0.01_br1_rl100_cov100_err0.01_reads.fa21.hist"
@@ -615,7 +612,7 @@ if(length(args) < 4) {
 
     if (k > readlength) { stop("K cannot be greater than readlength") }
 
-    cat(paste("GenomeScope analyzing ", histfile, " k=", k, " readlen=", readlength, " outdir=", foldername, "\n", sep=""))
+    cat(paste("GenomeScope analyzing ", histfile, " k=", k, " p=", p, " readlen=", readlength, " outdir=", foldername, "\n", sep=""))
 
 	dir.create(foldername, showWarnings=FALSE)
 
@@ -666,7 +663,7 @@ if(length(args) < 4) {
         x <- kmer_prof[start:maxCovIndex,1]
         y <- kmer_prof[start:maxCovIndex,2]
 
-        model_4peaks <- estimate_Genome_4peak2(kmer_prof, x, y, k, readlength, round, foldername)
+        model_4peaks <- estimate_Genome_4peak2(kmer_prof, x, y, k, p, readlength, round, foldername)
 
         if (!is.null(model_4peaks[[1]])) {
           cat(paste("converged. score: ", model_4peaks[[2]]$all[[1]]), file=progressFilename, sep="\n", append=TRUE)
