@@ -1,8 +1,8 @@
 #!/bin/sh
 
-if [[ $# != 4 ]]
+if [[ $# != 5 ]]
 then
-  echo "simhist.sh LEN DUP HET KMER\n";
+  echo "simhist.sh LEN DUP HET KMER PLOIDY\n";
   exit
 fi
 
@@ -10,8 +10,9 @@ LEN=$1
 DUP=$2
 HET=$3
 KMER=$4
+PLOIDY=$5
 
-./simgenome.pl $LEN $DUP $HET $KMER > genome.fa
+./simgenome.pl $LEN $DUP $HET $KMER $PLOIDY > genome.fa
 
 
 echo "\n"
