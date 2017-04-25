@@ -13,6 +13,7 @@ KMER=$4
 PLOIDY=$5
 
 ./simgenome.pl $LEN $DUP $HET $KMER $PLOIDY > genome.fa
+python ./project.py $LEN $DUP $HET $KMER $PLOIDY
 
 
 echo "\n"
