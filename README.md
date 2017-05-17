@@ -13,6 +13,7 @@ Also in the analysis/genomesim folder, we have updated simgenome.pl, eval_error.
 The run_sweep.sh file creates the simulated kmer profiles as well as the profiles predict by the updated model of a given ploidy, duplication rate, and heterozgyosity. The ploidy ranges from 2 to 10, the duplication rate from 0 to 1 by 0.1, and the heterozygosity rate for 0.000, 0.001, 0.010, 0.050, 0.100, 0.200, and 0.300. This amounts to 385 total simulations. The run_eval.sh file will evaluate the 385 models against the true data, and evaluate the accuracies. These accuracies were used to create the results histogram file of the final writeup. For all 385 simulations, the accuracies were greater than 98.6%.
 
 In the analysis/scripts folder, chromosomeMutator.py and parameteranalysis.py have been updated. The user should also download the Triticum aestivum genome into analysis/scripts from ftp://ftp.ensemblgenomes.org/pub/plants/release-34/fasta/triticum_aestivum/dna/Triticum_aestivum.TGACv1.dna.toplevel.fa.gz. Afterwards, the user should run:
+
     $ head -n100000 Triticum_aestivum.TGACv1.dna.toplevel.fa > T_aestivum100000.fa
     $ grep -v '>' T_aestivum100000.fa > T_aestivum100000_2.fa
     $ grep -v 'N' T_aestivum100000_2.fa > T_aestivum100000.fa
