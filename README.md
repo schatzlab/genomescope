@@ -34,7 +34,7 @@ In the analysis/scripts folder, chromosomeMutator.py and parameteranalysis.py ha
     $ Rscript genomescope.R reads4.histo 21 4 100 output4
     $ Rscript genomescope.R reads5.histo 21 5 100 output5
 
-This will produce the results in the final report table. 
+This will produce the results in the final report table. The code first creates a subset of the T. aestivum genome for testing, and removes the > symbol and any Ns. Then it runs parameteranalysis.py to produce the simulated reads from the T. aestivum genome. Then jellyfish count gets the kmer reads.jf files and jellyfish histo produces the reads.histo files. Finally, genomescope.R is run on the reads.histo files and the output is stored to different output files.
 
 ## Getting Started
 
