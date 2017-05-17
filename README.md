@@ -12,7 +12,28 @@ Also in the analysis/genomesim folder, we have updated simgenome.pl, eval_error.
 
 The run_sweep.sh file creates the simulated kmer profiles as well as the profiles predict by the updated model of a given ploidy, duplication rate, and heterozgyosity. The ploidy ranges from 2 to 10, the duplication rate from 0 to 1 by 0.1, and the heterozygosity rate for 0.000, 0.001, 0.010, 0.050, 0.100, 0.200, and 0.300. This amounts to 385 total simulations. The run_eval.sh file will evaluate the 385 models against the true data, and evaluate the accuracies. These accuracies were used to create the results histogram file of the final writeup. For all 385 simulations, the accuracies were greater than 98.6%.
 
-In the analysis/scripts folder, chromosomeMutator.py and parameteranalysis.py have been updated. 
+In the analysis/scripts folder, chromosomeMutator.py and parameteranalysis.py have been updated. The user should also download the Triticum aestivum genome into analysis/scripts from ftp://ftp.ensemblgenomes.org/pub/plants/release-34/fasta/triticum_aestivum/dna/Triticum_aestivum.TGACv1.dna.toplevel.fa.gz. Afterwards, the user should run:
+    $ head -n100000 Triticum_aestivum.TGACv1.dna.toplevel.fa > T_aestivum100000.fa
+    $ grep -v '>' T_aestivum100000.fa > T_aestivum100000_2.fa
+    $ grep -v 'N' T_aestivum100000_2.fa > T_aestivum100000.fa
+    $ python parameteranalysis.py 31 2 100 100 1 0.01 T_aestivum100000.fa 0.01
+    $ python parameteranalysis.py 31 3 100 100 1 0.01 T_aestivum100000.fa 0.01
+    $ python parameteranalysis.py 31 4 100 100 1 0.01 T_aestivum100000.fa 0.01
+    $ python parameteranalysis.py 31 5 100 100 1 0.01 T_aestivum100000.fa 0.01
+    $ jellyfish count -C -m 21 -s 1000000000 -t 10 -o reads2.jf <(zcat T_aestivum1000000.fa_p2_het0.01_br1_rl100_cov100_err0.01_reads.fa.gz)
+    $ jellyfish count -C -m 21 -s 1000000000 -t 10 -o reads3.jf <(zcat T_aestivum1000000.fa_p3_het0.01_br1_rl100_cov100_err0.01_reads.fa.gz)
+    $ jellyfish count -C -m 21 -s 1000000000 -t 10 -o reads4.jf <(zcat T_aestivum1000000.fa_p4_het0.01_br1_rl100_cov100_err0.01_reads.fa.gz)
+    $ jellyfish count -C -m 21 -s 1000000000 -t 10 -o reads5.jf <(zcat T_aestivum1000000.fa_p5_het0.01_br1_rl100_cov100_err0.01_reads.fa.gz)
+    $ jellyfish histo -t 10 reads2.jf > reads2.histo
+    $ jellyfish histo -t 10 reads3.jf > reads3.histo
+    $ jellyfish histo -t 10 reads4.jf > reads4.histo
+    $ jellyfish histo -t 10 reads5.jf > reads5.histo
+    $ Rscript genomescope.R reads2.histo 21 2 100 output2
+    $ Rscript genomescope.R reads3.histo 21 3 100 output3
+    $ Rscript genomescope.R reads4.histo 21 4 100 output4
+    $ Rscript genomescope.R reads5.histo 21 5 100 output5
+
+This will produce the results in the final report table. 
 
 ## Getting Started
 
