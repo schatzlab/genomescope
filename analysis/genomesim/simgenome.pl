@@ -95,7 +95,7 @@ for (my $j = 0; $j < $PLOIDY; $j++) #for every haplotype
   $mutrate[$j] = sprintf("%0.02f", 100*($nummut[$j] / $newlen));
 }
 
-print STDERR "Simulated $newlen total bases, @nummut mutations (@mutrate%), G=$GENOME_LEN, d=$DUP_RATE, r=@HET_RATE, p=$PLOIDY\n";
+print STDERR "Simulated $newlen total bases, @nummut mutations (@mutrate)%, G=$GENOME_LEN, d=$DUP_RATE, r=@HET_RATE, p=$PLOIDY\n";
 
 
 
