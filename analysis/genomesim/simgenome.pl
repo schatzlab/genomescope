@@ -16,7 +16,7 @@ my ($PLOIDY, $DUP_RATE, $KMER_LEN, @HET_RATE)  = @ARGV;
 die "Dup rate cant be > 1\n" if ($DUP_RATE > 1.0);
 die "Het rate cant be > 1\n" if ( any{$_ > 1.0} @HET_RATE);
 
-print STDERR "Simulating G=$GENOME_LEN, d=$DUP_RATE, r=$HET_RATE, k=$KMER_LEN, p=$PLOIDY\n";
+print STDERR "Simulating G=$GENOME_LEN, d=$DUP_RATE, r=@HET_RATE, k=$KMER_LEN, p=$PLOIDY\n";
 
 
 ## Initialize DNA coding table: 0<->A, 1<->C, 2<->G, 3<->T
@@ -54,7 +54,7 @@ print STDERR " ... duplicated $DUP_RATE, newlen=$newlen\n";
 ## Add random heterozygosity to all haplotypes
 ###############################################################################
 
-print STDERR " ... add heterozygosity r=$HET_RATE\n";
+print STDERR " ... add heterozygosity r=@HET_RATE\n";
 
 my @nummut = (0)x$PLOIDY; #number of mutations for each haplotype, used to calculate per-haplotype mutation rate from progenitor
 for (my $j = 1; $j < $PLOIDY; $j++) #for every non-progenitor haplotype
@@ -67,7 +67,7 @@ for (my $i = 0; $i < $newlen; $i++) #for every base
   for (my $j = 1; $j < $PLOIDY; $j++) # for every non-progenitor haplotype
   {
     my $r = rand();
-    if ($r <= $HET_RATE) #if the base on this haplotype is a mutation
+    if ($r <= $HET_RATE[$j-1]) #if the base on this haplotype is a mutation
     {
       $nummut[$j]++; #increase number of mutations for this haplotype
       my $s = 1+int(rand(2)); #random integer from 1, 2, 3, corresponding to which base it mutates to
@@ -92,7 +92,7 @@ for (my $j = 0; $j < $PLOIDY; $j++) #for every haplotype
 my @mutrate = (0)x$PLOIDY;
 for (my $j = 0; $j < $PLOIDY; $j++) #for every haplotype
 {
-  my $mutrate[$j] = sprintf("%0.02f", 100*($nummut[$j] / $newlen));
+  $mutrate[$j] = sprintf("%0.02f", 100*($nummut[$j] / $newlen));
 }
 
 print STDERR "Simulated $newlen total bases, @nummut mutations (@mutrate%), G=$GENOME_LEN, d=$DUP_RATE, r=@HET_RATE, p=$PLOIDY\n";
