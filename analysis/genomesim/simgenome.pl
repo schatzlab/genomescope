@@ -1,18 +1,20 @@
 #!/usr/bin/perl -w
 use strict;
+use List::Util qw(any);
 
-my $USAGE = "simgenome.pl GENOME_LEN DUP_RATE HET_RATE KMER_LEN PLOIDY > genome.fa\n";
+my $USAGE = "simgenome.pl GENOME_LEN PLOIDY DUP_RATE KMER_LEN HET_RATE > genome.fa\n";
 
-die $USAGE if (scalar @ARGV != 5);
+die $USAGE if (scalar @ARGV < 5);
 
 my $GENOME_LEN = shift @ARGV or die $USAGE;
-my $DUP_RATE   = shift @ARGV;
-my $HET_RATE   = shift @ARGV;
-my $KMER_LEN   = shift @ARGV;
-my $PLOIDY     = shift @ARGV;
+my ($PLOIDY, $DUP_RATE, $KMER_LEN, @HET_RATE)  = @ARGV;
+#my $DUP_RATE   = shift @ARGV;
+#my @HET_RATE   = shift @ARGV;
+#my $KMER_LEN   = shift @ARGV;
+#my $PLOIDY     = shift @ARGV;
 
 die "Dup rate cant be > 1\n" if ($DUP_RATE > 1.0);
-die "Het rate cant be > 1\n" if ($HET_RATE > 1.0);
+die "Het rate cant be > 1\n" if ( any{$_ > 1.0} @HET_RATE);
 
 print STDERR "Simulating G=$GENOME_LEN, d=$DUP_RATE, r=$HET_RATE, k=$KMER_LEN, p=$PLOIDY\n";
 
@@ -31,7 +33,7 @@ print STDERR " ... simulating progenitor\n";
 
 my @genomes = ("")x$PLOIDY;
 
-for (my $i = 0; $i < $GENOME_LEN; $i++)
+for (my $i = 0; $i < $GENOME_LEN; $i++) #for every base
 {
   my $z = int(rand(4));
   my $b = $DNA[$z];
@@ -54,31 +56,24 @@ print STDERR " ... duplicated $DUP_RATE, newlen=$newlen\n";
 
 print STDERR " ... add heterozygosity r=$HET_RATE\n";
 
-my $nummut = 0;
-for (my $i = 1; $i < $PLOIDY; $i++)
+my @nummut = (0)x$PLOIDY; #number of mutations for each haplotype, used to calculate per-haplotype mutation rate from progenitor
+for (my $j = 1; $j < $PLOIDY; $j++) #for every non-progenitor haplotype
 {
-  $genomes[$i] = $genomes[0];
+  $genomes[$j] = $genomes[0]; #set the haplotype equal to the 'progenitor' haplotype
 }
 
-for (my $i = 0; $i < $newlen; $i++)
+for (my $i = 0; $i < $newlen; $i++) #for every base
 {
-  my $r = rand();
-  if ($r <= $HET_RATE)
+  for (my $j = 1; $j < $PLOIDY; $j++) # for every non-progenitor haplotype
   {
-    $nummut++;
-    my @s = (0)x$PLOIDY;
-    while((keys %{{ map {$_, 1} @s }} == 1))
+    my $r = rand();
+    if ($r <= $HET_RATE) #if the base on this haplotype is a mutation
     {
-      for (my $k = 0; $k < $PLOIDY; $k++)
-      {
-        $s[$k] = int(rand(4));
-      }
-    }
-    my $b = substr($genomes[0], $i, 1);
-    for (my $k = 0; $k < $PLOIDY; $k++)
-    {
-      my $n = $DNA[($DNAIDX{$b}+$s[$k])%4];
-      substr($genomes[$k], $i, 1) = $n;
+      $nummut[$j]++; #increase number of mutations for this haplotype
+      my $s = 1+int(rand(2)); #random integer from 1, 2, 3, corresponding to which base it mutates to
+      my $b = substr($genomes[0], $i, 1); #the DNA base on the progenitor at this location
+      my $n = $DNA[($DNAIDX{$b}+$s)%4]; #the mutated DNA base
+      substr($genomes[$j], $i, 1) = $n; #set the base on this haplotype to the mutated DNA base
     }
   }
 }
@@ -87,15 +82,20 @@ for (my $i = 0; $i < $newlen; $i++)
 ## Print the haplotypes
 ###############################################################################
 
-for (my $k = 0; $k < $PLOIDY; $k++)
+for (my $j = 0; $j < $PLOIDY; $j++) #for every haplotype
 {
-  print ">$k\n";
-  print $genomes[$k];
+  print ">$j\n";
+  print $genomes[$j];
   print "\n";
 }
 
-my $mutrate = sprintf("%0.02f", 100*($nummut / $newlen));
-print STDERR "Simulated $newlen total bases, $nummut mutations ($mutrate%), G=$GENOME_LEN, d=$DUP_RATE, r=$HET_RATE, p=$PLOIDY\n";
+my @mutrate = (0)x$PLOIDY;
+for (my $j = 0; $j < $PLOIDY; $j++) #for every haplotype
+{
+  my $mutrate[$j] = sprintf("%0.02f", 100*($nummut[$j] / $newlen));
+}
+
+print STDERR "Simulated $newlen total bases, @nummut mutations (@mutrate%), G=$GENOME_LEN, d=$DUP_RATE, r=@HET_RATE, p=$PLOIDY\n";
 
 
 
