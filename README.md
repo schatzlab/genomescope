@@ -78,6 +78,18 @@ While GenomeScope can automate most of the analysis, it does have one critical p
 The short answer is by mixing the samples together, this becomes a tetraploid sample, but GenomeScope currently doesnt work with ploidy > 2. Ive been doing some simulations to further understand this: I randomly generate a 1Mbp maternal sequence m1, and then introduce heterozygous variants to create the paternal sequence p1 at a given rate of heterozygosity r1. In parallel, I create a second maternal genome m2 that differs from m1 by a separate rate of heterozygosity rM. From m2, I derive the paternal genome p2 using the rate of heterozygosity r2. Note that there are 3 rates of heterozygosity that can be adjusted (r1, r2, and rM), and from your data we know that r1 and r2 are around 0.1% but rM is unknown, although is assumed to be very low because the mitochondrial genomes are identical. From this framework, I tried several values of rM, and see that when rM is set to 0.02% then GenomeScope infers the overall rate of heterozygosity at about 0.05%, similar to your data (see attached results). In the joint GenomeScope plot, there is a new peak of heterozygous kmers centered at around 10x coverage (below the expected coverage for heterozygous variants), but GenomeScope incorrectly assumes these are errors just because it doesnt understand how to deal with higher levels of ploidy. We are working on extended the model to consider situations like this, but for now if you want to demonstrate this further, you'd have to align the reads to your assembly, and then you should detect variants that occur at about 50% allele frequency (where m1 and m2 are different), plus variants that occur at about 25% allele frequency (where there is further heterozygosity in p1 or p2). If you would like to run additional simulations, the code is available in the repo at [https://github.com/schatzlab/genomescope/tree/master/analysis/genomesim/polyploid](https://github.com/schatzlab/genomescope/tree/master/analysis/genomesim/polyploid)
 
 
+**> Q: Can you please define the terms on the plot:
+
+The published paper, and especially the supplemental methods defines the terms more completely but briefly:
+
+len: inferred total genome length <br>
+uniq: percent of the genome that is unique (not repetitive) <br>
+het: overall rate of heterozygosity <br>
+kcov: mean kmer coverage for heterozygous bases. note the top of the peak will not intersect the kcov line because of the over dispersion in real data <br>
+err: error rate of the reads <br<
+dup: average rate of read duplications <br>
+
+
 ## Resources
 
 VCF files of the variants identified in the larger genomes are available here:
