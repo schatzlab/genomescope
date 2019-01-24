@@ -200,3 +200,4 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
     print(best_container[[2]]$all[[1]])
     print(best_container[[1]]$m$deviance())
   }
+}
