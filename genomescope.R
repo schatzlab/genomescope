@@ -42,6 +42,8 @@ COLOR_KMERPEAK = "black"
 COLOR_RESIDUAL = "purple"
 COLOR_COVTHRES = "red"
 
+library(minpack.lm)
+
 ## Given mean +/- stderr, report min and max value within 2 SE
 ###############################################################################
 
@@ -55,6 +57,7 @@ min_max1 <- function(table) {
 
 ## Main program starts here
 ###############################################################################
+
 parser <- ArgumentParser()
 parser$add_argument("-v", "--version", action="store_true", default=FALSE, help="print the version and exit")
 parser$add_argument("-i", "--input", help = "input histogram file")
@@ -197,4 +200,3 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
     print(best_container[[2]]$all[[1]])
     print(best_container[[1]]$m$deviance())
   }
-}
