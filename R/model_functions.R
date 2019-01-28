@@ -428,6 +428,106 @@ predict4_unique = function(r1, r2, r3, k, d, kmercov, bias, x)
 #    alpha_4_unique * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)
 #  }
 
+#Am ->(r1)-> Ap ->(r2)-> Bm ->(r3)-> Bp
+#' something
+#'
+#' @param something
+#' @return something
+#' @seealso something
+#' @export
+#' @examples
+#' blah blah blah
+predict4 = function(r1, r2, r3, k, d, kmercov, bias, x)
+{
+  #enforce r1 <= r2 <= r3
+  if (r1 > r2 || r2 > r3) {return(0)}
+  raaaa = (1-r1)*(1-r2)*(1-r3)
+  raaab = (1-r1)*(1-r2)*r3
+  raabb = (1-r1)*r2*(1-r3)
+  rabbb = r1*(1-r2)*(1-r3)
+  raabc = (1-r1)*r2*r3
+  rabbc = r1*(1-r2)*r3
+  rabcc = r1*r2*(1-r3)
+  rabcd = r1*r2*r3
+  tAAAA = raaaa**k
+  tAAAB = (raaaa+raaab)**k
+  tAABB = (raaaa+raabb)**k
+  tABBB = (raaaa+rabbb)**k
+  tAABC = (raaaa+raaab+raabb+raabc)**k
+  tABBC = (raaaa+raaab+rabbb+rabbc)**k
+  tABCC = (raaaa+raabb+rabbb+rabcc)**k
+  sAAAA = tAAAA
+  sAAAB = tAAAB-tAAAA
+  sAABB = tAABB-tAAAA
+  sABBB = tABBB-tAAAA
+  sAABC = tAABC-tAAAB-tAABB+tAAAA
+  sABBC = tABBC-tAAAB-tABBB+tAAAA
+  sABCC = tABCC-tAABB-tABBB+tAAAA
+  sABCD = 1-tAABC-tABBC-tABCC+tAAAB+tAABB+tABBB-tAAAA
+  alpha_1 = (1-d)*(sAAAB + 2*sAABC + sABBB + 2*sABBC + 2*sABCC + 4*sABCD) + d*(2*sAAAA*sAAAB + 2*sAAAB^2 + 2*sAAAB*sAABB + 4*sAAAA*sAABC + 6*sAAAB*sAABC + 4*sAABB*sAABC + 4*sAABC^2 + 2*sAAAB*sABBB + 4*sAABC*sABBB + 2*sAAAA*sABBC + 4*sAAAB*sABBC + 2*sAABB*sABBC + 6*sAABC*sABBC + 2*sABBB*sABBC + 2*sABBC^2 + 2*sAAAA*sABCC + 4*sAAAB*sABCC + 2*sAABB*sABCC + 6*sAABC*sABCC + 2*sABBB*sABCC + 4*sABBC*sABCC + 2*sABCC^2 + 6*sAAAA*sABCD + 8*sAAAB*sABCD + 6*sAABB*sABCD + 10*sAABC*sABCD + 6*sABBB*sABCD + 8*sABBC*sABCD + 8*sABCC*sABCD + 6*sABCD^2)
+  alpha_2 = (1-d)*(2*sAABB + sAABC + sABBC + sABCC) + d*(2*sAAAA*sAABB + 2*sAAAB*sAABB + 2*sAABB^2 + 2*sAABB*sAABC + 2*sAABB*sABBB + sABBB^2 + 2*sAAAA*sABBC + 2*sAAAB*sABBC + 4*sAABB*sABBC + 2*sAABC*sABBC + 4*sABBB*sABBC + 3*sABBC^2 + 2*sAAAA*sABCC + 2*sAAAB*sABCC + 4*sAABB*sABCC + 2*sAABC*sABCC + 4*sABBB*sABCC + 6*sABBC*sABCC + 3*sABCC^2 + 2*sAABB*sABCD + 2*sABBB*sABCD + 4*sABBC*sABCD + 4*sABCC*sABCD + sABCD^2)
+  alpha_3 = (1-d)*(sAAAB + sABBB) + d*(2*sAAAA*sABBB + 2*sAAAB*sABBB + 4*sAABB*sABBB + 4*sAABC*sABBB + 2*sABBB^2 + 2*sAABB*sABBC + 2*sAABC*sABBC + 2*sABBB*sABBC + 2*sAABB*sABCC + 2*sAABC*sABCC + 2*sABBB*sABCC + 2*sAABB*sABCD + 2*sAABC*sABCD + 2*sABBB*sABCD)
+  alpha_4 = (1-d)*(sAAAA) + d*(sAABB^2 + 2*sAABB*sAABC + sAABC^2 + 2*sAAAB*sABBB + 2*sAAAB*sABBC + 2*sAAAB*sABCC + 2*sAAAB*sABCD)
+  alpha_5 = d*(2*sAAAB*sAABB + 2*sAAAB*sAABC + 2*sAAAA*sABBB + 2*sAAAA*sABBC + 2*sAAAA*sABCC + 2*sAAAA*sABCD)
+  alpha_6 = d*(sAAAB^2 + 2*sAAAA*sAABB + 2*sAAAA*sAABC)
+  alpha_7 = d*(2*sAAAA*sAAAB)
+  alpha_8 = d*(sAAAA^2)
+  alpha_1 * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2 * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3 * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4 * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5 * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6 * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)+
+  alpha_7 * dnbinom(x, size = kmercov*7 / bias, mu = kmercov*7)+
+  alpha_8 * dnbinom(x, size = kmercov*8 / bias, mu = kmercov*8)
+}
+
+#Am ->(r1)-> Ap ->(r2)-> Bm ->(r3)-> Bp
+#' something
+#'
+#' @param something
+#' @return something
+#' @seealso something
+#' @export
+#' @examples
+#' blah blah blah
+predict4_unique = function(r1, r2, r3, k, d, kmercov, bias, x)
+{
+  #enforce r1 <= r2 <= r3
+  if (r1 > r2 || r2 > r3) {return(0)}
+  raaaa = (1-r1)*(1-r2)*(1-r3)
+  raaab = (1-r1)*(1-r2)*r3
+  raabb = (1-r1)*r2*(1-r3)
+  rabbb = r1*(1-r2)*(1-r3)
+  raabc = (1-r1)*r2*r3
+  rabbc = r1*(1-r2)*r3
+  rabcc = r1*r2*(1-r3)
+  rabcd = r1*r2*r3
+  tAAAA = raaaa**k
+  tAAAB = (raaaa+raaab)**k
+  tAABB = (raaaa+raabb)**k
+  tABBB = (raaaa+rabbb)**k
+  tAABC = (raaaa+raaab+raabb+raabc)**k
+  tABBC = (raaaa+raaab+rabbb+rabbc)**k
+  tABCC = (raaaa+raabb+rabbb+rabcc)**k
+  sAAAA = tAAAA
+  sAAAB = tAAAB-tAAAA
+  sAABB = tAABB-tAAAA
+  sABBB = tABBB-tAAAA
+  sAABC = tAABC-tAAAB-tAABB+tAAAA
+  sABBC = tABBC-tAAAB-tABBB+tAAAA
+  sABCC = tABCC-tAABB-tABBB+tAAAA
+  sABCD = 1-tAABC-tABBC-tABCC+tAAAB+tAABB+tABBB-tAAAA
+  alpha_1_unique = (1-d)*(sAAAB + 2*sAABC + sABBB + 2*sABBC + 2*sABCC + 4*sABCD)
+  alpha_2_unique = (1-d)*(2*sAABB + sAABC + sABBC + sABCC)
+  alpha_3_unique = (1-d)*(sAAAB + sABBB)
+  alpha_4_unique = (1-d)*(sAAAA)
+  alpha_1_unique * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2_unique * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3_unique * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4_unique * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)
+}
+
 #' something
 #'
 #' @param something
