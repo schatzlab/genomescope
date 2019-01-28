@@ -493,8 +493,8 @@ predict4 = function(r1, r2, r3, k, d, kmercov, bias, x)
 #' blah blah blah
 predict4_unique = function(r1, r2, r3, k, d, kmercov, bias, x)
 {
-  #enforce r1 <= r2 <= r3
-  if (r1 > r2 || r2 > r3) {return(0)}
+  #enforce r1 <= r3 <= r2
+  if (r1 > r3 || r3 > r2) {return(0)}
   raaaa = (1-r1)*(1-r2)*(1-r3)
   raaab = (1-r1)*(1-r2)*r3
   raabb = (1-r1)*r2*(1-r3)
