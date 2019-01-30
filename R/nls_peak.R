@@ -151,7 +151,10 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
   if (p==4) {
     try(model <- 
     nlsLM(y ~ length*predict4(r1, r2, r3, k, d, kmercov, bias, x),
-    start = list(d=0.001, r1=0.001, r2 = 0.003, r3=0.002, kmercov=estKmercov, bias = 0.5, length = estLength/4),
+    #enforce r1 <= r2 <= r3
+    start = list(d=0.001, r1=0.001, r2 = 0.002, r3=0.003, kmercov=estKmercov, bias = 0.5, length = estLength/4),
+    #enforce r1 <= r3 <= r2
+    #start = list(d=0.001, r1=0.001, r2 = 0.003, r3=0.002, kmercov=estKmercov, bias = 0.5, length = estLength/4),
     lower = c(0, 0, 0, 0, 0, 0, 0),
     upper = c(1, 1, 1, 1, Inf, Inf, Inf),
     control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
@@ -162,7 +165,10 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
 
       try(model <- 
       nlsLM(y ~ length*predict4(r1, r2, r3, k, d, kmercov, bias, x),
-      start = list(d=0.001, r1=0.001, r2=0.003, r3=0.002, kmercov=estKmercov, bias = 0.5, length=estLength/4),
+      #enforce r1 <= r2 <= r3
+      start = list(d=0.001, r1=0.001, r2=0.002, r3=0.003, kmercov=estKmercov, bias = 0.5, length=estLength/4),
+      #enforce r1 <= r3 <= r2
+      #start = list(d=0.001, r1=0.001, r2=0.003, r3=0.002, kmercov=estKmercov, bias = 0.5, length=estLength/4),
       lower = c(0, 0, 0, 0, 0, 0, 0),
       upper = c(1, 1, 1, 1, Inf, Inf, Inf),
       algorithm="port", control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
