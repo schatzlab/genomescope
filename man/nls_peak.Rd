@@ -15,9 +15,9 @@ nls_peak(x, y, k, p, estKmercov, estLength, max_iterations)
 
 \item{p}{An integer corresponding to the ploidy.}
 
-\item{estKmercov}{A numeric with the estimated average kmer coverage of the polyploid genome.}
+\item{estKmercov}{A numeric corresponding to the estimated average kmer coverage of the polyploid genome.}
 
-\item{estLength}{A numeric with the estimated polyploid genome length.}
+\item{estLength}{A numeric corresponding to the estimated polyploid genome length.}
 
 \item{max_iterations}{An integer corresponding to the maximum number iterations to use for nlsLM.}
 }

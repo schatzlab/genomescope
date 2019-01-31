@@ -52,8 +52,10 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   ## Features to report
   het=c(-1,-1)
   homo=c(-1,-1)
+  p_to_num_r = c(0, 1, 2, 4, 6, 10)
+  num_r = p_to_num_r[p]
   if (p > 1) {
-    hets = lapply(1:(p-1), function(x) c(-1, -1))
+    hets = lapply(1:(num_r), function(x) c(-1, -1))
   }
   #het1=c(-1,-1)
   #het2=c(-1,-1)
@@ -238,7 +240,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     }
     if (p==4)
     {
-      unique_hist = amlen*predict4_unique(ahets[[1]], ahets[[2]], ahets[[3]], k, amd, akcov, adups, x)
+      unique_hist = amlen*predict4_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], k, amd, akcov, adups, x) #changed
     }
     if (p==5) #need to change
     {
@@ -267,39 +269,39 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     residual = y - pred
 
-    if (p==1){hetline = paste0("A:",     format(100*ahomo, digits=3), "%")}
-    if (p==2){hetline = paste0("AA:",     format(100*ahomo, digits=3), "% ",
-                               "AB:",     format(100*ahets[[1]], digits=3), "%")}
-    if (p==3){hetline = paste0("AAA:",    format(100*ahomo, digits=3), "% ",
-                               "AAB:",    format(100*ahets[[1]], digits=3), "% ",
-                               "ABC:",    format(100*ahets[[2]], digits=3), "%")}
-    #if (p==4){hetline = paste0("AAAA:",   format(100*ahomo, digits=3), "% ",
-    #                           "AAAB:",   format(100*ahet1, digits=3), "% ",
-    #                           "AABB:",   format(100*ahet2, digits=3), "% ",
-    #                           "AABC:",   format(100*ahet3, digits=3), "% ",
-    #                           "ABCD:",   format(100*ahet4, digits=3), "%")}
-    if (p==4){hetline = paste0("r0:", format(100*ahomo, digits=3), "% ",
-                               "r1:", format(100*ahets[[1]], digits=3), "% ",
-                               "r2:", format(100*ahets[[2]], digits=3), "% ",
-                               "r3:", format(100*ahets[[3]], digits=3), "%")}
-    if (p==5){hetline = paste0("AAAAA:",  format(100*ahomo, digits=3), "% ",
-                               "AAAAB:",  format(100*ahets[[1]], digits=3), "% ",
-                               "AAABB:",  format(100*ahets[[2]], digits=3), "% ",'\n',
-                               "AAABC:",  format(100*ahets[[3]], digits=3), "% ",
-                               "AABBC:",  format(100*ahets[[4]], digits=3), "% ",
-                               "AABCD:",  format(100*ahets[[5]], digits=3), "% ",
-                               "ABCDE:",  format(100*ahets[[6]], digits=3), "%")}
-    if (p==6){hetline = paste0("AAAAAA:", format(100*ahomo, digits=3), "% ",
-                               "AAAAAB:", format(100*ahets[[1]], digits=3), "% ",
-                               "AAAABB:", format(100*ahets[[2]], digits=3), "% ",
-                               "AAABBB:", format(100*ahets[[3]], digits=3), "% ",
-                               "AAAABC:", format(100*ahets[[4]], digits=3), "% ",'\n',
-                               "AAABBC:", format(100*ahets[[5]], digits=3), "% ",
-                               "AABBCC:", format(100*ahets[[6]], digits=3), "% ",
-                               "AAABCD:", format(100*ahets[[7]], digits=3), "% ",
-                               "AABBCD:", format(100*ahets[[8]], digits=3), "% ",
-                               "AABCDE:", format(100*ahets[[9]], digits=3), "% ",
-                               "ABCDEF:", format(100*ahets[[10]], digits=3), "%")}
+    if (p==1){hetline = paste0("a:",     format(100*ahomo, digits=3), "%")}
+    if (p==2){hetline = paste0("aa:",     format(100*ahomo, digits=3), "% ",
+                               "ab:",     format(100*ahets[[1]], digits=3), "%")}
+    if (p==3){hetline = paste0("aaa:",    format(100*ahomo, digits=3), "% ",
+                               "aab:",    format(100*ahets[[1]], digits=3), "% ",
+                               "abc:",    format(100*ahets[[2]], digits=3), "%")}
+    if (p==4){hetline = paste0("aaaa:",   format(100*ahomo, digits=3), "% ",
+                               "aaab:",   format(100*ahets[[1]], digits=3), "% ",
+                               "aabb:",   format(100*ahets[[2]], digits=3), "% ",
+                               "aabc:",   format(100*ahets[[3]], digits=3), "% ",
+                               "abcd:",   format(100*ahets[[4]], digits=3), "%")}
+#    if (p==4){hetline = paste0("r0:", format(100*ahomo, digits=3), "% ",
+#                               "r1:", format(100*ahets[[1]], digits=3), "% ",
+#                               "r2:", format(100*ahets[[2]], digits=3), "% ",
+#                               "r3:", format(100*ahets[[3]], digits=3), "%")}
+    if (p==5){hetline = paste0("aaaaa:",  format(100*ahomo, digits=3), "% ",
+                               "aaaab:",  format(100*ahets[[1]], digits=3), "% ",
+                               "aaabb:",  format(100*ahets[[2]], digits=3), "% ",'\n',
+                               "aaabc:",  format(100*ahets[[3]], digits=3), "% ",
+                               "aabbc:",  format(100*ahets[[4]], digits=3), "% ",
+                               "aabcd:",  format(100*ahets[[5]], digits=3), "% ",
+                               "abcde:",  format(100*ahets[[6]], digits=3), "%")}
+    if (p==6){hetline = paste0("aaaaaa:", format(100*ahomo, digits=3), "% ",
+                               "aaaaab:", format(100*ahets[[1]], digits=3), "% ",
+                               "aaaabb:", format(100*ahets[[2]], digits=3), "% ",
+                               "aaabbb:", format(100*ahets[[3]], digits=3), "% ",
+                               "aaaabc:", format(100*ahets[[4]], digits=3), "% ",'\n',
+                               "aaabbc:", format(100*ahets[[5]], digits=3), "% ",
+                               "aabbcc:", format(100*ahets[[6]], digits=3), "% ",
+                               "aaabcd:", format(100*ahets[[7]], digits=3), "% ",
+                               "aabbcd:", format(100*ahets[[8]], digits=3), "% ",
+                               "aabcde:", format(100*ahets[[9]], digits=3), "% ",
+                               "abcdef:", format(100*ahets[[10]], digits=3), "%")}
     print(hetline)
     ## Finish Log plot
     title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
@@ -424,62 +426,62 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   cat(paste("\n",sprintf(format_column_1,"property"),               sprintf(format_column_2,"min"),                              sprintf(format_column_3,"max"), sep=""),                                     file=summaryFile, sep="\n", append=TRUE)
   if (p==1)
   {
-    cat(paste(sprintf(format_column_1,"Homozygous (A)"),            sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Homozygous (a)"),            sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
   }
   if (p==2)
   {
-    cat(paste(sprintf(format_column_1,"Homozygous (AA)"),           sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"Heterozygous (AB)"),         sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Homozygous (aa)"),           sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Heterozygous (ab)"),         sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
   }
   if (p==3)
   {
-    cat(paste(sprintf(format_column_1,"Homozygous (AAA)"),          sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"Heterozygous (not AAA)"),    sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AAB"),                       sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"ABC"),                       sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Homozygous (aaa)"),          sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Heterozygous (not aaa)"),    sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aab"),                       sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"abc"),                       sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
   }
-  #if (p==4)
-  #{
-  #  cat(paste(sprintf(format_column_1,"Homozygous (AAAA)"),         sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-  #  cat(paste(sprintf(format_column_1,"Heterozygous (not AAAA)"),   sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
-  #  cat(paste(sprintf(format_column_1,"AAAB"),                      sprintf(format_column_2,percentage_format(het1[1])),         sprintf(format_column_3,percentage_format(het1[2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-  #  cat(paste(sprintf(format_column_1,"AABB"),                      sprintf(format_column_2,percentage_format(het2[1])),         sprintf(format_column_3,percentage_format(het2[2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-  #  cat(paste(sprintf(format_column_1,"AABC"),                      sprintf(format_column_2,percentage_format(het3[1])),         sprintf(format_column_3,percentage_format(het3[2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-  #  cat(paste(sprintf(format_column_1,"ABCD"),                      sprintf(format_column_2,percentage_format(het4[1])),         sprintf(format_column_3,percentage_format(het4[2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-  #}
   if (p==4)
   {
-    cat(paste(sprintf(format_column_1,"r0"),         sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"Heterozygous (not r0)"),   sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"r1"),                      sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"r2"),                      sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"r3"),                      sprintf(format_column_2,percentage_format(hets[[3]][1])),         sprintf(format_column_3,percentage_format(hets[[3]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Homozygous (aaaa)"),         sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Heterozygous (not aaaa)"),   sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aaab"),                      sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aabb"),                      sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aabc"),                      sprintf(format_column_2,percentage_format(hets[[3]][1])),         sprintf(format_column_3,percentage_format(hets[[3]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"abcd"),                      sprintf(format_column_2,percentage_format(hets[[4]][1])),         sprintf(format_column_3,percentage_format(hets[[4]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
   }
+#  if (p==4)
+#  {
+#    cat(paste(sprintf(format_column_1,"r0"),         sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+#    cat(paste(sprintf(format_column_1,"Heterozygous (not r0)"),   sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
+#    cat(paste(sprintf(format_column_1,"r1"),                      sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+#    cat(paste(sprintf(format_column_1,"r2"),                      sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+#    cat(paste(sprintf(format_column_1,"r3"),                      sprintf(format_column_2,percentage_format(hets[[3]][1])),         sprintf(format_column_3,percentage_format(hets[[3]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+#  }
   if (p==5)
   {
-    cat(paste(sprintf(format_column_1,"Homozygous (AAAAA)"),        sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_2,"Heterozygous (not AAAAA)"),  sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AAAAB"),                     sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AAABB"),                     sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AAABC"),                     sprintf(format_column_2,percentage_format(hets[[3]][1])),         sprintf(format_column_3,percentage_format(hets[[3]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AABBC"),                     sprintf(format_column_2,percentage_format(hets[[4]][1])),         sprintf(format_column_3,percentage_format(hets[[4]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AABCD"),                     sprintf(format_column_2,percentage_format(hets[[5]][1])),         sprintf(format_column_3,percentage_format(hets[[5]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"ABCDE"),                     sprintf(format_column_2,percentage_format(hets[[6]][1])),         sprintf(format_column_3,percentage_format(hets[[6]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Homozygous (aaaaa)"),        sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_2,"Heterozygous (not aaaaa)"),  sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aaaab"),                     sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aaabb"),                     sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aaabc"),                     sprintf(format_column_2,percentage_format(hets[[3]][1])),         sprintf(format_column_3,percentage_format(hets[[3]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aabbc"),                     sprintf(format_column_2,percentage_format(hets[[4]][1])),         sprintf(format_column_3,percentage_format(hets[[4]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aabcd"),                     sprintf(format_column_2,percentage_format(hets[[5]][1])),         sprintf(format_column_3,percentage_format(hets[[5]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"abcde"),                     sprintf(format_column_2,percentage_format(hets[[6]][1])),         sprintf(format_column_3,percentage_format(hets[[6]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
   }
   if (p==6)
   {
-    cat(paste(sprintf(format_column_1,"Homozygous (AAAAAA)"),       sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"Heterozygous (not AAAAAA)"), sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])), sep=""),                 file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AAAAAB"),                    sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AAAABB"),                    sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AAABBB"),                    sprintf(format_column_2,percentage_format(hets[[3]][1])),         sprintf(format_column_3,percentage_format(hets[[3]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AAAABC"),                    sprintf(format_column_2,percentage_format(hets[[4]][1])),         sprintf(format_column_3,percentage_format(hets[[4]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AAABBC"),                    sprintf(format_column_2,percentage_format(hets[[5]][1])),         sprintf(format_column_3,percentage_format(hets[[5]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AABBCC"),                    sprintf(format_column_2,percentage_format(hets[[6]][1])),         sprintf(format_column_3,percentage_format(hets[[6]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AAABCD"),                    sprintf(format_column_2,percentage_format(hets[[7]][1])),         sprintf(format_column_3,percentage_format(hets[[7]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AABBCD"),                    sprintf(format_column_2,percentage_format(hets[[8]][1])),         sprintf(format_column_3,percentage_format(hets[[8]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"AABCDE"),                    sprintf(format_column_2,percentage_format(hets[[9]][1])),         sprintf(format_column_3,percentage_format(hets[[9]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"ABCDEF"),                    sprintf(format_column_2,percentage_format(hets[[10]][1])),        sprintf(format_column_3,percentage_format(hets[[10]][2])), sep=""),               file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Homozygous (aaaaaa)"),       sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"Heterozygous (not aaaaaa)"), sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])), sep=""),                 file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aaaaab"),                    sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aaaabb"),                    sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aaabbb"),                    sprintf(format_column_2,percentage_format(hets[[3]][1])),         sprintf(format_column_3,percentage_format(hets[[3]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aaaabc"),                    sprintf(format_column_2,percentage_format(hets[[4]][1])),         sprintf(format_column_3,percentage_format(hets[[4]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aaabbc"),                    sprintf(format_column_2,percentage_format(hets[[5]][1])),         sprintf(format_column_3,percentage_format(hets[[5]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aabbcc"),                    sprintf(format_column_2,percentage_format(hets[[6]][1])),         sprintf(format_column_3,percentage_format(hets[[6]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aaabcd"),                    sprintf(format_column_2,percentage_format(hets[[7]][1])),         sprintf(format_column_3,percentage_format(hets[[7]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aabbcd"),                    sprintf(format_column_2,percentage_format(hets[[8]][1])),         sprintf(format_column_3,percentage_format(hets[[8]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aabcde"),                    sprintf(format_column_2,percentage_format(hets[[9]][1])),         sprintf(format_column_3,percentage_format(hets[[9]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"abcdef"),                    sprintf(format_column_2,percentage_format(hets[[10]][1])),        sprintf(format_column_3,percentage_format(hets[[10]][2])), sep=""),               file=summaryFile, sep="\n", append=TRUE)
   }
   cat(paste(sprintf(format_column_1,"Genome Haploid Length"), sprintf(format_column_2,bp_format(total_len[2])),                  sprintf(format_column_3,bp_format(total_len[1])), sep=""),                   file=summaryFile, sep="\n", append=TRUE)
   cat(paste(sprintf(format_column_1,"Genome Repeat Length"),  sprintf(format_column_2,bp_format(repeat_len[2])),                 sprintf(format_column_3,bp_format(repeat_len[1])), sep=""),                  file=summaryFile, sep="\n", append=TRUE)

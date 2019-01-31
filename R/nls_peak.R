@@ -4,8 +4,8 @@
 #' @param y A numeric vector of the y-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @param k An integer corresponding to the kmer length.
 #' @param p An integer corresponding to the ploidy.
-#' @param estKmercov A numeric with the estimated average kmer coverage of the polyploid genome.
-#' @param estLength A numeric with the estimated polyploid genome length.
+#' @param estKmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param estLength A numeric corresponding to the estimated polyploid genome length.
 #' @param max_iterations An integer corresponding to the maximum number iterations to use for nlsLM.
 #' @return An nlsLM model object with some additional components.
 #' @export
@@ -21,11 +21,18 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
   r3_initial = 0.003
   r4_initial = 0.004
   r5_initial = 0.005
-  r_initials = c(r1_initial, r2_initial, r3_initial, r4_initial, r5_initial)
-  r_start = vector("list", p-1)
+  r6_initial = 0.006
+  r7_initial = 0.007
+  r8_initial = 0.008
+  r9_initial = 0.009
+  r10_initial = 0.010
+  r_initials = c(r1_initial, r2_initial, r3_initial, r4_initial, r5_initial, r6_initial, r7_initial, r8_initial, r9_initial, r10_initial)
+  p_to_num_r = c(0, 1, 2, 4, 6, 10)
+  num_r = p_to_num_r[p]
+  r_start = vector("list", num_r)
   if (p > 1) {
-    names(r_start) = paste("r", 1:(p-1), sep="")
-    for (i in 1:(p-1)) {
+    names(r_start) = paste("r", 1:(num_r), sep="")
+    for (i in 1:(num_r)) {
       r_start[[paste("r",i,sep="")]] = r_initials[i]
     }
   }
@@ -37,14 +44,14 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
   bias_initial = 0.5
   bias_max = Inf
   length_min = 0
-  length_initial = estLength
+  length_initial = estLength/p
   length_max = Inf
 
   #Determine what formula to use, based on p
   if (p==1) {
     r_text = ""
   } else {
-    r_text = paste(paste(lapply(1:(p-1), function(x) paste("r", as.character(x), sep="")), collapse=", "), ", ")
+    r_text = paste(paste(lapply(1:(num_r), function(x) paste("r", as.character(x), sep="")), collapse=", "), ", ")
   }
   formula = as.formula(paste("y ~ length*predict",p,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
 
@@ -52,8 +59,8 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
 
   try(model <- nlsLM(formula = formula,
                      start   = c(list(d = d_initial), r_start, list(kmercov = kmercov_initial, bias = bias_initial, length = length_initial)),
-                     lower   = c(c(d_min), rep(r_min, p-1), c(kmercov_min, bias_min, length_min)),
-                     upper   = c(c(d_max), rep(r_max, p-1), c(kmercov_max, bias_max, length_max)),
+                     lower   = c(c(d_min), rep(r_min, num_r), c(kmercov_min, bias_min, length_min)),
+                     upper   = c(c(d_max), rep(r_max, num_r), c(kmercov_max, bias_max, length_max)),
                      control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
 
   if (!is.null(model))
@@ -63,7 +70,7 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
     if (p==1) {
       model$hets = list(c(0, 0))
     } else {
-      model$hets = lapply(1:(p-1), function(x) min_max1(model_sum$coefficients[paste('r', x, sep=""),]))
+      model$hets = lapply(1:(num_r), function(x) min_max1(model_sum$coefficients[paste('r', x, sep=""),]))
     }
     model$het = c(1-Reduce("*", 1-unlist(lapply(model$hets, '[[', 1))), 1-Reduce("*", 1-unlist(lapply(model$hets, '[[', 2))))
     model$homo = 1-model$het
@@ -74,7 +81,7 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
     if (p==1) {
       model$ahets = list(c(0))
     } else {
-      model$ahets = lapply(1:(p-1), function(x) model_sum$coefficients[paste('r', x, sep=""),][[1]])
+      model$ahets = lapply(1:(num_r), function(x) model_sum$coefficients[paste('r', x, sep=""),][[1]])
     }
     model$ahet = 1-Reduce("*", 1-unlist(model$ahets))
     model$ahomo = 1-model$ahet

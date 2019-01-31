@@ -2,19 +2,26 @@
 % Please edit documentation in R/model_functions.R
 \name{predict2}
 \alias{predict2}
-\title{something}
+\title{Produce model estimated (p=2) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.}
 \usage{
 predict2(r1, k, d, kmercov, bias, x)
 }
+\arguments{
+\item{r1}{A numeric corresponding to the nucleotide heterozygosity ab.}
+
+\item{k}{An integer corresponding to the kmer length.}
+
+\item{d}{A numeric corresponding to the repetitiveness.}
+
+\item{kmercov}{A numeric corresponding to the estimated average kmer coverage of the polyploid genome.}
+
+\item{bias}{A numeric corresponding to the overdispersion of the negative binomial distribution.}
+
+\item{x}{An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).}
+}
 \value{
-something
+A numeric vector of the model estimated y-coordinates of the kmer spectra.
 }
 \description{
-something
-}
-\examples{
-blah blah blah
-}
-\seealso{
-something
+Produce model estimated (p=2) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 }

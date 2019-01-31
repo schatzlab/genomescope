@@ -2,19 +2,26 @@
 % Please edit documentation in R/model_functions.R
 \name{predict6}
 \alias{predict6}
-\title{something}
+\title{Produce model estimated (p=6) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.}
 \usage{
 predict6(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, k, d, kmercov, bias, x)
 }
+\arguments{
+\item{r1, r2, r3, r4, r5, r6, r7, r8, r9, r10}{Numerics corresponding to the nucleotide heterozygosities aaaaab, aaaabb, aaabbb, aaaabc, aaabbc, aabbcc, aaabcd, aabbcd, aabcde, and abcdef respectively.}
+
+\item{k}{An integer corresponding to the kmer length.}
+
+\item{d}{A numeric corresponding to the repetitiveness.}
+
+\item{kmercov}{A numeric corresponding to the estimated average kmer coverage of the polyploid genome.}
+
+\item{bias}{A numeric corresponding to the overdispersion of the negative binomial distribution.}
+
+\item{x}{An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).}
+}
 \value{
-something
+A numeric vector of the model estimated y-coordinates of the kmer spectra.
 }
 \description{
-something
-}
-\examples{
-blah blah blah
-}
-\seealso{
-something
+Produce model estimated (p=6) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 }
