@@ -503,7 +503,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   cat(model_status, file=progressFilename, sep="\n", append=TRUE)
 
   if (TESTING) {
-    testingFile <- paste(foldername,"/", arguments$name_prefix, "_testing.tsv",sep="")
+    testingFile <- paste(foldername,"/SIMULATED_testing.tsv",sep="")
     cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
   }
 }
