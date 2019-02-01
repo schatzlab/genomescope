@@ -68,6 +68,7 @@ parser$add_argument("-l", "--lambda", "--kcov", "--kmercov", type = "integer", d
 parser$add_argument("-m", "--max_kmercov", type = "integer", default=-1, help = "optional maximum kmer coverage threshold (kmers with coverage greater than max_kmercov are ignored by the model)")
 parser$add_argument("-n", "--name_prefix", default = "OUTPUT", help = "name prefix for output files [default OUTPUT]")
 parser$add_argument("--verbose", action="store_true", default=FALSE, help = "optional flag to print messages during execution")
+parser$add_argument("--testing", action="store_true", default=FALSE, help = "optional flag to create testing.tsv file with model parameters")
 
 arguments <- parser$parse_args()
 version_message <- "GenomeScope 2.0\n"
@@ -91,6 +92,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   estKmercov <- arguments$lambda
   max_kmercov <- arguments$max_kmercov
   VERBOSE <- arguments$verbose
+  TESTING <- arguments$testing
 
   cat(paste("GenomeScope analyzing ", histfile, " k=", k, " p=", p, " outdir=", foldername, "\n", sep=""))
 
