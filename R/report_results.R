@@ -56,7 +56,12 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   num_r = p_to_num_r[p]
   if (p > 1) {
     hets = lapply(1:(num_r), function(x) c(-1, -1))
+    ahets = lapply(1:(num_r), function(x) -1)
   }
+  amd = -1
+  akcov = -1
+  adups = -1
+  amlen = -1
   #het1=c(-1,-1)
   #het2=c(-1,-1)
   #het3=c(-1,-1)
@@ -504,6 +509,23 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
   if (TESTING) {
     testingFile <- paste(foldername,"/SIMULATED_testing.tsv",sep="")
-    cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+    if (p==1) {
+      cat(paste(amd, akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+    }
+    if (p==2) {
+      cat(paste(amd, ahets[[1]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+    }
+    if (p==3) {
+      cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+    }
+    if (p==4) {
+      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+    }
+    if (p==5) {
+      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+    }
+    if (p==6) {
+      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], ahets[[7]], ahets[[8]], ahets[[9]], ahets[[10]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+    }
   }
 }
