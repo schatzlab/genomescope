@@ -72,7 +72,8 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
     } else {
       model$hets = lapply(1:(num_r), function(x) min_max1(model_sum$coefficients[paste('r', x, sep=""),]))
     }
-    model$het = c(1-Reduce("*", 1-unlist(lapply(model$hets, '[[', 1))), 1-Reduce("*", 1-unlist(lapply(model$hets, '[[', 2))))
+    #model$het = c(1-Reduce("*", 1-unlist(lapply(model$hets, '[[', 1))), 1-Reduce("*", 1-unlist(lapply(model$hets, '[[', 2))))
+    model$het = c(sum(sapply(model$hets, '[[', 1)), sum(sapply(model$hets, '[[', 2)))
     model$homo = 1-model$het
     model$dups   = min_max(model_sum$coefficients['bias',])
     model$kcov   = min_max(model_sum$coefficients['kmercov',])
@@ -83,7 +84,8 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
     } else {
       model$ahets = lapply(1:(num_r), function(x) model_sum$coefficients[paste('r', x, sep=""),][[1]])
     }
-    model$ahet = 1-Reduce("*", 1-unlist(model$ahets))
+    #model$ahet = 1-Reduce("*", 1-unlist(model$ahets))
+    model$ahet = Reduce("+", model$ahets)
     model$ahomo = 1-model$ahet
     model$adups = model_sum$coefficients['bias',][[1]]
     model$akcov = model_sum$coefficients['kmercov',][[1]]
