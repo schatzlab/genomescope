@@ -78,6 +78,7 @@ predict2 = function(r1, k, d, kmercov, bias, x)
 predict2_unique = function(r1, k, d, kmercov, bias, x)
 {
   r0 = 1-r1
+  if (r0 < 0) {return(0)}
   t0 = r0**k
   s0 = t0
   s1 = 1-t0
@@ -135,6 +136,7 @@ predict3 = function(r1, r2, k, d, kmercov, bias, x)
 predict3_unique = function(r1, r2, k, d, kmercov, bias, x)
 {
   r0 = 1-r1-r2
+  if (r0 < 0) {return(0)}
   t0 = r0**k
   t1 = (r0+r1)**k
   s0 = t0
@@ -162,7 +164,7 @@ predict3_unique = function(r1, r2, k, d, kmercov, bias, x)
 predict4 = function(r1, r2, r3, r4, k, d, kmercov, bias, x)
 {
   r0 = 1-r1-r2-r3-r4 #aaaa
-  #if (r0 < 0) {return(0)}
+  if (r0 < 0) {return(0)}
   t0 = r0**k #AAAA
   t1 = (r0+r1)**k #AAAA + AAAB
   t2 = (r0+r2)**k #AAAA + AABB
@@ -204,6 +206,7 @@ predict4 = function(r1, r2, r3, r4, k, d, kmercov, bias, x)
 predict4_unique = function(r1, r2, r3, r4, k, d, kmercov, bias, x)
 {
   r0 = 1-r1-r2-r3-r4
+  if (r0 < 0) {return(0)}
   t0 = r0**k
   t1 = (r0+r1)**k
   t2 = (r0+r2)**k
@@ -285,6 +288,7 @@ predict5 = function(r1, r2, r3, r4, r5, r6, k, d, kmercov, bias, x)
 predict5_unique = function(r1, r2, r3, r4, r5, r6, k, d, kmercov, bias, x)
 {
   r0 = 1-r1-r2-r3-r4-r5-r6
+  if (r0 < 0) {return(0)}
   t0 = (r0)**k
   t1 = (r0+r1)**k
   t2 = (r0+r2)**k
@@ -384,6 +388,7 @@ predict6 = function(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, k, d, kmercov, bias
 predict6_unique = function(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, k, d, kmercov, bias, x)
 {
   r0  = 1-r1-r2-r3-r4-r5-r6-r7-r8-r9-r10
+  if (r0 < 0) {return(0)}
   t0  = (r0)**k
   t1  = (r0+r1)**k
   t2  = (r0+r2)**k
