@@ -229,6 +229,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     error_rate = c(error_rate, error_rate)
 
     total_len = (total_kmers-total_error_kmers)/(p*kcov)
+    atotal_len = (total_kmers-total_error_kmers)/(p*akcov)
 
     ## find kmers that fit the p peak model (no repeats)
     if (p==1)
@@ -510,22 +511,22 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (TESTING) {
     testingFile <- paste(foldername,"/SIMULATED_testing.tsv",sep="")
     if (p==1) {
-      cat(paste(amd, akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==2) {
-      cat(paste(amd, ahets[[1]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, ahets[[1]], akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==3) {
-      cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==4) {
-      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==5) {
-      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==6) {
-      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], ahets[[7]], ahets[[8]], ahets[[9]], ahets[[10]], akcov, adups, amlen, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], ahets[[7]], ahets[[8]], ahets[[9]], ahets[[10]], akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
   }
 }
