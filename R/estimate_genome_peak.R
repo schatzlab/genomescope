@@ -14,8 +14,8 @@
 #' and nlsscore is the score (model RSSE) corresponding to the best fit (of the p forms).
 #' @export
 estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, estKmercov, round, foldername, arguments) {
-  p_to_num_topolgies = c(1, 1, 1, 2, 5, 15)
-  num_topolgies = p_to_num_topologies[p]
+  p_to_num_topologies = c(1, 1, 1, 2, 5, 15)
+  num_topologies = p_to_num_topologies[p]
   numofKmers = sum(as.numeric(x)*as.numeric(y))
   if (estKmercov==-1) {
     ## First we see what happens when we set the estimated kmer coverage to be the x-coordinate where the max peak occurs (typically the homozygous peak)
