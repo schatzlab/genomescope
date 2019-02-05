@@ -162,6 +162,7 @@ predict3_unique = function(r1, r2, k, d, kmercov, bias, x)
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
 predict4_1 = function(raaab, raabc, rabcd, k, d, kmercov, bias, x)
+{
   raaaa = 1-raaab-raabc-rabcd
   if (raaaa < 0) {return(0)}
   tAAAA = raaaa**k
@@ -201,6 +202,7 @@ predict4_1 = function(raaab, raabc, rabcd, k, d, kmercov, bias, x)
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
 predict4_1_unique = function(raaab, raabc, rabcd, k, d, kmercov, bias, x)
+{
   raaaa = 1-raaab-raabc-rabcd
   if (raaaa < 0) {return(0)}
   tAAAA = raaaa**k
@@ -232,6 +234,7 @@ predict4_1_unique = function(raaab, raabc, rabcd, k, d, kmercov, bias, x)
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
 predict4_2 = function(raabb, raabc, rabcd, k, d, kmercov, bias, x)
+{
   raaaa = 1-raabb-raabc-rabcd
   if (raaaa < 0) {return(0)}
   tAAAA = raaaa**k
@@ -271,6 +274,7 @@ predict4_2 = function(raabb, raabc, rabcd, k, d, kmercov, bias, x)
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
 predict4_2_unique = function(raabb, raabc, rabcd, k, d, kmercov, bias, x)
+{
   raaaa = 1-raabb-raabc-rabcd
   if (raaaa < 0) {return(0)}
   tAAAA = raaaa**k
