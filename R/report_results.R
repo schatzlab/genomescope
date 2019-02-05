@@ -62,6 +62,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   akcov = -1
   adups = -1
   amlen = -1
+  atotal_len = -1
+  top = -1
   #het1=c(-1,-1)
   #het2=c(-1,-1)
   #het3=c(-1,-1)
