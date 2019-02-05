@@ -4,31 +4,23 @@
 #' @param y A numeric vector of the y-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @param k An integer corresponding to the kmer length.
 #' @param p An integer corresponding to the ploidy.
+#' @param top An integer corresponding to the topology.
 #' @param estKmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
 #' @param estLength A numeric corresponding to the estimated polyploid genome length.
 #' @param max_iterations An integer corresponding to the maximum number iterations to use for nlsLM.
 #' @return An nlsLM model object with some additional components.
 #' @export
-nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
+nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   #Initiate variables
   model = NULL
   d_min = 0
   d_initial = 0.001
   d_max = 1
   r_min = 0
-  r1_initial = 0.001
-  r2_initial = 0.002
-  r3_initial = 0.003
-  r4_initial = 0.004
-  r5_initial = 0.005
-  r6_initial = 0.006
-  r7_initial = 0.007
-  r8_initial = 0.008
-  r9_initial = 0.009
-  r10_initial = 0.010
-  r_initials = c(r1_initial, r2_initial, r3_initial, r4_initial, r5_initial, r6_initial, r7_initial, r8_initial, r9_initial, r10_initial)
-  p_to_num_r = c(0, 1, 2, 4, 6, 10)
+  r_initial = 0.001
+  p_to_num_r = c(0, 1, 2, 3, 4, 5)
   num_r = p_to_num_r[p]
+  r_initials = rep(r_initial, num_r)
   r_start = vector("list", num_r)
   if (p > 1) {
     names(r_start) = paste("r", 1:(num_r), sep="")
@@ -53,7 +45,7 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
   } else {
     r_text = paste(paste(lapply(1:(num_r), function(x) paste("r", as.character(x), sep="")), collapse=", "), ", ")
   }
-  formula = as.formula(paste("y ~ length*predict",p,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
+  formula = as.formula(paste("y ~ length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
 
   if (VERBOSE) {cat("trying nlsLM algorithm (Levenberg-Marquardt)\n")}
 
@@ -67,6 +59,7 @@ nls_peak<-function(x, y, k, p, estKmercov, estLength, max_iterations) {
   {
     model_sum    = summary(model)
     model$p      = p
+    model$top = top
     if (p==1) {
       model$hets = list(c(0, 0))
     } else {

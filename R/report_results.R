@@ -52,7 +52,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   ## Features to report
   het=c(-1,-1)
   homo=c(-1,-1)
-  p_to_num_r = c(0, 1, 2, 4, 6, 10)
+  p_to_num_r = c(0, 1, 2, 3, 4, 5)
   num_r = p_to_num_r[p]
   if (p > 1) {
     hets = lapply(1:(num_r), function(x) c(-1, -1))
@@ -136,6 +136,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     capture.output(model_sum, file=paste(foldername,"/", arguments$name_prefix, "_model.txt", sep=""))
 
     ## Identify key values
+    top   = model$top
     hets  = model$hets
     het   = model$het
     ahets = model$ahets
@@ -246,7 +247,12 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     }
     if (p==4)
     {
-      unique_hist = amlen*predict4_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], k, amd, akcov, adups, x) #changed
+      if (top==1) {
+        unique_hist = amlen*predict4_1_unique(ahets[[1]], ahets[[2]], ahets[[3]], k, amd, akcov, adups, x)
+      }
+      if (top==2) {
+        unique_hist = amlen*predict4_2_unique(ahets[[1]], ahets[[2]], ahets[[3]], k, amd, akcov, adups, x)
+      }
     }
     if (p==5) #need to change
     {
@@ -282,10 +288,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
                                "aab:",    format(100*ahets[[1]], digits=3), "% ",
                                "abc:",    format(100*ahets[[2]], digits=3), "%")}
     if (p==4){hetline = paste0("aaaa:",   format(100*ahomo, digits=3), "% ",
-                               "aaab:",   format(100*ahets[[1]], digits=3), "% ",
-                               "aabb:",   format(100*ahets[[2]], digits=3), "% ",
-                               "aabc:",   format(100*ahets[[3]], digits=3), "% ",
-                               "abcd:",   format(100*ahets[[4]], digits=3), "%")}
+                               switch(top, "aaab:", "aabb:"),   format(100*ahets[[1]], digits=3), "% ",
+                               "aabc:",   format(100*ahets[[2]], digits=3), "% ",
+                               "abcd:",   format(100*ahets[[3]], digits=3), "%")}
 #    if (p==4){hetline = paste0("r0:", format(100*ahomo, digits=3), "% ",
 #                               "r1:", format(100*ahets[[1]], digits=3), "% ",
 #                               "r2:", format(100*ahets[[2]], digits=3), "% ",
@@ -450,10 +455,10 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   {
     cat(paste(sprintf(format_column_1,"Homozygous (aaaa)"),         sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Heterozygous (not aaaa)"),   sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"aaab"),                      sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"aabb"),                      sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"aabc"),                      sprintf(format_column_2,percentage_format(hets[[3]][1])),         sprintf(format_column_3,percentage_format(hets[[3]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-    cat(paste(sprintf(format_column_1,"abcd"),                      sprintf(format_column_2,percentage_format(hets[[4]][1])),         sprintf(format_column_3,percentage_format(hets[[4]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1, switch(top, "aaab", "aabb")),                      sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"aabc"),                      sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    cat(paste(sprintf(format_column_1,"abcd"),                      sprintf(format_column_2,percentage_format(hets[[3]][1])),         sprintf(format_column_3,percentage_format(hets[[3]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+    #cat(paste(sprintf(format_column_1,"abcd"),                      sprintf(format_column_2,percentage_format(hets[[4]][1])),         sprintf(format_column_3,percentage_format(hets[[4]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
   }
 #  if (p==4)
 #  {
@@ -511,22 +516,22 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (TESTING) {
     testingFile <- paste(foldername,"/SIMULATED_testing.tsv",sep="")
     if (p==1) {
-      cat(paste(amd, akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==2) {
-      cat(paste(amd, ahets[[1]], akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, ahets[[1]], akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==3) {
-      cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==4) {
-      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==5) {
-      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==6) {
-      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], ahets[[7]], ahets[[8]], ahets[[9]], ahets[[10]], akcov, adups, atotal_len, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      cat(paste(amd, ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], ahets[[7]], ahets[[8]], ahets[[9]], ahets[[10]], akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
   }
 }
