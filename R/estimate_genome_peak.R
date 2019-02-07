@@ -39,7 +39,7 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov
   nls0 = NULL
   top_count = 0
   for (top in topologies) {
-    top_count += 1
+    top_count = top_count + 1
     nls1 = nls_peak(x, y, k, p, top, estKmercov1, estLength1, MAX_ITERATIONS)
     if (top_count < num_topologies || (estKmercov==-1 && p>=2)) { #if this is not the last evaluation
       nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
