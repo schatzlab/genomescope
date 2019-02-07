@@ -13,9 +13,16 @@
 #' @return A list (nls, nlsscore) where nls is the nlsLM model object (with some additional components)
 #' and nlsscore is the score (model RSSE) corresponding to the best fit (of the p forms).
 #' @export
-estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, estKmercov, round, foldername, arguments) {
-  p_to_num_topologies = c(1, 1, 1, 2, 5, 15)
-  num_topologies = p_to_num_topologies[p]
+estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov, round, foldername, arguments) {
+  if (topology==-1) {
+    p_to_num_topologies = c(1, 1, 1, 2, 5, 15)
+    num_topologies = p_to_num_topologies[p]
+    topologies = 1:num_topologies
+  }
+  else {
+    num_topologies = 1
+    topologies = c(topology)
+  }
   numofKmers = sum(as.numeric(x)*as.numeric(y))
   if (estKmercov==-1) {
     ## First we see what happens when we set the estimated kmer coverage to be the x-coordinate where the max peak occurs (typically the homozygous peak)
@@ -30,9 +37,11 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, estKmercov, round, f
   if (VERBOSE) {cat(paste("trying with kmercov: ", estKmercov1, "\n"))}
 
   nls0 = NULL
-  for (top in 1:num_topologies) {
+  top_count = 0
+  for (top in topologies) {
+    top_count += 1
     nls1 = nls_peak(x, y, k, p, top, estKmercov1, estLength1, MAX_ITERATIONS)
-    if (top < num_topologies || (estKmercov==-1 && p>=2)) { #if this is not the last evaluation
+    if (top_count < num_topologies || (estKmercov==-1 && p>=2)) { #if this is not the last evaluation
       nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
     }
 
@@ -51,7 +60,7 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, estKmercov, round, f
 
         if (VERBOSE) {print(summary(nls1))}
 
-        if (i<p || top < num_topologies) { #if this is not the last evaluation
+        if (i<p || top_count < num_topologies) { #if this is not the last evaluation
           nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
         }
       }

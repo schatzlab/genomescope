@@ -67,6 +67,7 @@ parser$add_argument("-p", "--ploidy", type = "integer", default = 2, help = "plo
 parser$add_argument("-l", "--lambda", "--kcov", "--kmercov", type = "integer", default=-1, help = "optional initial kmercov estimate for model to use")
 parser$add_argument("-m", "--max_kmercov", type = "integer", default=-1, help = "optional maximum kmer coverage threshold (kmers with coverage greater than max_kmercov are ignored by the model)")
 parser$add_argument("-n", "--name_prefix", default = "OUTPUT", help = "name prefix for output files [default OUTPUT]")
+parser$add_argument("-t", "--topology", type = "integer", default = -1, help = "optional topology for model to use")
 parser$add_argument("--verbose", action="store_true", default=FALSE, help = "optional flag to print messages during execution")
 parser$add_argument("--testing", action="store_true", default=FALSE, help = "optional flag to create testing.tsv file with model parameters")
 
@@ -80,7 +81,7 @@ if (arguments$version) {
 
 if (is.null(arguments$input) | is.null(arguments$output)) {
   cat("USAGE: genomescope.R -i input_histogram_file -k kmer_length -p ploidy -o output_dir\n")
-  cat("OPTIONAL PARAMETERS: -l lambda -m max_kmercov -n 'name_prefix' --verbose\n")
+  cat("OPTIONAL PARAMETERS: -l lambda -m max_kmercov -n 'name_prefix' -t topology --verbose --testing\n")
   cat("HELP: genomescope.R --help\n")
 } else {
 
@@ -91,6 +92,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   foldername <- arguments$output
   estKmercov <- arguments$lambda
   max_kmercov <- arguments$max_kmercov
+  topology        <- arguments$topology
   VERBOSE <- arguments$verbose
   TESTING <- arguments$testing
 
@@ -144,7 +146,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
     x <- kmer_prof[start:maxCovIndex,1]
     y <- kmer_prof[start:maxCovIndex,2]
 
-    model_peaks <- estimate_Genome_peakp(kmer_prof, x, y, k, p, estKmercov, round, foldername, arguments)
+    model_peaks <- estimate_Genome_peakp(kmer_prof, x, y, k, p, topology, estKmercov, round, foldername, arguments)
 
     if (!is.null(model_peaks[[1]])) {
       cat(paste("converged. score: ", model_peaks[[2]]$all[[1]]), file=progressFilename, sep="\n", append=TRUE)
