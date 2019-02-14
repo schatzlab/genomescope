@@ -237,15 +237,15 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     ## find kmers that fit the p peak model (no repeats)
     if (p==1)
     {
-      unique_hist = amlen*predict1_unique(k, amd, akcov, adups, x)
+      unique_hist = amlen*predict1_1_unique(k, amd, akcov, adups, x)
     }
     if (p==2)
     {
-      unique_hist = amlen*predict2_unique(ahets[[1]], k, amd, akcov, adups, x)
+      unique_hist = amlen*predict2_1_unique(ahets[[1]], k, amd, akcov, adups, x)
     }
     if (p==3)
     {
-      unique_hist = amlen*predict3_unique(ahets[[1]], ahets[[2]], k, amd, akcov, adups, x)
+      unique_hist = amlen*predict3_1_unique(ahets[[1]], ahets[[2]], k, amd, akcov, adups, x)
     }
     if (p==4)
     {

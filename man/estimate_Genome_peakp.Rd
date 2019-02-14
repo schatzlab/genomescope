@@ -4,8 +4,8 @@
 \alias{estimate_Genome_peakp}
 \title{Function to fit 2p peak model, with p forms}
 \usage{
-estimate_Genome_peakp(kmer_hist_orig, x, y, k, p, estKmercov, round,
-  foldername, arguments)
+estimate_Genome_peakp(kmer_hist_orig, x, y, k, p, topology, estKmercov,
+  round, foldername, arguments)
 }
 \arguments{
 \item{kmer_hist_orig}{A data frame of the original histogram data (starting at 1 and with last position removed).}

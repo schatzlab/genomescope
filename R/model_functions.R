@@ -7,7 +7,7 @@
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict1 = function(k, d, kmercov, bias, x)
+predict1_1 = function(k, d, kmercov, bias, x)
 {
   r0 = 1
   t0 = r0**k
@@ -47,7 +47,7 @@ predict1_unique = function(k, d, kmercov, bias, x)
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict2 = function(r1, k, d, kmercov, bias, x)
+predict2_1 = function(r1, k, d, kmercov, bias, x)
 {
   r0 = 1-r1 #aa
   if (r0 < 0) {return(0)}
@@ -75,7 +75,7 @@ predict2 = function(r1, k, d, kmercov, bias, x)
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict2_unique = function(r1, k, d, kmercov, bias, x)
+predict2_1_unique = function(r1, k, d, kmercov, bias, x)
 {
   r0 = 1-r1
   if (r0 < 0) {return(0)}
@@ -99,7 +99,7 @@ predict2_unique = function(r1, k, d, kmercov, bias, x)
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict3 = function(r1, r2, k, d, kmercov, bias, x)
+predict3_1 = function(r1, r2, k, d, kmercov, bias, x)
 {
   r0 = 1-r1-r2 #aaa
   if (r0 < 0) {return(0)}
@@ -133,7 +133,7 @@ predict3 = function(r1, r2, k, d, kmercov, bias, x)
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict3_unique = function(r1, r2, k, d, kmercov, bias, x)
+predict3_1_unique = function(r1, r2, k, d, kmercov, bias, x)
 {
   r0 = 1-r1-r2
   if (r0 < 0) {return(0)}
