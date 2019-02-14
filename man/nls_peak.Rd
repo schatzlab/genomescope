@@ -4,7 +4,7 @@
 \alias{nls_peak}
 \title{Uses nlsLM to fit 2p peak model}
 \usage{
-nls_peak(x, y, k, p, estKmercov, estLength, max_iterations)
+nls_peak(x, y, k, p, top, estKmercov, estLength, max_iterations)
 }
 \arguments{
 \item{x}{An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).}
@@ -14,6 +14,8 @@ nls_peak(x, y, k, p, estKmercov, estLength, max_iterations)
 \item{k}{An integer corresponding to the kmer length.}
 
 \item{p}{An integer corresponding to the ploidy.}
+
+\item{top}{An integer corresponding to the topology.}
 
 \item{estKmercov}{A numeric corresponding to the estimated average kmer coverage of the polyploid genome.}
 

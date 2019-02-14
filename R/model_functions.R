@@ -150,6 +150,8 @@ predict3_unique = function(r1, r2, k, d, kmercov, bias, x)
   alpha_3_unique * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)
 }
 
+
+
 #AAAA -> AAAB -> AABC -> ABCD
 #' Produce model estimated (p=4, topology=1) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'

@@ -86,15 +86,15 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
 } else {
 
   ## Load the arguments from the user
-  histfile   <- arguments$input
-  k          <- arguments$kmer_size
-  p          <- arguments$ploidy
-  foldername <- arguments$output
-  estKmercov <- arguments$lambda
+  histfile    <- arguments$input
+  k           <- arguments$kmer_size
+  p           <- arguments$ploidy
+  foldername  <- arguments$output
+  estKmercov  <- arguments$lambda
   max_kmercov <- arguments$max_kmercov
-  topology        <- arguments$topology
-  VERBOSE <- arguments$verbose
-  TESTING <- arguments$testing
+  topology    <- arguments$topology
+  VERBOSE     <- arguments$verbose
+  TESTING     <- arguments$testing
 
   cat(paste("GenomeScope analyzing ", histfile, " k=", k, " p=", p, " outdir=", foldername, "\n", sep=""))
 
@@ -174,12 +174,15 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
           hetm = model_peaks[[1]]$ahet
           hetb = best_container[[1]]$ahet
 
-          if (hetb * SCORE_HET_FOLD_DIFFERENCE < hetm) {
+          #if (hetb * SCORE_HET_FOLD_DIFFERENCE < hetm) {
+          if (hetb + 0.01 < hetm) {
             if (VERBOSE) {cat("model has significantly higher heterozygosity but similar score, overruling\n")}
-            best_container = model_peaks
+            #best_container = model_peaks
           }
-          else if (hetm * SCORE_HET_FOLD_DIFFERENCE < hetb) {
+          #else if (hetm * SCORE_HET_FOLD_DIFFERENCE < hetb) {
+          else if (hetm + 0.01 < hetb) {
             if (VERBOSE) {cat("previous best has significantly higher heterozygosity and similar score, keeping\n")}
+            best_container = model_peaks #added
           }
           else if (model_peaks[[2]]$all[[1]] < best_container[[2]]$all[[1]]) {
             if (VERBOSE) {cat("score is marginally better but het rate is not extremely different, updating\n")}
