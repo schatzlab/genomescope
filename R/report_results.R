@@ -95,12 +95,12 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   ## Plot the distribution, and hopefully with the model fit
   png(paste(foldername, "/", arguments$name_prefix, "_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
-  #par(mar = c(5.1,4.1,5.1,2.1))
+  par(mar = c(5.1,4.1,5.1,2.1))
   plot(kmer_hist_orig, type="n", main="GenomeScope Profile\n\n\n",
   xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit),
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
-  rect(0, 0, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
-  #rect(0, 0, x_limit*1.1 , y_limit*1.1, col=COLOR_BGCOLOR)
+  #rect(0, 0, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
+  rect(0, 0, x_limit*1.1 , y_limit*1.1, col=COLOR_BGCOLOR)
   points(kmer_hist_orig, type="h", col=COLOR_HIST, lwd=2)
 #  if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
 #    abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
@@ -110,7 +110,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   ## Make a second plot in log space over entire range
   png(paste(foldername, "/", arguments$name_prefix, "_plot.log.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
-  #par(mar = c(5.1,4.1,5.1,2.1))
+  par(mar = c(5.1,4.1,5.1,2.1))
   plot(kmer_hist_orig, type="n", main="GenomeScope Profile\n\n\n",
   xlab="Coverage", ylab="Frequency", log="xy",
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
@@ -345,7 +345,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     ## Add legend
     if(length(kmer_hist[,1])==length(kmer_hist_orig[,1]))
     {
-      legend(exp(.65 * log(max(x))), 1.0 * max(y),
+      legend(exp(.62 * log(max(x))), 1.0 * max(y),
       legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
       lty=c("solid", "solid", "solid", "solid", "dashed"),
       lwd=c(3,3,3,3,3),
@@ -355,7 +355,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     else
     {
       legend("topright",
-      ##legend(exp(.65 * log(max(x))), 1.0 * max(y),
+      ##legend(exp(.62 * log(max(x))), 1.0 * max(y),
       legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks","cov-threshold"),
       lty=c("solid", "solid", "solid", "solid", "dashed", "dashed"),
       lwd=c(3,3,3,3,2,3),
@@ -392,7 +392,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     if (VERBOSE) { lines(x, residual, col=COLOR_RESIDUAL, lwd=3) }
 
     ## Add legend
-    legend(.65 * x_limit, 1.0 * y_limit,
+    legend(.62 * x_limit, 1.0 * y_limit,
     legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
     lty=c("solid", "solid", "solid", "solid", "dashed"),
     lwd=c(3,3,3,3,2),
