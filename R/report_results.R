@@ -358,7 +358,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     ## Draw just the unique portion of the model
     if (TRANSFORM) {
       lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
-      lines(x, pred_hist_transform, col=COLOR_2pPEAK, lwd=3)
+      lines(x, pred_transform, col=COLOR_2pPEAK, lwd=3)
       lines(x[1:error_xcutoff_ind], error_kmers_transform, lwd=3, col=COLOR_ERRORS)
     } else {
       lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
