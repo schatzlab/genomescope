@@ -25,8 +25,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (TRANSFORM) {
     y = x*y
     kmer_hist_transform = list()
-    kmer_hist_transform[[1]] = x
-    kmer_hist_transform[[2]] = y
+    kmer_hist_transform$x = x
+    kmer_hist_transform$y = y
   }
   model = container[[1]]
 
