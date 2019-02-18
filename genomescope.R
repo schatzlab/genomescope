@@ -70,6 +70,7 @@ parser$add_argument("-n", "--name_prefix", default = "OUTPUT", help = "name pref
 parser$add_argument("-t", "--topology", type = "integer", default = -1, help = "optional topology for model to use")
 parser$add_argument("--verbose", action="store_true", default=FALSE, help = "optional flag to print messages during execution")
 parser$add_argument("--testing", action="store_true", default=FALSE, help = "optional flag to create testing.tsv file with model parameters")
+parser$add_argument("--transform", action="store_true", default=FALSE, help = "optional flag to fit to transformed (x*y vs. x) kmer histogram")
 
 arguments <- parser$parse_args()
 version_message <- "GenomeScope 2.0\n"
@@ -95,6 +96,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   topology    <- arguments$topology
   VERBOSE     <- arguments$verbose
   TESTING     <- arguments$testing
+  TRANSFORM   <- arguments$transform
 
   cat(paste("GenomeScope analyzing ", histfile, " k=", k, " p=", p, " outdir=", foldername, "\n", sep=""))
 

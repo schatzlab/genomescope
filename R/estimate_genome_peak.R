@@ -15,7 +15,7 @@
 #' @export
 estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov, round, foldername, arguments) {
   if (topology==-1) {
-    p_to_num_topologies = c(1, 1, 1, 2, 5, 15)
+    p_to_num_topologies = c(1, 1, 1, 2, 5, 16)
     num_topologies = p_to_num_topologies[p]
     topologies = 1:num_topologies
   }
