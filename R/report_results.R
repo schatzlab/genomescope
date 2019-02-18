@@ -22,6 +22,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   
   x=kmer_hist_orig[[1]]
   y=kmer_hist_orig[[2]]
+  if (TRANSFORM) {
+    y = x*y
+  }
   model = container[[1]]
 
   #automatically zoom into the relevant regions of the plot, ignore first 15 positions
@@ -126,9 +129,15 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   {
     x=kmer_hist[[1]]
     y=kmer_hist[[2]]
+    if (TRANSFORM) {
+      y_transform = x*y
+    }
 
     ## The model converged!
     pred=predict(model, newdata=data.frame(x))
+    if (TRANSFORM) {
+      pred_transform = x*pred
+    }
 
     ## Compute the genome characteristics
     model_sum=summary(model)
@@ -224,6 +233,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     ## Rather than "0", set to be some very small number so log-log plot looks okay
     error_kmers = pmax(error_kmers, 1e-10)
+    if (TRANSFORM) {
+      error_kmers_transform = x[1:error_xcutoff_ind]*error_kmers
+    }
 
     total_error_kmers = sum(as.numeric(error_kmers) * as.numeric(x[1:error_xcutoff_ind]))
     total_kmers = sum(as.numeric(x)*as.numeric(y))
@@ -265,6 +277,10 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       unique_hist = amlen*predict6_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], ahets[[7]], ahets[[8]], ahets[[9]], ahets[[10]], k, amd, akcov, adups, x)
     }
 
+    if (TRANSFORM) {
+      unique_hist_transform = x*unique_hist
+    }
+
     unique_kmers = sum(as.numeric(x)*as.numeric(unique_hist))
     repeat_kmers = total_kmers - unique_kmers - total_error_kmers
 
@@ -282,6 +298,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     model_fit_unique = score$unique
 
     residual = y - pred
+    if (TRANSFORM) {
+      residual_transform = y_transform - pred_transform
+    }
 
     if (p==1){hetline = paste0("a:",     format(100*ahomo, digits=3), "%")}
     if (p==2){hetline = paste0("aa:",     format(100*ahomo, digits=3), "% ",
@@ -337,11 +356,23 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     abline(v=akcov * (1:(2*p)), col=COLOR_KMERPEAK, lty=2)
 
     ## Draw just the unique portion of the model
-    lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
-    lines(x, pred, col=COLOR_2pPEAK, lwd=3)
-    lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+    if (TRANSFORM) {
+      lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
+      lines(x, pred_hist_transform, col=COLOR_2pPEAK, lwd=3)
+      lines(x[1:error_xcutoff_ind], error_kmers_transform, lwd=3, col=COLOR_ERRORS)
+    } else {
+      lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
+      lines(x, pred, col=COLOR_2pPEAK, lwd=3)
+      lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+    }
 
-    if (VERBOSE) { lines(x, residual, col=COLOR_RESIDUAL, lwd=3) }
+    if (VERBOSE) {
+      if (TRANSFORM) {
+        lines(x, residual_transform, col=COLOR_RESIDUAL, lwd=3)
+      } else {
+        lines(x, residual, col=COLOR_RESIDUAL, lwd=3)
+      }
+    }
 
     ## Add legend
     if(length(kmer_hist[,1])==length(kmer_hist_orig[,1]))
@@ -386,11 +417,23 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     abline(v=akcov * (1:(2*p)), col=COLOR_KMERPEAK, lty=2)
 
     ## Draw just the unique portion of the model
-    lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
-    lines(x, pred, col=COLOR_2pPEAK, lwd=3)
-    lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+    if (TRANSFORM) {
+      lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
+      lines(x, pred_transform, col=COLOR_2pPEAK, lwd=3)
+      lines(x[1:error_xcutoff_ind], error_kmers_transform, lwd=3, col=COLOR_ERRORS)
+    } else {
+      lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
+      lines(x, pred, col=COLOR_2pPEAK, lwd=3)
+      lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+    }
 
-    if (VERBOSE) { lines(x, residual, col=COLOR_RESIDUAL, lwd=3) }
+    if (VERBOSE) {
+      if (TRANSFORM) {
+        lines(x, residual_transform, col=COLOR_RESIDUAL, lwd=3)
+      } else {
+        lines(x, residual, col=COLOR_RESIDUAL, lwd=3)
+      }
+    }
 
     ## Add legend
     legend(.62 * x_limit, 1.0 * y_limit,
