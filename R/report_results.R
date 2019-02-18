@@ -291,7 +291,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
                                "abc:",    format(100*ahets[[2]], digits=3), "%")}
     if (p==4){hetline = paste0("aaaa:",   format(100*ahomo, digits=3), "% ",
                                switch(top, "aaab:", "aabb:"),   format(100*ahets[[1]], digits=3), "% ",
-                               "aabb:",   format(100*switch(), digits=3), "% ",
+                               #"aabb:",   format(100*switch(), digits=3), "% ",
                                "aabc:",   format(100*ahets[[2]], digits=3), "% ",
                                "abcd:",   format(100*ahets[[3]], digits=3), "%")}
 #    if (p==4){hetline = paste0("r0:", format(100*ahomo, digits=3), "% ",
