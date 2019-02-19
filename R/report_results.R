@@ -345,23 +345,25 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
                                "aabbc:",  format(100*ahets[[4]], digits=3), "% ",
                                "aabcd:",  format(100*ahets[[5]], digits=3), "% ",
                                "abcde:",  format(100*ahets[[6]], digits=3), "%")}
-#    if (p==6){hetline = paste0("aaaaaa:", format(100*ahomo, digits=3), "% ",
-#                               "aaaaab:", format(100*ahets[[1]], digits=3), "% ",
-#                               "aaaabc:", format(100*ahets[[2]], digits=3), "% ",'\n',
-#                               "aaabcd:", format(100*ahets[[3]], digits=3), "% ",
-#                               "aabcde:", format(100*ahets[[4]], digits=3), "% ",
-#                               "abcdef:", format(100*ahets[[5]], digits=3), "%")}
     if (p==6){hetline = paste0("aaaaaa:", format(100*ahomo, digits=3), "% ",
                                "aaaaab:", format(100*ahets[[1]], digits=3), "% ",
-                               "aaaabb:", format(100*ahets[[2]], digits=3), "% ",
-                               "aaabbb:", format(100*ahets[[3]], digits=3), "% ",
-                               "aaaabc:", format(100*ahets[[4]], digits=3), "% ",'\n',
-                               "aaabbc:", format(100*ahets[[5]], digits=3), "% ",
-                               "aabbcc:", format(100*ahets[[6]], digits=3), "% ",
-                               "aaabcd:", format(100*ahets[[7]], digits=3), "% ",
-                               "aabbcd:", format(100*ahets[[8]], digits=3), "% ",
-                               "aabcde:", format(100*ahets[[9]], digits=3), "% ",
-                               "abcdef:", format(100*ahets[[10]], digits=3), "%")}
+                               "aaaabc:", format(100*ahets[[2]], digits=3), "% ",'\n',
+                               "aaabcd:", format(100*ahets[[3]], digits=3), "% ",
+                               "aabcde:", format(100*ahets[[4]], digits=3), "% ",
+                               "abcdef:", format(100*ahets[[5]], digits=3), "%")}
+    if (top==0) {
+      if (p==6){hetline = paste0("aaaaaa:", format(100*ahomo, digits=3), "% ",
+                                 "aaaaab:", format(100*ahets[[1]], digits=3), "% ",
+                                 "aaaabb:", format(100*ahets[[2]], digits=3), "% ",
+                                 "aaabbb:", format(100*ahets[[3]], digits=3), "% ",
+                                 "aaaabc:", format(100*ahets[[4]], digits=3), "% ",'\n',
+                                 "aaabbc:", format(100*ahets[[5]], digits=3), "% ",
+                                 "aabbcc:", format(100*ahets[[6]], digits=3), "% ",
+                                 "aaabcd:", format(100*ahets[[7]], digits=3), "% ",
+                                 "aabbcd:", format(100*ahets[[8]], digits=3), "% ",
+                                 "aabcde:", format(100*ahets[[9]], digits=3), "% ",
+                                 "abcdef:", format(100*ahets[[10]], digits=3), "%")}
+    }
     print(hetline)
     ## Finish Log plot
     title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
