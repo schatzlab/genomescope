@@ -15,7 +15,8 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   model = NULL
   d_min = 0
   d_initial = 0.001
-  d_max = 1
+  #d_max = 1
+  d_max = 0.05
   r_min = 0
   r_initial = 0.001
   if (top==0) {
