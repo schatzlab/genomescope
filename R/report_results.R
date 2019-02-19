@@ -281,6 +281,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       if (top==1) {
         unique_hist = amlen*predict6_1_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], k, amd, akcov, adups, x)
       }
+      if (top==6) {
+        unique_hist = amlen*predict6_6_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], k, amd, akcov, adups, x)
+      }
     }
 
     if (TRANSFORM) {

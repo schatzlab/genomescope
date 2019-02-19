@@ -474,6 +474,96 @@ predict6_1_unique = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, 
   alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
 }
 
+#' Produce model estimated (p=6, topology=6) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaaabb,raaaabc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaabb, aaaabc, aaabcd, aabcde, and abcdef respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict6_6 = function(raaaabb, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+{
+  raaaaaa  = 1-raaaabb-raaaabc-raaabcd-raabcde-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaaabc  = (raaaaaa+raaaabb+raaaabc)**k
+  taaabcd  = (raaaaaa+raaaabb+raaaabc+raaabcd)**k
+  taabcde  = (raaaaaa+raaaabb+raaaabc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAAABC  = taaaabc-taaaabb
+  sAAABCD  = taaabcd-taaaabc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
+  alpha_1  = (1-d)*(2*sAAAABC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(4*sAAAAAA*sAAAABC + 4*sAAAABB*sAAAABC + 4*sAAAABC**2 + 6*sAAAAAA*sAAABCD + 6*sAAAABB*sAAABCD + 10*sAAAABC*sAAABCD + 6*sAAABCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 12*sAAAABC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 14*sAAAABC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAAABB + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 2*sAAAABB*sAAAABC + 2*sAAAABB*sAAABCD + 2*sAAAABB*sAABCDE + 2*sAAAABB*sABCDEF + sABCDEF**2)
+  alpha_3  = (1-d)*(sAAABCD) + d*(2*sAABCDE*sABCDEF)
+  alpha_4  = (1-d)*(sAAAABB + sAAAABC) + d*(sAABCDE**2 + 2*sAAABCD*sABCDEF)
+  alpha_5  = (1-d)*(0) + d*(2*sAAABCD*sAABCDE + 2*sAAAABB*sABCDEF + 2*sAAAABC*sABCDEF)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABCD**2 + 2*sAAAABB*sAABCDE + 2*sAAAABC*sAABCDE)
+  alpha_7  = d*(2*sAAAABB*sAAABCD + 2*sAAAABC*sAAABCD + 2*sAAAAAA*sABCDEF)
+  alpha_8  = d*(sAAAABB**2 + 2*sAAAABB*sAAAABC + sAAAABC**2 + 2*sAAAAAA*sAABCDE)
+  alpha_9  = d*(2*sAAAAAA*sAAABCD)
+  alpha_10 = d*(2*sAAAAAA*sAAAABB + 2*sAAAAAA*sAAAABC)
+  alpha_11 = d*(0)
+  alpha_12 = d*(sAAAAAA**2)
+  alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)+
+  alpha_7  * dnbinom(x, size = kmercov*7 / bias, mu = kmercov*7)+
+  alpha_8  * dnbinom(x, size = kmercov*8 / bias, mu = kmercov*8)+
+  alpha_9  * dnbinom(x, size = kmercov*9 / bias, mu = kmercov*9)+
+  alpha_10 * dnbinom(x, size = kmercov*10 / bias, mu = kmercov*10)+
+  alpha_11 * dnbinom(x, size = kmercov*11 / bias, mu = kmercov*11)+
+  alpha_12 * dnbinom(x, size = kmercov*12 / bias, mu = kmercov*12)
+}
+
+#' Produce model estimated (p=6, topology=6, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaaabb,raaaabc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaabb, aaaabc, aaabcd, aabcde, and abcdef respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict6_6_unique = function(raaaabb, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+{
+  raaaaaa  = 1-raaaabb-raaaabc-raaabcd-raabcde-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaaabc  = (raaaaaa+raaaabb+raaaabc)**k
+  taaabcd  = (raaaaaa+raaaabb+raaaabc+raaabcd)**k
+  taabcde  = (raaaaaa+raaaabb+raaaabc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAAABC  = taaaabc-taaaabb
+  sAAABCD  = taaabcd-taaaabc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
+  alpha_1_unique  = (1-d)*(2*sAAAABC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF)
+  alpha_2_unique  = (1-d)*(sAAAABB + sAABCDE)
+  alpha_3_unique  = (1-d)*(sAAABCD)
+  alpha_4_unique  = (1-d)*(sAAAABB + sAAAABC)
+  alpha_5_unique  = (1-d)*(0)
+  alpha_6_unique  = (1-d)*(sAAAAAA)
+  alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
+}
+
 #' Produce model estimated (p=6) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
 #' @param r1,r2,r3,r4,r5,r6,r7,r8,r9,r10 Numerics corresponding to the nucleotide heterozygosities aaaaab, aaaabb, aaabbb, aaaabc, aaabbc, aabbcc, aaabcd, aabbcd, aabcde, and abcdef respectively.

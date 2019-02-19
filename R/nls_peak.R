@@ -46,8 +46,8 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
     r_text = paste(paste(lapply(1:(num_r), function(x) paste("r", as.character(x), sep="")), collapse=", "), ", ")
   }
   if (TRANSFORM) {
-    y = x*y
-    formula = as.formula(paste("y ~ x*length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
+    y_transform = x*y
+    formula = as.formula(paste("y_transform ~ x*length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
   } else {
     formula = as.formula(paste("y ~ length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
   }
