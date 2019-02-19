@@ -98,15 +98,20 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   resolution=300
 
   ## Plot the distribution, and hopefully with the model fit
+  if (TRANSFORM) {
+    kmer_hist_plot = kmer_hist_transform
+  } else {
+    kmer_hist_plot = kmer_hist_orig
+  }
   png(paste(foldername, "/", arguments$name_prefix, "_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,5.1,2.1))
-  plot(kmer_hist_transform, type="n", main="GenomeScope Profile\n\n\n",
+  plot(kmer_hist_plot, type="n", main="GenomeScope Profile\n\n\n",
   xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit),
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   #rect(0, 0, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
   rect(0, 0, x_limit*1.1 , y_limit*1.1, col=COLOR_BGCOLOR)
-  points(kmer_hist_transform, type="h", col=COLOR_HIST, lwd=2)
+  points(kmer_hist_plot, type="h", col=COLOR_HIST, lwd=2)
 #  if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
 #    abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
 #  }
@@ -116,11 +121,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   png(paste(foldername, "/", arguments$name_prefix, "_plot.log.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,5.1,2.1))
-  plot(kmer_hist_transform, type="n", main="GenomeScope Profile\n\n\n",
+  plot(kmer_hist_plot, type="n", main="GenomeScope Profile\n\n\n",
   xlab="Coverage", ylab="Frequency", log="xy",
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   rect(1e-10, 1e-10, max(kmer_hist_orig[,1])*10 , max(kmer_hist_orig[,2])*10, col=COLOR_BGCOLOR)
-  points(kmer_hist_transform, type="h", col=COLOR_HIST, lwd=2)
+  points(kmer_hist_plot, type="h", col=COLOR_HIST, lwd=2)
   if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
     abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
   }
