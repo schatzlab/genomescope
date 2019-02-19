@@ -18,7 +18,7 @@ NUM_ROUNDS=4
 START_SHIFT=5
 
 ## Typical cutoff for sequencing error
-TYPICAL_ERROR = 15
+TYPICAL_ERROR = 35
 
 ## Max rounds on NLS
 MAX_ITERATIONS=200
