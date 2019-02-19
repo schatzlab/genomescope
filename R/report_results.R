@@ -24,9 +24,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   y=kmer_hist_orig[[2]]
   if (TRANSFORM) {
     y = x*y
-    kmer_hist_transform = list()
-    kmer_hist_transform$x = x
-    kmer_hist_transform$y = y
+    kmer_hist_transform = kmer_hist_orig
+    kmer_hist_transform$V2 = kmer_hist_transform$V1 * kmer_hist_transform$V2
   }
   model = container[[1]]
 
@@ -102,12 +101,12 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   png(paste(foldername, "/", arguments$name_prefix, "_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,5.1,2.1))
-  plot(ifelse(TRANSFORM, kmer_hist_transform, kmer_hist_orig), type="n", main="GenomeScope Profile\n\n\n",
+  plot(kmer_hist_transform, type="n", main="GenomeScope Profile\n\n\n",
   xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit),
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   #rect(0, 0, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
   rect(0, 0, x_limit*1.1 , y_limit*1.1, col=COLOR_BGCOLOR)
-  points(ifelse(TRANSFORM, kmer_hist_transform, kmer_hist_orig), type="h", col=COLOR_HIST, lwd=2)
+  points(kmer_hist_transform, type="h", col=COLOR_HIST, lwd=2)
 #  if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
 #    abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
 #  }
@@ -117,11 +116,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   png(paste(foldername, "/", arguments$name_prefix, "_plot.log.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,5.1,2.1))
-  plot(ifelse(TRANSFORM, kmer_hist_transform, kmer_hist_orig), type="n", main="GenomeScope Profile\n\n\n",
+  plot(kmer_hist_transform, type="n", main="GenomeScope Profile\n\n\n",
   xlab="Coverage", ylab="Frequency", log="xy",
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   rect(1e-10, 1e-10, max(kmer_hist_orig[,1])*10 , max(kmer_hist_orig[,2])*10, col=COLOR_BGCOLOR)
-  points(ifelse(TRANSFORM, kmer_hist_transform, kmer_hist_orig), type="h", col=COLOR_HIST, lwd=2)
+  points(kmer_hist_transform, type="h", col=COLOR_HIST, lwd=2)
   if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
     abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
   }
@@ -138,9 +137,6 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     ## The model converged!
     pred=predict(model, newdata=data.frame(x))
-    if (TRANSFORM) {
-      pred_transform = x*pred
-    }
 
     ## Compute the genome characteristics
     model_sum=summary(model)
@@ -302,7 +298,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     residual = y - pred
     if (TRANSFORM) {
-      residual_transform = y_transform - pred_transform
+      residual_transform = y_transform - pred
     }
 
     if (p==1){hetline = paste0("a:",     format(100*ahomo, digits=3), "%")}
@@ -361,7 +357,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     ## Draw just the unique portion of the model
     if (TRANSFORM) {
       lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
-      lines(x, pred_transform, col=COLOR_2pPEAK, lwd=3)
+      lines(x, pred, col=COLOR_2pPEAK, lwd=3)
       lines(x[1:error_xcutoff_ind], error_kmers_transform, lwd=3, col=COLOR_ERRORS)
     } else {
       lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
@@ -422,7 +418,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     ## Draw just the unique portion of the model
     if (TRANSFORM) {
       lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
-      lines(x, pred_transform, col=COLOR_2pPEAK, lwd=3)
+      lines(x, pred, col=COLOR_2pPEAK, lwd=3)
       lines(x[1:error_xcutoff_ind], error_kmers_transform, lwd=3, col=COLOR_ERRORS)
     } else {
       lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
