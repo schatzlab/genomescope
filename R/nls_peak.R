@@ -25,7 +25,8 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   }
   num_r = p_to_num_r[p]
   #r_initials = rep(r_initial, num_r)
-  r_initials = c(0.010, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004, 0.003, 0.002, 0.001)
+  #r_initials = c(0.010, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004, 0.003, 0.002, 0.001)
+  r_initials = c(0.03729, 0.007493, 0.009627, 0.01469, 0.008204, 0.003340, 0.0001906, 0.001918, 0.002039, 0)
   r_start = vector("list", num_r)
   if (p > 1) {
     names(r_start) = paste("r", 1:(num_r), sep="")
