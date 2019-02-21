@@ -216,7 +216,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     error_xcutoff_ind = tail(which(x<=error_xcutoff),n=1)
     if (length(error_xcutoff_ind)==0) {error_xcutoff_ind=1}
 
-    error_kmers = y[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
+    if (TRANSFORM) {
+      error_kmers = y_transform[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
+    } else {
+      error_kmers = y[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
+    }
 
     first_zero = -1
 
@@ -243,11 +247,13 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     ## Rather than "0", set to be some very small number so log-log plot looks okay
     error_kmers = pmax(error_kmers, 1e-10)
+
     if (TRANSFORM) {
-      error_kmers_transform = x[1:error_xcutoff_ind]*error_kmers
+      total_error_kmers = sum(error_kmers)
+    } else {
+      total_error_kmers = sum(as.numeric(error_kmers) * as.numeric(x[1:error_xcutoff_ind]))
     }
 
-    total_error_kmers = sum(as.numeric(error_kmers) * as.numeric(x[1:error_xcutoff_ind]))
     total_kmers = sum(as.numeric(x)*as.numeric(y))
 
     error_rate = 1-(1-(total_error_kmers/total_kmers))**(1/k)
@@ -388,7 +394,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     if (TRANSFORM) {
       lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
       lines(x, pred, col=COLOR_2pPEAK, lwd=3)
-      lines(x[1:error_xcutoff_ind], error_kmers_transform, lwd=3, col=COLOR_ERRORS)
+      lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
     } else {
       lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
       lines(x, pred, col=COLOR_2pPEAK, lwd=3)
@@ -449,7 +455,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     if (TRANSFORM) {
       lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
       lines(x, pred, col=COLOR_2pPEAK, lwd=3)
-      lines(x[1:error_xcutoff_ind], error_kmers_transform, lwd=3, col=COLOR_ERRORS)
+      lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
     } else {
       lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
       lines(x, pred, col=COLOR_2pPEAK, lwd=3)
