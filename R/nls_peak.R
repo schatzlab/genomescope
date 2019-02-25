@@ -43,7 +43,7 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   kmercov_initial = estKmercov
   kmercov_max = Inf
   bias_min = 0
-  bias_initial = 0.5
+  bias_initial = 0.1 #0.5
   bias_max = Inf
   length_min = 0
   length_initial = estLength/p
