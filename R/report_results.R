@@ -541,8 +541,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (VERBOSE) {
     cat(paste("VERBOSE set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (top!=-1) {
-    cat(paste("topology = ", top, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  if (topology!=-1) {
+    cat(paste("topology = ", topology, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (TESTING) {
     cat(paste("TESTING set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
@@ -550,14 +550,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (TRANSFORM) {
     cat(paste("TRANSFORM set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (r_inits!=-1) {
-    cat(paste("initial rates = ", r_inits, sep=""), file=summaryFile, sep="\n", append=TRUE)
-  }
   if (KMER_RATES) {
     cat(paste("KMER_RATES set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (ALPHA_RATES) {
     cat(paste("ALPHA_RATES set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (r_inits!=-1) {
+    cat(paste("initial rates = ", r_inits, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   cat(paste("\n",sprintf(format_column_1,"property"),               sprintf(format_column_2,"min"),                              sprintf(format_column_3,"max"), sep=""),                                     file=summaryFile, sep="\n", append=TRUE)
   if (p==1)
