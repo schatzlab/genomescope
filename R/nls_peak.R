@@ -16,7 +16,6 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   d_min = 0
   d_initial = 0.001
   d_max = 1
-  #d_max = 0.05
   r_min = 0
   r_initial = 0.001
   if (top==0) {
@@ -25,16 +24,20 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
     p_to_num_r = c(0, 1, 2, 3, 4, 5)
   }
   num_r = p_to_num_r[p]
-  #r_initials = rep(r_initial, num_r)
-  r_initials = c(0.010, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004, 0.003, 0.002, 0.001)
-  #r_initials = c(0.03729, 0.007493, 0.009627, 0.01469, 0.008204, 0.003340, 0.0001906, 0.001918, 0.002039, 0)
-  #r_initials = c(0.05422, 0.008120, 0.01071, 0.01531, 0.008848, 0.004343, 0.001104, 0.002018, 0.0002830, 0)
-  #r_initials = c(0.02989, 0.008720, 0.009232, 0.01607, 0.00731, 0.003750, 0, 0.001318, 0, 0)
-  #r_initials = c(0.005, 0.004, 0.003, 0.002, 0.001)
-  if (ALPHA_RATES) {
-    r_initials = c(4,3,2,1)
-  } else if (KMER_RATES) {
-    r_initials = c(0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09)
+  if (r_inits!=-1) {
+    r_initials = unlist(lapply(strsplit(r_inits,","),as.numeric))
+    if (length(r_initials)!=num_r) {
+      stop("Incorrect number of initial rates supplied.")
+    }
+  } else {
+    if (ALPHA_RATES) {
+      r_initials = c(12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1) #This doesn't work yet.
+    } else if (KMER_RATES) {
+      c(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05)
+    } else {
+      r_initials = rep(r_initial, num_r)
+      #r_initials = c(0.010, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004, 0.003, 0.002, 0.001)
+    }
   }
   r_start = vector("list", num_r)
   if (p > 1) {
@@ -48,7 +51,7 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   kmercov_initial = estKmercov
   kmercov_max = Inf
   bias_min = 0
-  bias_initial = 0.1 #0.5
+  bias_initial = 0.5
   bias_max = Inf
   length_min = 0
   length_initial = estLength/p
