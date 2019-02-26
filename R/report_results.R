@@ -534,6 +534,30 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (arguments$max_kmercov!=-1) {
     cat(paste("max_kmercov = ", arguments$max_kmercov, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
+  if (arguments$name_prefix!="DEFAULT") {
+    cat(paste("name prefix = ", arguments$name_prefix, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (VERBOSE) {
+    cat(paste("VERBOSE set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (top!=-1) {
+    cat(paste("topology = ", top, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (TESTING) {
+    cat(paste("TESTING set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (TRANSFORM) {
+    cat(paste("TRANSFORM set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (INITIAL_RATES) {
+    cat(paste("initial rates = ", r_inits, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (KMER_RATES) {
+    cat(paste("KMER_RATES set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (ALPHA_RATES) {
+    cat(paste("ALPHA_RATES set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
   cat(paste("\n",sprintf(format_column_1,"property"),               sprintf(format_column_2,"min"),                              sprintf(format_column_3,"max"), sep=""),                                     file=summaryFile, sep="\n", append=TRUE)
   if (p==1)
   {
