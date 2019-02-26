@@ -232,10 +232,10 @@ predict4_0_unique = function(raaab, raabb, raabc, rabcd, k, d, kmercov, bias, x)
     sAABC = tAABC-tAAAB-tAABB+tAAAA
     sABCD = 1-tAABC
   }
-  alpha_1_unique = (1-d)*(sAAAB + 2*sAABC + 4*sABCD) + d*(2*sAAAA*sAAAB + 2*sAAAB^2 + 2*sAAAB*sAABB + 4*sAAAA*sAABC + 6*sAAAB*sAABC + 4*sAABB*sAABC + 4*sAABC^2 + 6*sAAAA*sABCD + 8*sAAAB*sABCD + 6*sAABB*sABCD + 10*sAABC*sABCD + 6*sABCD^2)
-  alpha_2_unique = (1-d)*(2*sAABB + sAABC) + d*(2*sAAAA*sAABB + 2*sAAAB*sAABB + 2*sAABB^2 + 2*sAABB*sAABC + 2*sAABB*sABCD + sABCD^2)
-  alpha_3_unique = (1-d)*(sAAAB) + d*(2*sAABB*sABCD + 2*sAABC*sABCD)
-  alpha_4_unique = (1-d)*(sAAAA) + d*(sAABB^2 + 2*sAABB*sAABC + sAABC^2 + 2*sAAAB*sABCD)
+  alpha_1_unique = (1-d)*(sAAAB + 2*sAABC + 4*sABCD)
+  alpha_2_unique = (1-d)*(2*sAABB + sAABC)
+  alpha_3_unique = (1-d)*(sAAAB)
+  alpha_4_unique = (1-d)*(sAAAA)
   alpha_1_unique * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2_unique * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3_unique * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
