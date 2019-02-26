@@ -72,6 +72,7 @@ parser$add_argument("--verbose", action="store_true", default=FALSE, help = "opt
 parser$add_argument("--testing", action="store_true", default=FALSE, help = "optional flag to create testing.tsv file with model parameters")
 parser$add_argument("--transform", action="store_true", default=FALSE, help = "optional flag to fit to transformed (x*y vs. x) kmer histogram")
 parser$add_argument("--kmer_rates", action="store_true", default=FALSE, help = "optional flag to fit using kmer partition rates instead of nucleotide partition rates")
+parser$add_argument("--alpha_rates", action="store_true", default=FALSE, help = "optional flag to fit user alpha rates")
 
 arguments <- parser$parse_args()
 version_message <- "GenomeScope 2.0\n"
@@ -84,7 +85,7 @@ if (arguments$version) {
 if (is.null(arguments$input) | is.null(arguments$output)) {
   cat("USAGE: genomescope.R -i input_histogram_file -k kmer_length -p ploidy -o output_dir\n")
   cat("OPTIONAL PARAMETERS: -l lambda -m max_kmercov -n 'name_prefix' --verbose\n")
-  cat("ADVANCED PARAMETERS: -t topology --testing --transform --kmer_rates\n")
+  cat("ADVANCED PARAMETERS: -t topology --testing --transform --kmer_rates --alpha_rates\n")
   cat("HELP: genomescope.R --help\n")
 } else {
 
@@ -100,6 +101,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   TESTING     <- arguments$testing
   TRANSFORM   <- arguments$transform
   KMER_RATES  <- arguments$kmer_rates
+  ALPHA_RATES <- arguments$alpha_rates
 
   cat(paste("GenomeScope analyzing ", histfile, " k=", k, " p=", p, " outdir=", foldername, "\n", sep=""))
 
