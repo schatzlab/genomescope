@@ -526,6 +526,10 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
   cat(paste("GenomeScope version 2.0", sep=""), file=summaryFile, sep="\n")
   cat(paste("input file = ", arguments$input, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  cat(paste("output directory = ", arguments$output, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  if (arguments$name_prefix!="OUTPUT") {
+    cat(paste("name prefix = ", arguments$name_prefix, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
   cat(paste("k = ", k,sep=""), file=summaryFile, sep="\n", append=TRUE)
   cat(paste("p = ", p,sep=""), file=summaryFile, sep="\n", append=TRUE)
   if (arguments$lambda!=-1) {
@@ -533,9 +537,6 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   }
   if (arguments$max_kmercov!=-1) {
     cat(paste("max_kmercov = ", arguments$max_kmercov, sep=""), file=summaryFile, sep="\n", append=TRUE)
-  }
-  if (arguments$name_prefix!="DEFAULT") {
-    cat(paste("name prefix = ", arguments$name_prefix, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (VERBOSE) {
     cat(paste("VERBOSE set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
