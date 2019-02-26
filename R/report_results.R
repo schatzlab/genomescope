@@ -549,7 +549,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (TRANSFORM) {
     cat(paste("TRANSFORM set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (INITIAL_RATES) {
+  if (r_inits!=-1) {
     cat(paste("initial rates = ", r_inits, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (KMER_RATES) {
