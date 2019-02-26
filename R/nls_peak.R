@@ -31,6 +31,11 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   #r_initials = c(0.05422, 0.008120, 0.01071, 0.01531, 0.008848, 0.004343, 0.001104, 0.002018, 0.0002830, 0)
   #r_initials = c(0.02989, 0.008720, 0.009232, 0.01607, 0.00731, 0.003750, 0, 0.001318, 0, 0)
   #r_initials = c(0.005, 0.004, 0.003, 0.002, 0.001)
+  if (ALPHA_RATES) {
+    r_initials = c(4,3,2,1)
+  } else if (KMER_RATES) {
+    r_initials = c(0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09)
+  }
   r_start = vector("list", num_r)
   if (p > 1) {
     names(r_start) = paste("r", 1:(num_r), sep="")
