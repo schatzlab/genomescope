@@ -33,7 +33,7 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
     if (ALPHA_RATES) {
       r_initials = c(12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1) #This doesn't work yet.
     } else if (KMER_RATES) {
-      c(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05)
+      r_initials = c(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05)
     } else {
       r_initials = rep(r_initial, num_r)
       #r_initials = c(0.010, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004, 0.003, 0.002, 0.001)
