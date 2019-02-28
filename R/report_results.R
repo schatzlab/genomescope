@@ -23,9 +23,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   x=kmer_hist_orig[[1]]
   y=kmer_hist_orig[[2]]
   if (TRANSFORM) {
-    y = x*y
+    y = as.numeric(x)*as.numeric(y)
     kmer_hist_transform = kmer_hist_orig
-    kmer_hist_transform$V2 = kmer_hist_transform$V1 * kmer_hist_transform$V2
+    kmer_hist_transform$V2 = as.numeric(kmer_hist_transform$V1) * as.numeric(kmer_hist_transform$V2)
   }
   model = container[[1]]
 
@@ -143,7 +143,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     x=kmer_hist[[1]]
     y=kmer_hist[[2]]
     if (TRANSFORM) {
-      y_transform = x*y
+      y_transform = as.numeric(x)*as.numeric(y)
     }
 
     ## The model converged!

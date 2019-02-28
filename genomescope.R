@@ -127,7 +127,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   ## try to find the local minimum between errors and the first (heterozygous) peak
   start <- tail(which(kmer_prof[1:TYPICAL_ERROR,2]==min(kmer_prof[1:TYPICAL_ERROR,2])),n=1)
   if (TRANSFORM) {
-    start <- tail(which(kmer_prof[1:TYPICAL_ERROR,2]*kmer_prof[1:TYPICAL_ERROR,1]==min(kmer_prof[1:TYPICAL_ERROR,2]*kmer_prof[1:TYPICAL_ERROR,1])),n=1)
+    start <- tail(which(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1])==min(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1]))),n=1)
   }
 
   maxCovIndex = -1
