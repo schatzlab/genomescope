@@ -167,8 +167,8 @@ predict4_0 = function(raaab, raabb, raabc, rabcd, k, d, kmercov, bias, x)
   if (raaaa < 0) {return(0)}
   if (KMER_RATES) {
     sAAAA = raaaa
-    sAABB = raabb
     sAAAB = raaab
+    sAABB = raabb
     sAABC = raabc
     sABCD = rabcd
   } else {
@@ -182,12 +182,12 @@ predict4_0 = function(raaab, raabb, raabc, rabcd, k, d, kmercov, bias, x)
     sAABC = tAABC-tAAAB-tAABB+tAAAA
     sABCD = 1-tAABC
   }
-  alpha_1 = (1-d)*(sAAAB + 2*sAABC + 4*sABCD) + d*(2*sAAAA*sAAAB + 2*sAAAB^2 + 2*sAAAB*sAABB + 4*sAAAA*sAABC + 6*sAAAB*sAABC + 4*sAABB*sAABC + 4*sAABC^2 + 6*sAAAA*sABCD + 8*sAAAB*sABCD + 6*sAABB*sABCD + 10*sAABC*sABCD + 6*sABCD^2)
-  alpha_2 = (1-d)*(2*sAABB + sAABC) + d*(2*sAAAA*sAABB + 2*sAAAB*sAABB + 2*sAABB^2 + 2*sAABB*sAABC + 2*sAABB*sABCD + sABCD^2)
+  alpha_1 = (1-d)*(sAAAB + 2*sAABC + 4*sABCD) + d*(2*sAAAA*sAAAB + 2*sAAAB**2 + 2*sAAAB*sAABB + 4*sAAAA*sAABC + 6*sAAAB*sAABC + 4*sAABB*sAABC + 4*sAABC**2 + 6*sAAAA*sABCD + 8*sAAAB*sABCD + 6*sAABB*sABCD + 10*sAABC*sABCD + 6*sABCD**2)
+  alpha_2 = (1-d)*(2*sAABB + sAABC) + d*(2*sAAAA*sAABB + 2*sAAAB*sAABB + 2*sAABB**2 + 2*sAABB*sAABC + 2*sAABB*sABCD + sABCD**2)
   alpha_3 = (1-d)*(sAAAB) + d*(2*sAABB*sABCD + 2*sAABC*sABCD)
-  alpha_4 = (1-d)*(sAAAA) + d*(sAABB^2 + 2*sAABB*sAABC + sAABC^2 + 2*sAAAB*sABCD)
+  alpha_4 = (1-d)*(sAAAA) + d*(sAABB**2 + 2*sAABB*sAABC + sAABC**2 + 2*sAAAB*sABCD)
   alpha_5 = d*(2*sAAAB*sAABB + 2*sAAAB*sAABC + 2*sAAAA*sABCD)
-  alpha_6 = d*(sAAAB^2 + 2*sAAAA*sAABB + 2*sAAAA*sAABC)
+  alpha_6 = d*(sAAAB**2 + 2*sAAAA*sAABB + 2*sAAAA*sAABC)
   alpha_7 = d*(2*sAAAA*sAAAB)
   alpha_8 = d*(sAAAA**2)
   alpha_1 * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
@@ -217,8 +217,8 @@ predict4_0_unique = function(raaab, raabb, raabc, rabcd, k, d, kmercov, bias, x)
   if (raaaa < 0) {return(0)}
   if (KMER_RATES) {
     sAAAA = raaaa
-    sAABB = raabb
     sAAAB = raaab
+    sAABB = raabb
     sAABC = raabc
     sABCD = rabcd
   } else {
