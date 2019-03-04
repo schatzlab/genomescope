@@ -559,6 +559,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (r_inits!=-1) {
     cat(paste("initial rates = ", r_inits, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
+  if (d_init!=-1) {
+    cat(paste("initial repetitiveness = ", d_init, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
   cat(paste("\n",sprintf(format_column_1,"property"),               sprintf(format_column_2,"min"),                              sprintf(format_column_3,"max"), sep=""),                                     file=summaryFile, sep="\n", append=TRUE)
   if (p==1)
   {

@@ -71,6 +71,7 @@ parser$add_argument("-t", "--topology", type = "integer", default = -1, help = "
 parser$add_argument("--verbose", action="store_true", default=FALSE, help = "optional flag to print messages during execution")
 parser$add_argument("--testing", action="store_true", default=FALSE, help = "optional flag to create testing.tsv file with model parameters")
 parser$add_argument("--transform", action="store_true", default=FALSE, help = "optional flag to fit to transformed (x*y vs. x) kmer histogram")
+parser$add_argument("--d_initial", type="character", default = -1, help = "optional flag to set initial value for repetitiveness")
 parser$add_argument("--initial_rates", type="character", default = -1, help = "optional flag to set initial values for nucleotide (or kmer or alpha) rates")
 parser$add_argument("--kmer_rates", action="store_true", default=FALSE, help = "optional flag to fit using kmer heterozygosity rates instead of nucleotide heterozygosity rates")
 parser$add_argument("--alpha_rates", action="store_true", default=FALSE, help = "optional flag to fit user alpha rates")
@@ -98,6 +99,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   estKmercov  <- arguments$lambda
   max_kmercov <- arguments$max_kmercov
   topology    <- arguments$topology
+  d_init      <- arguments$d_initial
   r_inits     <- arguments$initial_rates
   VERBOSE     <- arguments$verbose
   TESTING     <- arguments$testing
