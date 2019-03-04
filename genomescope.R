@@ -7,6 +7,7 @@
 ## Load libraries for non-linear least squares and argument parser
 library('minpack.lm')
 library('argparse')
+library('DEoptim')
 
 ## Load the genomescope library
 library('genomescope')

@@ -47,38 +47,49 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
     }
   }
   r_max = 1
-  kmercov_min = 0
+  kmercov_min = 0.5*estKmercov
   kmercov_initial = estKmercov
-  kmercov_max = Inf
+  kmercov_max = 2*estKmercov
   bias_min = 0
   bias_initial = 0.5
-  bias_max = Inf
-  length_min = 0
+  bias_max = 5
+  length_min = 0.5*estLength/p
   length_initial = estLength/p
-  length_max = Inf
+  length_max = 2*estLength/p
 
   #Determine what formula to use, based on p
   if (p==1) {
     r_text = ""
   } else {
-    r_text = paste(paste(lapply(1:(num_r), function(x) paste("r", as.character(x), sep="")), collapse=", "), ", ")
+    r_text = paste(paste(lapply(1:(num_r), function(x) paste("r", as.character(x), sep="")), collapse=", "), ", ",sep="")
+    r_param_text = paste(paste(lapply(1:(num_r), function(x) paste("r", as.character(x), "=params[", as.character(x+1), "]",sep="")), collapse="; "), "; ",sep="")
   }
   if (TRANSFORM) {
     #x = head(x,100)
     #y_transform = head(x,100)*head(y,100)
     y_transform = as.numeric(x)*as.numeric(y)
-    formula = as.formula(paste("y_transform ~ x*length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
+    #formula = as.formula(paste("y_transform ~ x*length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
+    formula = as.formula(paste("function(params) {d = params[1]; ", r_param_text, "kmercov=params[", as.character(num_r+2), "]; bias=params[", as.character(num_r+3), "]; length = params[", as.character(num_r+4), "]; sum((y_transform - x*length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x))**2)}",sep=""))
   } else {
-    formula = as.formula(paste("y ~ length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
+    #formula = as.formula(paste("y ~ length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
+    formula = eval(parse(text = paste("function(params) {d = params[1]; ", r_param_text, "kmercov=params[", as.character(num_r+2), "]; bias=params[", as.character(num_r+3), "]; length = params[", as.character(num_r+4), "]; sum((y - length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x))**2)}",sep="")))
   }
 
   if (VERBOSE) {cat("trying nlsLM algorithm (Levenberg-Marquardt)\n")}
 
-  try(model <- nlsLM(formula = formula,
-                     start   = c(list(d = d_initial), r_start, list(kmercov = kmercov_initial, bias = bias_initial, length = length_initial)),
-                     lower   = c(c(d_min), rep(r_min, num_r), c(kmercov_min, bias_min, length_min)),
-                     upper   = c(c(d_max), rep(r_max, num_r), c(kmercov_max, bias_max, length_max)),
-                     control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
+#  try(model <- nlsLM(formula = formula,
+#                     start   = c(list(d = d_initial), r_start, list(kmercov = kmercov_initial, bias = bias_initial, length = length_initial)),
+#                     lower   = c(c(d_min), rep(r_min, num_r), c(kmercov_min, bias_min, length_min)),
+#                     upper   = c(c(d_max), rep(r_max, num_r), c(kmercov_max, bias_max, length_max)),
+#                     control = list(minFactor=1e-12, maxiter=max_iterations)), silent = TRUE)
+
+  model <- DEoptim(fn    = formula,
+                   lower = c(c(d_min), rep(r_min, num_r), c(kmercov_min, bias_min, length_min)),
+                   upper = c(c(d_max), rep(r_max, num_r), c(kmercov_max, bias_max, length_max)),
+                   control = list(itermax = 500))
+
+  print(model)
+  stop()
 
   if (!is.null(model))
   {
