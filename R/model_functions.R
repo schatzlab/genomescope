@@ -970,11 +970,11 @@ predict5_0_unique = function(r1, r2, r3, r4, r5, r6, k, d, kmercov, bias, x)
   s4 = t4-t1-t2+t0
   s5 = t5-t3-t4+t1+t2-t0
   s6 = 1-t5
-  alpha_1_unique  = (1-d)*(s1 + 2*s3 + s4 + 3*s5 + 5*s6) + d*(2*s0*s1 + 2*s1**2 + 2*s1*s2 + 4*s0*s3 + 6*s1*s3 + 4*s2*s3 + 4*s3**2 + 2*s0*s4 + 4*s1*s4 + 2*s2*s4 + 6*s3*s4 + 2*s4**2 + 6*s0*s5 + 8*s1*s5 + 6*s2*s5 + 10*s3*s5 + 8*s4*s5 + 6*s5**2 + 8*s0*s6 + 10*s1*s6 + 8*s2*s6 + 12*s3*s6 + 10*s4*s6 + 14*s5*s6 + 8*s6**2)
-  alpha_2_unique  = (1-d)*(s2 + 2*s4 + s5) + d*(2*s0*s2 + 2*s1*s2 + 2*s2**2 + 2*s2*s3 + 2*s0*s4 + 2*s1*s4 + 4*s2*s4 + 2*s3*s4 + 2*s4**2 + 2*s2*s5 + 2*s4*s5 + 2*s2*s6 + 2*s4*s6 + s6**2)
-  alpha_3_unique  = (1-d)*(s2 + s3) + d*(2*s4*s6 + 2*s5*s6)
-  alpha_4_unique  = (1-d)*(s1) + d*(s4**2 + 2*s4*s5 + s5**2 + 2*s2*s6 + 2*s3*s6)
-  alpha_5_unique  = (1-d)*(s0) + d*(2*s2*s4 + 2*s3*s4 + 2*s2*s5 + 2*s3*s5 + 2*s1*s6)
+  alpha_1_unique  = (1-d)*(s1 + 2*s3 + s4 + 3*s5 + 5*s6)
+  alpha_2_unique  = (1-d)*(s2 + 2*s4 + s5)
+  alpha_3_unique  = (1-d)*(s2 + s3)
+  alpha_4_unique  = (1-d)*(s1)
+  alpha_5_unique  = (1-d)*(s0)
   alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -1124,18 +1124,18 @@ predict6_2 = function(raaaaab, raaaabc, raabbcd, raabcde, rabcdef, k, d, kmercov
     sAABCDE  = taabcde-taabbcd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(sAAAAAB + 2*sAAAABC + 2*sAABBCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB^2 + 4*sAAAAAA*sAAAABC + 6*sAAAAAB*sAAAABC + 4*sAAAABC^2 + 4*sAAAAAA*sAABBCD + 6*sAAAAAB*sAABBCD + 8*sAAAABC*sAABBCD + 4*sAABBCD^2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 12*sAAAABC*sAABCDE + 12*sAABBCD*sAABCDE + 8*sAABCDE^2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 14*sAAAABC*sABCDEF + 14*sAABBCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF^2)
-  alpha_2  = (1-d)*(2*sAABBCD + sAABCDE) + d*(2*sAAAAAA*sAABBCD + 2*sAAAAAB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAABBCD^2 + 2*sAABBCD*sAABCDE + 2*sAABBCD*sABCDEF + sABCDEF^2)
+  alpha_1  = (1-d)*(sAAAAAB + 2*sAAAABC + 2*sAABBCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 4*sAAAAAA*sAAAABC + 6*sAAAAAB*sAAAABC + 4*sAAAABC**2 + 4*sAAAAAA*sAABBCD + 6*sAAAAAB*sAABBCD + 8*sAAAABC*sAABBCD + 4*sAABBCD**2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 12*sAAAABC*sAABCDE + 12*sAABBCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 14*sAAAABC*sABCDEF + 14*sAABBCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(2*sAABBCD + sAABCDE) + d*(2*sAAAAAA*sAABBCD + 2*sAAAAAB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAABBCD**2 + 2*sAABBCD*sAABCDE + 2*sAABBCD*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(0) + d*(2*sAABBCD*sABCDEF + 2*sAABCDE*sABCDEF)
-  alpha_4  = (1-d)*(sAAAABC) + d*(sAABBCD^2 + 2*sAABBCD*sAABCDE + sAABCDE^2)
+  alpha_4  = (1-d)*(sAAAABC) + d*(sAABBCD**2 + 2*sAABBCD*sAABCDE + sAABCDE**2)
   alpha_5  = (1-d)*(sAAAAAB) + d*(2*sAAAABC*sABCDEF)
   alpha_6  = (1-d)*(sAAAAAA) + d*(2*sAAAABC*sAABBCD + 2*sAAAABC*sAABCDE + 2*sAAAAAB*sABCDEF)
   alpha_7  = d*(2*sAAAAAB*sAABBCD + 2*sAAAAAB*sAABCDE + 2*sAAAAAA*sABCDEF)
-  alpha_8  = d*(sAAAABC^2 + 2*sAAAAAA*sAABBCD + 2*sAAAAAA*sAABCDE)
+  alpha_8  = d*(sAAAABC**2 + 2*sAAAAAA*sAABBCD + 2*sAAAAAA*sAABCDE)
   alpha_9  = d*(2*sAAAAAB*sAAAABC)
-  alpha_10 = d*(sAAAAAB^2 + 2*sAAAAAA*sAAAABC)
+  alpha_10 = d*(sAAAAAB**2 + 2*sAAAAAA*sAAAABC)
   alpha_11 = d*(2*sAAAAAA*sAAAAAB)
-  alpha_12 = d*(sAAAAAA^2)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -1232,18 +1232,18 @@ predict6_3 = function(raaaaab, raaabbc, raaabcd, raabcde, rabcdef, k, d, kmercov
     sAABCDE  = taabcde-taaabcd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(sAAAAAB + sAAABBC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB^2 + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAABBC^2 + 6*sAAAAAA*sAAABCD + 8*sAAAAAB*sAAABCD + 8*sAAABBC*sAAABCD + 6*sAAABCD^2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 10*sAAABBC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE^2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 12*sAAABBC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF^2)
-  alpha_2  = (1-d)*(sAAABBC + sAABCDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 2*sAAABBC^2 + 2*sAAABBC*sAAABCD + 2*sAAABBC*sAABCDE + 2*sAAABBC*sABCDEF + sABCDEF^2)
+  alpha_1  = (1-d)*(sAAAAAB + sAAABBC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 6*sAAAAAA*sAAABCD + 8*sAAAAAB*sAAABCD + 8*sAAABBC*sAAABCD + 6*sAAABCD**2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 10*sAAABBC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 12*sAAABBC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAABBC + sAABCDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 2*sAAABBC*sAAABCD + 2*sAAABBC*sAABCDE + 2*sAAABBC*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABBC + sAAABCD) + d*(2*sAABCDE*sABCDEF)
-  alpha_4  = (1-d)*(0) + d*(sAABCDE^2 + 2*sAAABBC*sABCDEF + 2*sAAABCD*sABCDEF)
+  alpha_4  = (1-d)*(0) + d*(sAABCDE**2 + 2*sAAABBC*sABCDEF + 2*sAAABCD*sABCDEF)
   alpha_5  = (1-d)*(sAAAAAB) + d*(2*sAAABBC*sAABCDE + 2*sAAABCD*sAABCDE)
-  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBC^2 + 2*sAAABBC*sAAABCD + sAAABCD^2 + 2*sAAAAAB*sABCDEF)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBC**2 + 2*sAAABBC*sAAABCD + sAAABCD**2 + 2*sAAAAAB*sABCDEF)
   alpha_7  = d*(2*sAAAAAB*sAABCDE + 2*sAAAAAA*sABCDEF)
   alpha_8  = d*(2*sAAAAAB*sAAABBC + 2*sAAAAAB*sAAABCD + 2*sAAAAAA*sAABCDE)
   alpha_9  = d*(2*sAAAAAA*sAAABBC + 2*sAAAAAA*sAAABCD)
-  alpha_10 = d*(sAAAAAB^2)
+  alpha_10 = d*(sAAAAAB**2)
   alpha_11 = d*(2*sAAAAAA*sAAAAAB)
-  alpha_12 = d*(sAAAAAA^2)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -1340,18 +1340,18 @@ predict6_4 = function(raaaaab, raaabbc, raabccd, raabcde, rabcdef, k, d, kmercov
     sAABCDE  = taabcde-taabccd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(sAAAAAB + sAAABBC + 2*sAABCCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB^2 + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAABBC^2 + 4*sAAAAAA*sAABCCD + 6*sAAAAAB*sAABCCD + 6*sAAABBC*sAABCCD + 4*sAABCCD^2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 10*sAAABBC*sAABCDE + 12*sAABCCD*sAABCDE + 8*sAABCDE^2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 12*sAAABBC*sABCDEF + 14*sAABCCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF^2)
-  alpha_2  = (1-d)*(sAAABBC + 2*sAABCCD + sAABCDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 2*sAAABBC^2 + 2*sAAAAAA*sAABCCD + 2*sAAAAAB*sAABCCD + 4*sAAABBC*sAABCCD + 2*sAABCCD^2 + 2*sAAABBC*sAABCDE + 2*sAABCCD*sAABCDE + 2*sAAABBC*sABCDEF + 2*sAABCCD*sABCDEF + sABCDEF^2)
+  alpha_1  = (1-d)*(sAAAAAB + sAAABBC + 2*sAABCCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 4*sAAAAAA*sAABCCD + 6*sAAAAAB*sAABCCD + 6*sAAABBC*sAABCCD + 4*sAABCCD**2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 10*sAAABBC*sAABCDE + 12*sAABCCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 12*sAAABBC*sABCDEF + 14*sAABCCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAABBC + 2*sAABCCD + sAABCDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAABCCD + 2*sAAAAAB*sAABCCD + 4*sAAABBC*sAABCCD + 2*sAABCCD**2 + 2*sAAABBC*sAABCDE + 2*sAABCCD*sAABCDE + 2*sAAABBC*sABCDEF + 2*sAABCCD*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABBC) + d*(2*sAABCCD*sABCDEF + 2*sAABCDE*sABCDEF)
-  alpha_4  = (1-d)*(0) + d*(sAABCCD^2 + 2*sAABCCD*sAABCDE + sAABCDE^2 + 2*sAAABBC*sABCDEF)
+  alpha_4  = (1-d)*(0) + d*(sAABCCD**2 + 2*sAABCCD*sAABCDE + sAABCDE**2 + 2*sAAABBC*sABCDEF)
   alpha_5  = (1-d)*(sAAAAAB) + d*(2*sAAABBC*sAABCCD + 2*sAAABBC*sAABCDE)
-  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBC^2 + 2*sAAAAAB*sABCDEF)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBC**2 + 2*sAAAAAB*sABCDEF)
   alpha_7  = d*(2*sAAAAAB*sAABCCD + 2*sAAAAAB*sAABCDE + 2*sAAAAAA*sABCDEF)
   alpha_8  = d*(2*sAAAAAB*sAAABBC + 2*sAAAAAA*sAABCCD + 2*sAAAAAA*sAABCDE)
   alpha_9  = d*(2*sAAAAAA*sAAABBC)
-  alpha_10 = d*(sAAAAAB^2)
+  alpha_10 = d*(sAAAAAB**2)
   alpha_11 = d*(2*sAAAAAA*sAAAAAB)
-  alpha_12 = d*(sAAAAAA^2)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -1448,18 +1448,18 @@ predict6_5 = function(raaaaab, raaabbc, raabccd, rabcdde, rabcdef, k, d, kmercov
     sABCDDE  = tabcdde-taabccd
     sABCDEF  = 1-tabcdde
   }
-  alpha_1  = (1-d)*(sAAAAAB + sAAABBC + 2*sAABCCD + 4*sABCDDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB^2 + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAABBC^2 + 4*sAAAAAA*sAABCCD + 6*sAAAAAB*sAABCCD + 6*sAAABBC*sAABCCD + 4*sAABCCD^2 + 6*sAAAAAA*sABCDDE + 8*sAAAAAB*sABCDDE + 8*sAAABBC*sABCDDE + 10*sAABCCD*sABCDDE + 6*sABCDDE^2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 12*sAAABBC*sABCDEF + 14*sAABCCD*sABCDEF + 16*sABCDDE*sABCDEF + 10*sABCDEF^2)
-  alpha_2  = (1-d)*(sAAABBC + 2*sAABCCD + sABCDDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 2*sAAABBC^2 + 2*sAAAAAA*sAABCCD + 2*sAAAAAB*sAABCCD + 4*sAAABBC*sAABCCD + 2*sAABCCD^2 + 2*sAAAAAA*sABCDDE + 2*sAAAAAB*sABCDDE + 4*sAAABBC*sABCDDE + 4*sAABCCD*sABCDDE + 3*sABCDDE^2 + 2*sAAABBC*sABCDEF + 2*sAABCCD*sABCDEF + 4*sABCDDE*sABCDEF + sABCDEF^2)
+  alpha_1  = (1-d)*(sAAAAAB + sAAABBC + 2*sAABCCD + 4*sABCDDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 4*sAAAAAA*sAABCCD + 6*sAAAAAB*sAABCCD + 6*sAAABBC*sAABCCD + 4*sAABCCD**2 + 6*sAAAAAA*sABCDDE + 8*sAAAAAB*sABCDDE + 8*sAAABBC*sABCDDE + 10*sAABCCD*sABCDDE + 6*sABCDDE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 12*sAAABBC*sABCDEF + 14*sAABCCD*sABCDEF + 16*sABCDDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAABBC + 2*sAABCCD + sABCDDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAABCCD + 2*sAAAAAB*sAABCCD + 4*sAAABBC*sAABCCD + 2*sAABCCD**2 + 2*sAAAAAA*sABCDDE + 2*sAAAAAB*sABCDDE + 4*sAAABBC*sABCDDE + 4*sAABCCD*sABCDDE + 3*sABCDDE**2 + 2*sAAABBC*sABCDEF + 2*sAABCCD*sABCDEF + 4*sABCDDE*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABBC) + d*(2*sAABCCD*sABCDDE + 2*sAABCCD*sABCDEF)
-  alpha_4  = (1-d)*(0) + d*(sAABCCD^2 + 2*sAAABBC*sABCDDE + 2*sAAABBC*sABCDEF)
+  alpha_4  = (1-d)*(0) + d*(sAABCCD**2 + 2*sAAABBC*sABCDDE + 2*sAAABBC*sABCDEF)
   alpha_5  = (1-d)*(sAAAAAB) + d*(2*sAAABBC*sAABCCD)
-  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBC^2 + 2*sAAAAAB*sABCDDE + 2*sAAAAAB*sABCDEF)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBC**2 + 2*sAAAAAB*sABCDDE + 2*sAAAAAB*sABCDEF)
   alpha_7  = d*(2*sAAAAAB*sAABCCD + 2*sAAAAAA*sABCDDE + 2*sAAAAAA*sABCDEF)
   alpha_8  = d*(2*sAAAAAB*sAAABBC + 2*sAAAAAA*sAABCCD)
   alpha_9  = d*(2*sAAAAAA*sAAABBC)
-  alpha_10 = d*(sAAAAAB^2)
+  alpha_10 = d*(sAAAAAB**2)
   alpha_11 = d*(2*sAAAAAA*sAAAAAB)
-  alpha_12 = d*(sAAAAAA^2)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -1664,18 +1664,18 @@ predict6_7 = function(raaaabb, raaaabc, raabbcd, raabcde, rabcdef, k, d, kmercov
     sAABCDE  = taabcde-taabbcd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(2*sAAAABC + 2*sAABBCD + 4*sAABCDE + 6*sABCDEF) + d*(4*sAAAAAA*sAAAABC + 4*sAAAABB*sAAAABC + 4*sAAAABC^2 + 4*sAAAAAA*sAABBCD + 4*sAAAABB*sAABBCD + 8*sAAAABC*sAABBCD + 4*sAABBCD^2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 12*sAAAABC*sAABCDE + 12*sAABBCD*sAABCDE + 8*sAABCDE^2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 14*sAAAABC*sABCDEF + 14*sAABBCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF^2)
-  alpha_2  = (1-d)*(sAAAABB + 2*sAABBCD + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB^2 + 2*sAAAABB*sAAAABC + 2*sAAAAAA*sAABBCD + 4*sAAAABB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAABBCD^2 + 2*sAAAABB*sAABCDE + 2*sAABBCD*sAABCDE + 2*sAAAABB*sABCDEF + 2*sAABBCD*sABCDEF + sABCDEF^2)
+  alpha_1  = (1-d)*(2*sAAAABC + 2*sAABBCD + 4*sAABCDE + 6*sABCDEF) + d*(4*sAAAAAA*sAAAABC + 4*sAAAABB*sAAAABC + 4*sAAAABC**2 + 4*sAAAAAA*sAABBCD + 4*sAAAABB*sAABBCD + 8*sAAAABC*sAABBCD + 4*sAABBCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 12*sAAAABC*sAABCDE + 12*sAABBCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 14*sAAAABC*sABCDEF + 14*sAABBCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAAABB + 2*sAABBCD + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 2*sAAAABB*sAAAABC + 2*sAAAAAA*sAABBCD + 4*sAAAABB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAABBCD**2 + 2*sAAAABB*sAABCDE + 2*sAABBCD*sAABCDE + 2*sAAAABB*sABCDEF + 2*sAABBCD*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(0) + d*(2*sAABBCD*sABCDEF + 2*sAABCDE*sABCDEF)
-  alpha_4  = (1-d)*(sAAAABB + sAAAABC) + d*(sAABBCD^2 + 2*sAABBCD*sAABCDE + sAABCDE^2)
+  alpha_4  = (1-d)*(sAAAABB + sAAAABC) + d*(sAABBCD**2 + 2*sAABBCD*sAABCDE + sAABCDE**2)
   alpha_5  = (1-d)*(0) + d*(2*sAAAABB*sABCDEF + 2*sAAAABC*sABCDEF)
   alpha_6  = (1-d)*(sAAAAAA) + d*(2*sAAAABB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAAAABB*sAABCDE + 2*sAAAABC*sAABCDE)
   alpha_7  = d*(2*sAAAAAA*sABCDEF)
-  alpha_8  = d*(sAAAABB^2 + 2*sAAAABB*sAAAABC + sAAAABC^2 + 2*sAAAAAA*sAABBCD + 2*sAAAAAA*sAABCDE)
+  alpha_8  = d*(sAAAABB**2 + 2*sAAAABB*sAAAABC + sAAAABC**2 + 2*sAAAAAA*sAABBCD + 2*sAAAAAA*sAABCDE)
   alpha_9  = d*(0)
   alpha_10 = d*(2*sAAAAAA*sAAAABB + 2*sAAAAAA*sAAAABC)
   alpha_11 = d*(0)
-  alpha_12 = d*(sAAAAAA^2)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -1772,18 +1772,18 @@ predict6_8 = function(raaaabb, raaabcc, raaabcd, raabcde, rabcdef, k, d, kmercov
     sAABCDE  = taabcde-taaabcd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(sAAABCC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABCC + 2*sAAAABB*sAAABCC + 2*sAAABCC^2 + 6*sAAAAAA*sAAABCD + 6*sAAAABB*sAAABCD + 8*sAAABCC*sAAABCD + 6*sAAABCD^2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 10*sAAABCC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE^2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 12*sAAABCC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF^2)
-  alpha_2  = (1-d)*(sAAAABB + sAAABCC + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB^2 + 2*sAAAAAA*sAAABCC + 4*sAAAABB*sAAABCC + 2*sAAABCC^2 + 2*sAAAABB*sAAABCD + 2*sAAABCC*sAAABCD + 2*sAAAABB*sAABCDE + 2*sAAABCC*sAABCDE + 2*sAAAABB*sABCDEF + 2*sAAABCC*sABCDEF + sABCDEF^2)
+  alpha_1  = (1-d)*(sAAABCC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABCC + 2*sAAAABB*sAAABCC + 2*sAAABCC**2 + 6*sAAAAAA*sAAABCD + 6*sAAAABB*sAAABCD + 8*sAAABCC*sAAABCD + 6*sAAABCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 10*sAAABCC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 12*sAAABCC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAAABB + sAAABCC + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 2*sAAAAAA*sAAABCC + 4*sAAAABB*sAAABCC + 2*sAAABCC**2 + 2*sAAAABB*sAAABCD + 2*sAAABCC*sAAABCD + 2*sAAAABB*sAABCDE + 2*sAAABCC*sAABCDE + 2*sAAAABB*sABCDEF + 2*sAAABCC*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABCC + sAAABCD) + d*(2*sAABCDE*sABCDEF)
-  alpha_4  = (1-d)*(sAAAABB) + d*(sAABCDE^2 + 2*sAAABCC*sABCDEF + 2*sAAABCD*sABCDEF)
+  alpha_4  = (1-d)*(sAAAABB) + d*(sAABCDE**2 + 2*sAAABCC*sABCDEF + 2*sAAABCD*sABCDEF)
   alpha_5  = (1-d)*(0) + d*(2*sAAABCC*sAABCDE + 2*sAAABCD*sAABCDE + 2*sAAAABB*sABCDEF)
-  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABCC^2 + 2*sAAABCC*sAAABCD + sAAABCD^2 + 2*sAAAABB*sAABCDE)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABCC**2 + 2*sAAABCC*sAAABCD + sAAABCD**2 + 2*sAAAABB*sAABCDE)
   alpha_7  = d*(2*sAAAABB*sAAABCC + 2*sAAAABB*sAAABCD + 2*sAAAAAA*sABCDEF)
-  alpha_8  = d*(sAAAABB^2 + 2*sAAAAAA*sAABCDE)
+  alpha_8  = d*(sAAAABB**2 + 2*sAAAAAA*sAABCDE)
   alpha_9  = d*(2*sAAAAAA*sAAABCC + 2*sAAAAAA*sAAABCD)
   alpha_10 = d*(2*sAAAAAA*sAAAABB)
   alpha_11 = d*(0)
-  alpha_12 = d*(sAAAAAA^2)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -1848,7 +1848,7 @@ predict6_8_unique = function(raaaabb, raaabcc, raaabcd, raabcde, rabcdef, k, d, 
 
 #' Produce model estimated (p=6, topology=9) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param raaaaab,raaaabc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaaab, aaaabc, aaabcd, aabcde, and abcdef respectively.
+#' @param raaaabb,raaabcc,raabcdd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaabb, aaabcc, aabcdd, aabcde, and abcdef respectively.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -1856,42 +1856,42 @@ predict6_8_unique = function(raaaabb, raaabcc, raaabcd, raabcde, rabcdef, k, d, 
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict6_9 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+predict6_9 = function(raaaabb, raaabcc, raabcdd, raabcde, rabcdef, k, d, kmercov, bias, x)
 {
-  raaaaaa  = 1-raaaaab-raaaabc-raaabcd-raabcde-rabcdef
+  raaaaaa  = 1-raaaabb-raaabcc-raabcdd-raabcde-rabcdef
   if (raaaaaa < 0) {return(0)}
   if (KMER_RATES) {
     sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
-    sAAABCD  = raaabcd
+    sAAAABB  = raaaabb
+    sAAABCC  = raaabcc
+    sAABCDD  = raabcdd
     sAABCDE  = raabcde
     sABCDEF  = rabcdef
   } else {
     taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
+    taaaabb  = (raaaaaa+raaaabb)**k
+    taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+    taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
+    taabcde  = (raaaaaa+raaaabb+raaabcc+raabcdd+raabcde)**k
     sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAAABCD  = taaabcd-taaaabc
-    sAABCDE  = taabcde-taaabcd
+    sAAAABB  = taaaabb-taaaaaa
+    sAAABCC  = taaabcc-taaaabb
+    sAABCDD  = taabcdd-taaabcc
+    sAABCDE  = taabcde-taabcdd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(0) + d*(0)
-  alpha_2  = (1-d)*(0) + d*(0)
-  alpha_3  = (1-d)*(0) + d*(0)
-  alpha_4  = (1-d)*(0) + d*(0)
-  alpha_5  = (1-d)*(0) + d*(0)
-  alpha_6  = (1-d)*(0) + d*(0)
-  alpha_7  = d*(0)
-  alpha_8  = d*(0)
-  alpha_9  = d*(0)
-  alpha_10 = d*(0)
+  alpha_1  = (1-d)*(sAAABCC + 2*sAABCDD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABCC + 2*sAAAABB*sAAABCC + 2*sAAABCC**2 + 4*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 6*sAAABCC*sAABCDD + 4*sAABCDD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 10*sAAABCC*sAABCDE + 12*sAABCDD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 12*sAAABCC*sABCDEF + 14*sAABCDD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAAABB + sAAABCC + 2*sAABCDD + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 2*sAAAAAA*sAAABCC + 4*sAAAABB*sAAABCC + 2*sAAABCC**2 + 2*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 4*sAAABCC*sAABCDD + 2*sAABCDD**2 + 2*sAAAABB*sAABCDE + 2*sAAABCC*sAABCDE + 2*sAABCDD*sAABCDE + 2*sAAAABB*sABCDEF + 2*sAAABCC*sABCDEF + 2*sAABCDD*sABCDEF + sABCDEF**2)
+  alpha_3  = (1-d)*(sAAABCC) + d*(2*sAABCDD*sABCDEF + 2*sAABCDE*sABCDEF)
+  alpha_4  = (1-d)*(sAAAABB) + d*(sAABCDD**2 + 2*sAABCDD*sAABCDE + sAABCDE**2 + 2*sAAABCC*sABCDEF)
+  alpha_5  = (1-d)*(0) + d*(2*sAAABCC*sAABCDD + 2*sAAABCC*sAABCDE + 2*sAAAABB*sABCDEF)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABCC**2 + 2*sAAAABB*sAABCDD + 2*sAAAABB*sAABCDE)
+  alpha_7  = d*(2*sAAAABB*sAAABCC + 2*sAAAAAA*sABCDEF)
+  alpha_8  = d*(sAAAABB**2 + 2*sAAAAAA*sAABCDD + 2*sAAAAAA*sAABCDE)
+  alpha_9  = d*(2*sAAAAAA*sAAABCC)
+  alpha_10 = d*(2*sAAAAAA*sAAAABB)
   alpha_11 = d*(0)
-  alpha_12 = d*(0)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -1906,9 +1906,9 @@ predict6_9 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov
   alpha_12 * dnbinom(x, size = kmercov*12 / bias, mu = kmercov*12)
 }
 
-#' Produce model estimated (p=6, topology=10) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#' Produce model estimated (p=6, topology=9, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param raaaaab,raaaabc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaaab, aaaabc, aaabcd, aabcde, and abcdef respectively.
+#' @param raaaabb,raaabcc,raabcdd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaabb, aaabcc, aabcdd, aabcde, and abcdef respectively.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -1916,42 +1916,90 @@ predict6_9 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict6_10 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+predict6_9_unique = function(raaaabb, raaabcc, raabcdd, raabcde, rabcdef, k, d, kmercov, bias, x)
 {
-  raaaaaa  = 1-raaaaab-raaaabc-raaabcd-raabcde-rabcdef
+  raaaaaa  = 1-raaaabb-raaabcc-raabcdd-raabcde-rabcdef
   if (raaaaaa < 0) {return(0)}
   if (KMER_RATES) {
     sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
-    sAAABCD  = raaabcd
+    sAAAABB  = raaaabb
+    sAAABCC  = raaabcc
+    sAABCDD  = raabcdd
     sAABCDE  = raabcde
     sABCDEF  = rabcdef
   } else {
     taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
+    taaaabb  = (raaaaaa+raaaabb)**k
+    taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+    taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
+    taabcde  = (raaaaaa+raaaabb+raaabcc+raabcdd+raabcde)**k
     sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAAABCD  = taaabcd-taaaabc
-    sAABCDE  = taabcde-taaabcd
+    sAAAABB  = taaaabb-taaaaaa
+    sAAABCC  = taaabcc-taaaabb
+    sAABCDD  = taabcdd-taaabcc
+    sAABCDE  = taabcde-taabcdd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(0) + d*(0)
-  alpha_2  = (1-d)*(0) + d*(0)
-  alpha_3  = (1-d)*(0) + d*(0)
-  alpha_4  = (1-d)*(0) + d*(0)
-  alpha_5  = (1-d)*(0) + d*(0)
-  alpha_6  = (1-d)*(0) + d*(0)
-  alpha_7  = d*(0)
-  alpha_8  = d*(0)
-  alpha_9  = d*(0)
-  alpha_10 = d*(0)
+  alpha_1_unique  = (1-d)*(sAAABCC + 2*sAABCDD + 4*sAABCDE + 6*sABCDEF)
+  alpha_2_unique  = (1-d)*(sAAAABB + sAAABCC + 2*sAABCDD + sAABCDE)
+  alpha_3_unique  = (1-d)*(sAAABCC)
+  alpha_4_unique  = (1-d)*(sAAAABB)
+  alpha_5_unique  = (1-d)*(0)
+  alpha_6_unique  = (1-d)*(sAAAAAA)
+  alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
+}
+
+#' Produce model estimated (p=6, topology=10) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaaabb,raaabcc,raabcdd,rabcdee,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaabb, aaabcc, aabcdd, abcdee, and abcdef respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict6_10 = function(raaaabb, raaabcc, raabcdd, rabcdee, rabcdef, k, d, kmercov, bias, x)
+{
+  raaaaaa  = 1-raaaabb-raaabcc-raabcdd-rabcdee-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  if (KMER_RATES) {
+    sAAAAAA  = raaaaaa
+    sAAAABB  = raaaabb
+    sAAABCC  = raaabcc
+    sAABCDD  = raabcdd
+    sABCDEE  = rabcdee
+    sABCDEF  = rabcdef
+  } else {
+    taaaaaa  = (raaaaaa)**k
+    taaaabb  = (raaaaaa+raaaabb)**k
+    taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+    taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
+    tabcdee  = (raaaaaa+raaaabb+raaabcc+raabcdd+rabcdee)**k
+    sAAAAAA  = taaaaaa
+    sAAAABB  = taaaabb-taaaaaa
+    sAAABCC  = taaabcc-taaaabb
+    sAABCDD  = taabcdd-taaabcc
+    sABCDEE  = tabcdee-taabcdd
+    sABCDEF  = 1-tabcdee
+  }
+  alpha_1  = (1-d)*(sAAABCC + 2*sAABCDD + 4*sABCDEE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABCC + 2*sAAAABB*sAAABCC + 2*sAAABCC**2 + 4*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 6*sAAABCC*sAABCDD + 4*sAABCDD**2 + 6*sAAAAAA*sABCDEE + 6*sAAAABB*sABCDEE + 8*sAAABCC*sABCDEE + 10*sAABCDD*sABCDEE + 6*sABCDEE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 12*sAAABCC*sABCDEF + 14*sAABCDD*sABCDEF + 16*sABCDEE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAAABB + sAAABCC + 2*sAABCDD + sABCDEE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 2*sAAAAAA*sAAABCC + 4*sAAAABB*sAAABCC + 2*sAAABCC**2 + 2*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 4*sAAABCC*sAABCDD + 2*sAABCDD**2 + 2*sAAAAAA*sABCDEE + 4*sAAAABB*sABCDEE + 4*sAAABCC*sABCDEE + 4*sAABCDD*sABCDEE + 3*sABCDEE**2 + 2*sAAAABB*sABCDEF + 2*sAAABCC*sABCDEF + 2*sAABCDD*sABCDEF + 4*sABCDEE*sABCDEF + sABCDEF**2)
+  alpha_3  = (1-d)*(sAAABCC) + d*(2*sAABCDD*sABCDEE + 2*sAABCDD*sABCDEF)
+  alpha_4  = (1-d)*(sAAAABB) + d*(sAABCDD**2 + 2*sAAABCC*sABCDEE + 2*sAAABCC*sABCDEF)
+  alpha_5  = (1-d)*(0) + d*(2*sAAABCC*sAABCDD + 2*sAAAABB*sABCDEE + 2*sAAAABB*sABCDEF)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABCC**2 + 2*sAAAABB*sAABCDD)
+  alpha_7  = d*(2*sAAAABB*sAAABCC + 2*sAAAAAA*sABCDEE + 2*sAAAAAA*sABCDEF)
+  alpha_8  = d*(sAAAABB**2 + 2*sAAAAAA*sAABCDD)
+  alpha_9  = d*(2*sAAAAAA*sAAABCC)
+  alpha_10 = d*(2*sAAAAAA*sAAAABB)
   alpha_11 = d*(0)
-  alpha_12 = d*(0)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -1964,6 +2012,54 @@ predict6_10 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmerco
   alpha_10 * dnbinom(x, size = kmercov*10 / bias, mu = kmercov*10)+
   alpha_11 * dnbinom(x, size = kmercov*11 / bias, mu = kmercov*11)+
   alpha_12 * dnbinom(x, size = kmercov*12 / bias, mu = kmercov*12)
+}
+
+#' Produce model estimated (p=6, topology=10, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaaabb,raaabcc,raabcdd,rabcdee,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaabb, aaabcc, aabcdd, abcdee, and abcdef respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict6_10_unique = function(raaaabb, raaabcc, raabcdd, rabcdee, rabcdef, k, d, kmercov, bias, x)
+{
+  raaaaaa  = 1-raaaabb-raaabcc-raabcdd-rabcdee-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  if (KMER_RATES) {
+    sAAAAAA  = raaaaaa
+    sAAAABB  = raaaabb
+    sAAABCC  = raaabcc
+    sAABCDD  = raabcdd
+    sABCDEE  = rabcdee
+    sABCDEF  = rabcdef
+  } else {
+    taaaaaa  = (raaaaaa)**k
+    taaaabb  = (raaaaaa+raaaabb)**k
+    taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+    taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
+    tabcdee  = (raaaaaa+raaaabb+raaabcc+raabcdd+rabcdee)**k
+    sAAAAAA  = taaaaaa
+    sAAAABB  = taaaabb-taaaaaa
+    sAAABCC  = taaabcc-taaaabb
+    sAABCDD  = taabcdd-taaabcc
+    sABCDEE  = tabcdee-taabcdd
+    sABCDEF  = 1-tabcdee
+  }
+  alpha_1_unique  = (1-d)*(sAAABCC + 2*sAABCDD + 4*sABCDEE + 6*sABCDEF)
+  alpha_2_unique  = (1-d)*(sAAAABB + sAAABCC + 2*sAABCDD + sABCDEE)
+  alpha_3_unique  = (1-d)*(sAAABCC)
+  alpha_4_unique  = (1-d)*(sAAAABB)
+  alpha_5_unique  = (1-d)*(0)
+  alpha_6_unique  = (1-d)*(sAAAAAA)
+  alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
 }
 
 #' Produce model estimated (p=6, topology=11) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
@@ -2076,7 +2172,7 @@ predict6_11_unique = function(raaaabb, raabbcc, raabbcd, raabcde, rabcdef, k, d,
 
 #' Produce model estimated (p=6, topology=12) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param raaaaab,raaaabc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaaab, aaaabc, aaabcd, aabcde, and abcdef respectively.
+#' @param raaaabb,raabbcc,raabcdd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaabb, aabbcc, aabcdd, aabcde, and abcdef respectively.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -2084,42 +2180,42 @@ predict6_11_unique = function(raaaabb, raabbcc, raabbcd, raabcde, rabcdef, k, d,
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict6_12 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+predict6_12 = function(raaaabb, raabbcc, raabcdd, raabcde, rabcdef, k, d, kmercov, bias, x)
 {
-  raaaaaa  = 1-raaaaab-raaaabc-raaabcd-raabcde-rabcdef
+  raaaaaa  = 1-raaaabb-raabbcc-raabcdd-raabcde-rabcdef
   if (raaaaaa < 0) {return(0)}
   if (KMER_RATES) {
     sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
-    sAAABCD  = raaabcd
+    sAAAABB  = raaaabb
+    sAABBCC  = raabbcc
+    sAABCDD  = raabcdd
     sAABCDE  = raabcde
     sABCDEF  = rabcdef
   } else {
     taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
+    taaaabb  = (raaaaaa+raaaabb)**k
+    taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+    taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
+    taabcde  = (raaaaaa+raaaabb+raabbcc+raabcdd+raabcde)**k
     sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAAABCD  = taaabcd-taaaabc
-    sAABCDE  = taabcde-taaabcd
+    sAAAABB  = taaaabb-taaaaaa
+    sAABBCC  = taabbcc-taaaabb
+    sAABCDD  = taabcdd-taabbcc
+    sAABCDE  = taabcde-taabcdd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(0) + d*(0)
-  alpha_2  = (1-d)*(0) + d*(0)
-  alpha_3  = (1-d)*(0) + d*(0)
-  alpha_4  = (1-d)*(0) + d*(0)
-  alpha_5  = (1-d)*(0) + d*(0)
-  alpha_6  = (1-d)*(0) + d*(0)
-  alpha_7  = d*(0)
-  alpha_8  = d*(0)
+  alpha_1  = (1-d)*(2*sAABCDD + 4*sAABCDE + 6*sABCDEF) + d*(4*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 4*sAABBCC*sAABCDD + 4*sAABCDD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 8*sAABBCC*sAABCDE + 12*sAABCDD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 10*sAABBCC*sABCDEF + 14*sAABCDD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAAABB + 3*sAABBCC + 2*sAABCDD + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 4*sAAAAAA*sAABBCC + 6*sAAAABB*sAABBCC + 4*sAABBCC**2 + 2*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 6*sAABBCC*sAABCDD + 2*sAABCDD**2 + 2*sAAAABB*sAABCDE + 4*sAABBCC*sAABCDE + 2*sAABCDD*sAABCDE + 2*sAAAABB*sABCDEF + 4*sAABBCC*sABCDEF + 2*sAABCDD*sABCDEF + sABCDEF**2)
+  alpha_3  = (1-d)*(0) + d*(2*sAABBCC*sABCDEF + 2*sAABCDD*sABCDEF + 2*sAABCDE*sABCDEF)
+  alpha_4  = (1-d)*(sAAAABB) + d*(sAABBCC**2 + 2*sAABBCC*sAABCDD + sAABCDD**2 + 2*sAABBCC*sAABCDE + 2*sAABCDD*sAABCDE + sAABCDE**2)
+  alpha_5  = (1-d)*(0) + d*(2*sAAAABB*sABCDEF)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(2*sAAAABB*sAABBCC + 2*sAAAABB*sAABCDD + 2*sAAAABB*sAABCDE)
+  alpha_7  = d*(2*sAAAAAA*sABCDEF)
+  alpha_8  = d*(sAAAABB**2 + 2*sAAAAAA*sAABBCC + 2*sAAAAAA*sAABCDD + 2*sAAAAAA*sAABCDE)
   alpha_9  = d*(0)
-  alpha_10 = d*(0)
+  alpha_10 = d*(2*sAAAAAA*sAAAABB)
   alpha_11 = d*(0)
-  alpha_12 = d*(0)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -2132,11 +2228,59 @@ predict6_12 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmerco
   alpha_10 * dnbinom(x, size = kmercov*10 / bias, mu = kmercov*10)+
   alpha_11 * dnbinom(x, size = kmercov*11 / bias, mu = kmercov*11)+
   alpha_12 * dnbinom(x, size = kmercov*12 / bias, mu = kmercov*12)
+}
+
+#' Produce model estimated (p=6, topology=12, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaaabb,raabbcc,raabcdd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaabb, aabbcc, aabcdd, aabcde, and abcdef respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict6_12_unique = function(raaaabb, raabbcc, raabcdd, raabcde, rabcdef, k, d, kmercov, bias, x)
+{
+  raaaaaa  = 1-raaaabb-raabbcc-raabcdd-raabcde-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  if (KMER_RATES) {
+    sAAAAAA  = raaaaaa
+    sAAAABB  = raaaabb
+    sAABBCC  = raabbcc
+    sAABCDD  = raabcdd
+    sAABCDE  = raabcde
+    sABCDEF  = rabcdef
+  } else {
+    taaaaaa  = (raaaaaa)**k
+    taaaabb  = (raaaaaa+raaaabb)**k
+    taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+    taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
+    taabcde  = (raaaaaa+raaaabb+raabbcc+raabcdd+raabcde)**k
+    sAAAAAA  = taaaaaa
+    sAAAABB  = taaaabb-taaaaaa
+    sAABBCC  = taabbcc-taaaabb
+    sAABCDD  = taabcdd-taabbcc
+    sAABCDE  = taabcde-taabcdd
+    sABCDEF  = 1-taabcde
+  }
+  alpha_1_unique  = (1-d)*(2*sAABCDD + 4*sAABCDE + 6*sABCDEF)
+  alpha_2_unique  = (1-d)*(sAAAABB + 3*sAABBCC + 2*sAABCDD + sAABCDE)
+  alpha_3_unique  = (1-d)*(0)
+  alpha_4_unique  = (1-d)*(sAAAABB)
+  alpha_5_unique  = (1-d)*(0)
+  alpha_6_unique  = (1-d)*(sAAAAAA)
+  alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
 }
 
 #' Produce model estimated (p=6, topology=13) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param raaaaab,raaaabc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaaab, aaaabc, aaabcd, aabcde, and abcdef respectively.
+#' @param raaaabb,raabbcc,raabcdd,rabcdee,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaabb, aabbcc, aabcdd, abcdee, and abcdef respectively.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -2144,42 +2288,42 @@ predict6_12 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmerco
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict6_13 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+predict6_13 = function(raaaabb, raabbcc, raabcdd, rabcdee, rabcdef, k, d, kmercov, bias, x)
 {
-  raaaaaa  = 1-raaaaab-raaaabc-raaabcd-raabcde-rabcdef
+  raaaaaa  = 1-raaaabb-raabbcc-raabcdd-rabcdee-rabcdef
   if (raaaaaa < 0) {return(0)}
   if (KMER_RATES) {
     sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
+    sAAAABB  = raaaabb
+    sAABBCC  = raabbcc
+    sAABCDD  = raabcdd
+    sABCDEE  = rabcdee
     sABCDEF  = rabcdef
   } else {
     taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
+    taaaabb  = (raaaaaa+raaaabb)**k
+    taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+    taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
+    tabcdee  = (raaaaaa+raaaabb+raabbcc+raabcdd+rabcdee)**k
     sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAAABCD  = taaabcd-taaaabc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
+    sAAAABB  = taaaabb-taaaaaa
+    sAABBCC  = taabbcc-taaaabb
+    sAABCDD  = taabcdd-taabbcc
+    sABCDEE  = tabcdee-taabcdd
+    sABCDEF  = 1-tabcdee
   }
-  alpha_1  = (1-d)*(0) + d*(0)
-  alpha_2  = (1-d)*(0) + d*(0)
-  alpha_3  = (1-d)*(0) + d*(0)
-  alpha_4  = (1-d)*(0) + d*(0)
-  alpha_5  = (1-d)*(0) + d*(0)
-  alpha_6  = (1-d)*(0) + d*(0)
-  alpha_7  = d*(0)
-  alpha_8  = d*(0)
+  alpha_1  = (1-d)*(2*sAABCDD + 4*sABCDEE + 6*sABCDEF) + d*(4*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 4*sAABBCC*sAABCDD + 4*sAABCDD**2 + 6*sAAAAAA*sABCDEE + 6*sAAAABB*sABCDEE + 6*sAABBCC*sABCDEE + 10*sAABCDD*sABCDEE + 6*sABCDEE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 10*sAABBCC*sABCDEF + 14*sAABCDD*sABCDEF + 16*sABCDEE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAAABB + 3*sAABBCC + 2*sAABCDD + sABCDEE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 4*sAAAAAA*sAABBCC + 6*sAAAABB*sAABBCC + 4*sAABBCC**2 + 2*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 6*sAABBCC*sAABCDD + 2*sAABCDD**2 + 2*sAAAAAA*sABCDEE + 4*sAAAABB*sABCDEE + 6*sAABBCC*sABCDEE + 4*sAABCDD*sABCDEE + 3*sABCDEE**2 + 2*sAAAABB*sABCDEF + 4*sAABBCC*sABCDEF + 2*sAABCDD*sABCDEF + 4*sABCDEE*sABCDEF + sABCDEF**2)
+  alpha_3  = (1-d)*(0) + d*(2*sAABBCC*sABCDEE + 2*sAABCDD*sABCDEE + 2*sAABBCC*sABCDEF + 2*sAABCDD*sABCDEF)
+  alpha_4  = (1-d)*(sAAAABB) + d*(sAABBCC**2 + 2*sAABBCC*sAABCDD + sAABCDD**2)
+  alpha_5  = (1-d)*(0) + d*(2*sAAAABB*sABCDEE + 2*sAAAABB*sABCDEF)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(2*sAAAABB*sAABBCC + 2*sAAAABB*sAABCDD)
+  alpha_7  = d*(2*sAAAAAA*sABCDEE + 2*sAAAAAA*sABCDEF)
+  alpha_8  = d*(sAAAABB**2 + 2*sAAAAAA*sAABBCC + 2*sAAAAAA*sAABCDD)
   alpha_9  = d*(0)
-  alpha_10 = d*(0)
+  alpha_10 = d*(2*sAAAAAA*sAAAABB)
   alpha_11 = d*(0)
-  alpha_12 = d*(0)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -2192,11 +2336,59 @@ predict6_13 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmerco
   alpha_10 * dnbinom(x, size = kmercov*10 / bias, mu = kmercov*10)+
   alpha_11 * dnbinom(x, size = kmercov*11 / bias, mu = kmercov*11)+
   alpha_12 * dnbinom(x, size = kmercov*12 / bias, mu = kmercov*12)
+}
+
+#' Produce model estimated (p=6, topology=13, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaaabb,raabbcc,raabcdd,rabcdee,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaabb, aabbcc, aabcdd, abcdee, and abcdef respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict6_13_unique = function(raaaabb, raabbcc, raabcdd, rabcdee, rabcdef, k, d, kmercov, bias, x)
+{
+  raaaaaa  = 1-raaaabb-raabbcc-raabcdd-rabcdee-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  if (KMER_RATES) {
+    sAAAAAA  = raaaaaa
+    sAAAABB  = raaaabb
+    sAABBCC  = raabbcc
+    sAABCDD  = raabcdd
+    sABCDEE  = rabcdee
+    sABCDEF  = rabcdef
+  } else {
+    taaaaaa  = (raaaaaa)**k
+    taaaabb  = (raaaaaa+raaaabb)**k
+    taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+    taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
+    tabcdee  = (raaaaaa+raaaabb+raabbcc+raabcdd+rabcdee)**k
+    sAAAAAA  = taaaaaa
+    sAAAABB  = taaaabb-taaaaaa
+    sAABBCC  = taabbcc-taaaabb
+    sAABCDD  = taabcdd-taabbcc
+    sABCDEE  = tabcdee-taabcdd
+    sABCDEF  = 1-tabcdee
+  }
+  alpha_1_unique  = (1-d)*(2*sAABCDD + 4*sABCDEE + 6*sABCDEF)
+  alpha_2_unique  = (1-d)*(sAAAABB + 3*sAABBCC + 2*sAABCDD + sABCDEE)
+  alpha_3_unique  = (1-d)*(0)
+  alpha_4_unique  = (1-d)*(sAAAABB)
+  alpha_5_unique  = (1-d)*(0)
+  alpha_6_unique  = (1-d)*(sAAAAAA)
+  alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
 }
 
 #' Produce model estimated (p=6, topology=14) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param raaaaab,raaaabc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaaab, aaaabc, aaabcd, aabcde, and abcdef respectively.
+#' @param raaabbb,raaabbc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaabbb, aaabbc, aaabcd, aabcde, and abcdef respectively.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -2204,42 +2396,42 @@ predict6_13 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmerco
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict6_14 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+predict6_14 = function(raaabbb, raaabbc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
 {
-  raaaaaa  = 1-raaaaab-raaaabc-raaabcd-raabcde-rabcdef
+  raaaaaa  = 1-raaabbb-raaabbc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0) {return(0)}
   if (KMER_RATES) {
     sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
+    sAAABBB  = raaabbb
+    sAAABBC  = raaabbc
     sAAABCD  = raaabcd
     sAABCDE  = raabcde
     sABCDEF  = rabcdef
   } else {
     taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
+    taaabbb  = (raaaaaa+raaabbb)**k
+    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+    taaabcd  = (raaaaaa+raaabbb+raaabbc+raaabcd)**k
+    taabcde  = (raaaaaa+raaabbb+raaabbc+raaabcd+raabcde)**k
     sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAAABCD  = taaabcd-taaaabc
+    sAAABBB  = taaabbb-taaaaaa
+    sAAABBC  = taaabbc-taaabbb
+    sAAABCD  = taaabcd-taaabbc
     sAABCDE  = taabcde-taaabcd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(0) + d*(0)
-  alpha_2  = (1-d)*(0) + d*(0)
-  alpha_3  = (1-d)*(0) + d*(0)
-  alpha_4  = (1-d)*(0) + d*(0)
-  alpha_5  = (1-d)*(0) + d*(0)
-  alpha_6  = (1-d)*(0) + d*(0)
-  alpha_7  = d*(0)
-  alpha_8  = d*(0)
-  alpha_9  = d*(0)
+  alpha_1  = (1-d)*(sAAABBC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 6*sAAAAAA*sAAABCD + 6*sAAABBB*sAAABCD + 8*sAAABBC*sAAABCD + 6*sAAABCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAABBB*sAABCDE + 10*sAAABBC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAABBB*sABCDEF + 12*sAAABBC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAABBC + sAABCDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 2*sAAABBC*sAAABCD + 2*sAAABBC*sAABCDE + 2*sAAABBC*sABCDEF + sABCDEF**2)
+  alpha_3  = (1-d)*(2*sAAABBB + sAAABBC + sAAABCD) + d*(2*sAAAAAA*sAAABBB + 2*sAAABBB**2 + 2*sAAABBB*sAAABBC + 2*sAAABBB*sAAABCD + 2*sAAABBB*sAABCDE + 2*sAAABBB*sABCDEF + 2*sAABCDE*sABCDEF)
+  alpha_4  = (1-d)*(0) + d*(sAABCDE**2 + 2*sAAABBB*sABCDEF + 2*sAAABBC*sABCDEF + 2*sAAABCD*sABCDEF)
+  alpha_5  = (1-d)*(0) + d*(2*sAAABBB*sAABCDE + 2*sAAABBC*sAABCDE + 2*sAAABCD*sAABCDE)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBB**2 + 2*sAAABBB*sAAABBC + sAAABBC**2 + 2*sAAABBB*sAAABCD + 2*sAAABBC*sAAABCD + sAAABCD**2)
+  alpha_7  = d*(2*sAAAAAA*sABCDEF)
+  alpha_8  = d*(2*sAAAAAA*sAABCDE)
+  alpha_9  = d*(2*sAAAAAA*sAAABBB + 2*sAAAAAA*sAAABBC + 2*sAAAAAA*sAAABCD)
   alpha_10 = d*(0)
   alpha_11 = d*(0)
-  alpha_12 = d*(0)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -2252,11 +2444,59 @@ predict6_14 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmerco
   alpha_10 * dnbinom(x, size = kmercov*10 / bias, mu = kmercov*10)+
   alpha_11 * dnbinom(x, size = kmercov*11 / bias, mu = kmercov*11)+
   alpha_12 * dnbinom(x, size = kmercov*12 / bias, mu = kmercov*12)
+}
+
+#' Produce model estimated (p=6, topology=14, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaabbb,raaabbc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaabbb, aaabbc, aaabcd, aabcde, and abcdef respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict6_14_unique = function(raaabbb, raaabbc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+{
+  raaaaaa  = 1-raaabbb-raaabbc-raaabcd-raabcde-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  if (KMER_RATES) {
+    sAAAAAA  = raaaaaa
+    sAAABBB  = raaabbb
+    sAAABBC  = raaabbc
+    sAAABCD  = raaabcd
+    sAABCDE  = raabcde
+    sABCDEF  = rabcdef
+  } else {
+    taaaaaa  = (raaaaaa)**k
+    taaabbb  = (raaaaaa+raaabbb)**k
+    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+    taaabcd  = (raaaaaa+raaabbb+raaabbc+raaabcd)**k
+    taabcde  = (raaaaaa+raaabbb+raaabbc+raaabcd+raabcde)**k
+    sAAAAAA  = taaaaaa
+    sAAABBB  = taaabbb-taaaaaa
+    sAAABBC  = taaabbc-taaabbb
+    sAAABCD  = taaabcd-taaabbc
+    sAABCDE  = taabcde-taaabcd
+    sABCDEF  = 1-taabcde
+  }
+  alpha_1_unique  = (1-d)*(sAAABBC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF)
+  alpha_2_unique  = (1-d)*(sAAABBC + sAABCDE)
+  alpha_3_unique  = (1-d)*(2*sAAABBB + sAAABBC + sAAABCD)
+  alpha_4_unique  = (1-d)*(0)
+  alpha_5_unique  = (1-d)*(0)
+  alpha_6_unique  = (1-d)*(sAAAAAA)
+  alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
 }
 
 #' Produce model estimated (p=6, topology=15) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param raaaaab,raaaabc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaaab, aaaabc, aaabcd, aabcde, and abcdef respectively.
+#' @param raaabbb,raaabbc,raabccd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaabbb, aaabbc, aabccd, aabcde, and abcdef respectively.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -2264,42 +2504,42 @@ predict6_14 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmerco
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict6_15 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+predict6_15 = function(raaabbb, raaabbc, raabccd, raabcde, rabcdef, k, d, kmercov, bias, x)
 {
-  raaaaaa  = 1-raaaaab-raaaabc-raaabcd-raabcde-rabcdef
+  raaaaaa  = 1-raaabbb-raaabbc-raabccd-raabcde-rabcdef
   if (raaaaaa < 0) {return(0)}
   if (KMER_RATES) {
     sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
-    sAAABCD  = raaabcd
+    sAAABBB  = raaabbb
+    sAAABBC  = raaabbc
+    sAABCCD  = raabccd
     sAABCDE  = raabcde
     sABCDEF  = rabcdef
   } else {
     taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
+    taaabbb  = (raaaaaa+raaabbb)**k
+    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+    taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
+    taabcde  = (raaaaaa+raaabbb+raaabbc+raabccd+raabcde)**k
     sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAAABCD  = taaabcd-taaaabc
-    sAABCDE  = taabcde-taaabcd
+    sAAABBB  = taaabbb-taaaaaa
+    sAAABBC  = taaabbc-taaabbb
+    sAABCCD  = taabccd-taaabbc
+    sAABCDE  = taabcde-taabccd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(0) + d*(0)
-  alpha_2  = (1-d)*(0) + d*(0)
-  alpha_3  = (1-d)*(0) + d*(0)
-  alpha_4  = (1-d)*(0) + d*(0)
-  alpha_5  = (1-d)*(0) + d*(0)
-  alpha_6  = (1-d)*(0) + d*(0)
-  alpha_7  = d*(0)
-  alpha_8  = d*(0)
-  alpha_9  = d*(0)
+  alpha_1  = (1-d)*(sAAABBC + 2*sAABCCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 4*sAAAAAA*sAABCCD + 4*sAAABBB*sAABCCD + 6*sAAABBC*sAABCCD + 4*sAABCCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAABBB*sAABCDE + 10*sAAABBC*sAABCDE + 12*sAABCCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAABBB*sABCDEF + 12*sAAABBC*sABCDEF + 14*sAABCCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAABBC + 2*sAABCCD + sAABCDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAABCCD + 2*sAAABBB*sAABCCD + 4*sAAABBC*sAABCCD + 2*sAABCCD**2 + 2*sAAABBC*sAABCDE + 2*sAABCCD*sAABCDE + 2*sAAABBC*sABCDEF + 2*sAABCCD*sABCDEF + sABCDEF**2)
+  alpha_3  = (1-d)*(2*sAAABBB + sAAABBC) + d*(2*sAAAAAA*sAAABBB + 2*sAAABBB**2 + 2*sAAABBB*sAAABBC + 2*sAAABBB*sAABCCD + 2*sAAABBB*sAABCDE + 2*sAAABBB*sABCDEF + 2*sAABCCD*sABCDEF + 2*sAABCDE*sABCDEF)
+  alpha_4  = (1-d)*(0) + d*(sAABCCD**2 + 2*sAABCCD*sAABCDE + sAABCDE**2 + 2*sAAABBB*sABCDEF + 2*sAAABBC*sABCDEF)
+  alpha_5  = (1-d)*(0) + d*(2*sAAABBB*sAABCCD + 2*sAAABBC*sAABCCD + 2*sAAABBB*sAABCDE + 2*sAAABBC*sAABCDE)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBB**2 + 2*sAAABBB*sAAABBC + sAAABBC**2)
+  alpha_7  = d*(2*sAAAAAA*sABCDEF)
+  alpha_8  = d*(2*sAAAAAA*sAABCCD + 2*sAAAAAA*sAABCDE)
+  alpha_9  = d*(2*sAAAAAA*sAAABBB + 2*sAAAAAA*sAAABBC)
   alpha_10 = d*(0)
   alpha_11 = d*(0)
-  alpha_12 = d*(0)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -2314,9 +2554,9 @@ predict6_15 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmerco
   alpha_12 * dnbinom(x, size = kmercov*12 / bias, mu = kmercov*12)
 }
 
-#' Produce model estimated (p=6, topology=16) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#' Produce model estimated (p=6, topology=15, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param raaaaab,raaaabc,raaabcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaaaab, aaaabc, aaabcd, aabcde, and abcdef respectively.
+#' @param raaabbb,raaabbc,raabccd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaabbb, aaabbc, aabccd, aabcde, and abcdef respectively.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -2324,42 +2564,90 @@ predict6_15 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmerco
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict6_16 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+predict6_15_unique = function(raaabbb, raaabbc, raabccd, raabcde, rabcdef, k, d, kmercov, bias, x)
 {
-  raaaaaa  = 1-raaaaab-raaaabc-raaabcd-raabcde-rabcdef
+  raaaaaa  = 1-raaabbb-raaabbc-raabccd-raabcde-rabcdef
   if (raaaaaa < 0) {return(0)}
   if (KMER_RATES) {
     sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
-    sAAABCD  = raaabcd
+    sAAABBB  = raaabbb
+    sAAABBC  = raaabbc
+    sAABCCD  = raabccd
     sAABCDE  = raabcde
     sABCDEF  = rabcdef
   } else {
     taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
+    taaabbb  = (raaaaaa+raaabbb)**k
+    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+    taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
+    taabcde  = (raaaaaa+raaabbb+raaabbc+raabccd+raabcde)**k
     sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAAABCD  = taaabcd-taaaabc
-    sAABCDE  = taabcde-taaabcd
+    sAAABBB  = taaabbb-taaaaaa
+    sAAABBC  = taaabbc-taaabbb
+    sAABCCD  = taabccd-taaabbc
+    sAABCDE  = taabcde-taabccd
     sABCDEF  = 1-taabcde
   }
-  alpha_1  = (1-d)*(0) + d*(0)
-  alpha_2  = (1-d)*(0) + d*(0)
-  alpha_3  = (1-d)*(0) + d*(0)
-  alpha_4  = (1-d)*(0) + d*(0)
-  alpha_5  = (1-d)*(0) + d*(0)
-  alpha_6  = (1-d)*(0) + d*(0)
-  alpha_7  = d*(0)
-  alpha_8  = d*(0)
-  alpha_9  = d*(0)
+  alpha_1_unique  = (1-d)*(sAAABBC + 2*sAABCCD + 4*sAABCDE + 6*sABCDEF)
+  alpha_2_unique  = (1-d)*(sAAABBC + 2*sAABCCD + sAABCDE)
+  alpha_3_unique  = (1-d)*(2*sAAABBB + sAAABBC)
+  alpha_4_unique  = (1-d)*(0)
+  alpha_5_unique  = (1-d)*(0)
+  alpha_6_unique  = (1-d)*(sAAAAAA)
+  alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
+}
+
+#' Produce model estimated (p=6, topology=16) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaabbb,raaabbc,raabccd,rabcdde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaabbb, aaabbc, aabccd, abcdde, and abcdef respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict6_16 = function(raaabbb, raaabbc, raabccd, rabcdde, rabcdef, k, d, kmercov, bias, x)
+{
+  raaaaaa  = 1-raaabbb-raaabbc-raabccd-rabcdde-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  if (KMER_RATES) {
+    sAAAAAA  = raaaaaa
+    sAAABBB  = raaabbb
+    sAAABBC  = raaabbc
+    sAABCCD  = raabccd
+    sABCDDE  = rabcdde
+    sABCDEF  = rabcdef
+  } else {
+    taaaaaa  = (raaaaaa)**k
+    taaabbb  = (raaaaaa+raaabbb)**k
+    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+    taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
+    tabcdde  = (raaaaaa+raaabbb+raaabbc+raabccd+rabcdde)**k
+    sAAAAAA  = taaaaaa
+    sAAABBB  = taaabbb-taaaaaa
+    sAAABBC  = taaabbc-taaabbb
+    sAABCCD  = taabccd-taaabbc
+    sABCDDE  = tabcdde-taabccd
+    sABCDEF  = 1-tabcdde
+  }
+  alpha_1  = (1-d)*(sAAABBC + 2*sAABCCD + 4*sABCDDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 4*sAAAAAA*sAABCCD + 4*sAAABBB*sAABCCD + 6*sAAABBC*sAABCCD + 4*sAABCCD**2 + 6*sAAAAAA*sABCDDE + 6*sAAABBB*sABCDDE + 8*sAAABBC*sABCDDE + 10*sAABCCD*sABCDDE + 6*sABCDDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAABBB*sABCDEF + 12*sAAABBC*sABCDEF + 14*sAABCCD*sABCDEF + 16*sABCDDE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAABBC + 2*sAABCCD + sABCDDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAABCCD + 2*sAAABBB*sAABCCD + 4*sAAABBC*sAABCCD + 2*sAABCCD**2 + 2*sAAAAAA*sABCDDE + 2*sAAABBB*sABCDDE + 4*sAAABBC*sABCDDE + 4*sAABCCD*sABCDDE + 3*sABCDDE**2 + 2*sAAABBC*sABCDEF + 2*sAABCCD*sABCDEF + 4*sABCDDE*sABCDEF + sABCDEF**2)
+  alpha_3  = (1-d)*(2*sAAABBB + sAAABBC) + d*(2*sAAAAAA*sAAABBB + 2*sAAABBB**2 + 2*sAAABBB*sAAABBC + 2*sAAABBB*sAABCCD + 2*sAAABBB*sABCDDE + 2*sAABCCD*sABCDDE + 2*sAAABBB*sABCDEF + 2*sAABCCD*sABCDEF)
+  alpha_4  = (1-d)*(0) + d*(sAABCCD**2 + 2*sAAABBB*sABCDDE + 2*sAAABBC*sABCDDE + 2*sAAABBB*sABCDEF + 2*sAAABBC*sABCDEF)
+  alpha_5  = (1-d)*(0) + d*(2*sAAABBB*sAABCCD + 2*sAAABBC*sAABCCD)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBB**2 + 2*sAAABBB*sAAABBC + sAAABBC**2)
+  alpha_7  = d*(2*sAAAAAA*sABCDDE + 2*sAAAAAA*sABCDEF)
+  alpha_8  = d*(2*sAAAAAA*sAABCCD)
+  alpha_9  = d*(2*sAAAAAA*sAAABBB + 2*sAAAAAA*sAAABBC)
   alpha_10 = d*(0)
   alpha_11 = d*(0)
-  alpha_12 = d*(0)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -2372,6 +2660,54 @@ predict6_16 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmerco
   alpha_10 * dnbinom(x, size = kmercov*10 / bias, mu = kmercov*10)+
   alpha_11 * dnbinom(x, size = kmercov*11 / bias, mu = kmercov*11)+
   alpha_12 * dnbinom(x, size = kmercov*12 / bias, mu = kmercov*12)
+}
+
+#' Produce model estimated (p=6, topology=16, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaabbb,raaabbc,raabccd,rabcdde,rabcdef Numerics corresponding to the nucleotide heterozygosities aaabbb, aaabbc, aabccd, abcdde, and abcdef respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict6_16_unique = function(raaabbb, raaabbc, raabccd, rabcdde, rabcdef, k, d, kmercov, bias, x)
+{
+  raaaaaa  = 1-raaabbb-raaabbc-raabccd-rabcdde-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  if (KMER_RATES) {
+    sAAAAAA  = raaaaaa
+    sAAABBB  = raaabbb
+    sAAABBC  = raaabbc
+    sAABCCD  = raabccd
+    sABCDDE  = rabcdde
+    sABCDEF  = rabcdef
+  } else {
+    taaaaaa  = (raaaaaa)**k
+    taaabbb  = (raaaaaa+raaabbb)**k
+    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+    taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
+    tabcdde  = (raaaaaa+raaabbb+raaabbc+raabccd+rabcdde)**k
+    sAAAAAA  = taaaaaa
+    sAAABBB  = taaabbb-taaaaaa
+    sAAABBC  = taaabbc-taaabbb
+    sAABCCD  = taabccd-taaabbc
+    sABCDDE  = tabcdde-taabccd
+    sABCDEF  = 1-tabcdde
+  }
+  alpha_1_unique  = (1-d)*(sAAABBC + 2*sAABCCD + 4*sABCDDE + 6*sABCDEF)
+  alpha_2_unique  = (1-d)*(sAAABBC + 2*sAABCCD + sABCDDE)
+  alpha_3_unique  = (1-d)*(2*sAAABBB + sAAABBC)
+  alpha_4_unique  = (1-d)*(0)
+  alpha_5_unique  = (1-d)*(0)
+  alpha_6_unique  = (1-d)*(sAAAAAA)
+  alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
 }
 
 #' Produce model estimated (p=6, full model) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
