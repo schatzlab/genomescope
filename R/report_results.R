@@ -367,11 +367,15 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     ## Draw just the unique portion of the model
     if (TRANSFORM) {
-      lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
+      if (!NO_UNIQUE_SEQUENCE) {
+        lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
+      }
       lines(x, pred, col=COLOR_2pPEAK, lwd=3)
       lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
     } else {
-      lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
+      if (!NO_UNIQUE_SEQUENCE) {
+        lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
+      }
       lines(x, pred, col=COLOR_2pPEAK, lwd=3)
       lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
     }
@@ -387,22 +391,41 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     ## Add legend
     if(length(kmer_hist[,1])==length(kmer_hist_orig[,1]))
     {
-      legend(exp(.62 * log(max(x))), 1.0 * max(y),
-      legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
-      lty=c("solid", "solid", "solid", "solid", "dashed"),
-      lwd=c(3,3,3,3,3),
-      col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
-      bg="white")
+      if (NO_UNIQUE_SEQUENCE) {
+        legend(exp(.62 * log(max(x))), 1.0 * max(y),
+        legend=c("observed", "full model", "errors", "kmer-peaks"),
+        lty=c("solid", "solid", "solid", "dashed"),
+        lwd=c(3,3,3,3),
+        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+        bg="white")
+      } else {
+        legend(exp(.62 * log(max(x))), 1.0 * max(y),
+        legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
+        lty=c("solid", "solid", "solid", "solid", "dashed"),
+        lwd=c(3,3,3,3,3),
+        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+        bg="white")
+      }
     }
     else
     {
-      legend("topright",
-      ##legend(exp(.62 * log(max(x))), 1.0 * max(y),
-      legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks","cov-threshold"),
-      lty=c("solid", "solid", "solid", "solid", "dashed", "dashed"),
-      lwd=c(3,3,3,3,2,3),
-      col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK, COLOR_COVTHRES),
-      bg="white")
+      if (NO_UNIQUE_SEQUENCE) {
+        legend("topright",
+        ##legend(exp(.62 * log(max(x))), 1.0 * max(y),
+        legend=c("observed", "full model", "errors", "kmer-peaks","cov-threshold"),
+        lty=c("solid", "solid", "solid", "dashed", "dashed"),
+        lwd=c(3,3,3,2,3),
+        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK, COLOR_COVTHRES),
+        bg="white")
+      } else {
+        legend("topright",
+        ##legend(exp(.62 * log(max(x))), 1.0 * max(y),
+        legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks","cov-threshold"),
+        lty=c("solid", "solid", "solid", "solid", "dashed", "dashed"),
+        lwd=c(3,3,3,3,2,3),
+        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK, COLOR_COVTHRES),
+        bg="white")
+      }
     }
 
     dev.set(dev.next())
@@ -428,11 +451,15 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     ## Draw just the unique portion of the model
     if (TRANSFORM) {
-      lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
+      if (!NO_UNIQUE_SEQUENCE) {
+        lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
+      }
       lines(x, pred, col=COLOR_2pPEAK, lwd=3)
       lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
     } else {
-      lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
+      if (!NO_UNIQUE_SEQUENCE) {
+        lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
+      }
       lines(x, pred, col=COLOR_2pPEAK, lwd=3)
       lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
     }
@@ -446,12 +473,21 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     }
 
     ## Add legend
-    legend(.62 * x_limit, 1.0 * y_limit,
-    legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
-    lty=c("solid", "solid", "solid", "solid", "dashed"),
-    lwd=c(3,3,3,3,2),
-    col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
-    bg="white")
+    if (NO_UNIQUE_SEQUENCE) {
+      legend(.62 * x_limit, 1.0 * y_limit,
+      legend=c("observed", "full model", "errors", "kmer-peaks"),
+      lty=c("solid", "solid", "solid", "dashed"),
+      lwd=c(3,3,3,2),
+      col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+      bg="white")
+    } else {
+      legend(.62 * x_limit, 1.0 * y_limit,
+      legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
+      lty=c("solid", "solid", "solid", "solid", "dashed"),
+      lwd=c(3,3,3,3,2),
+      col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+      bg="white")
+    }
 
     model_status="done"
 
