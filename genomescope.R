@@ -158,7 +158,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
     if (VERBOSE) {cat(paste("round", round, "trimming to", start, "trying 2p peak model... \n"))}
 
     ## Reset the input trimming off low frequency error kmers
-    kmer_prof=kmer_prof_orig[1:maxCovIndex,]
+    kmer_prof <- kmer_prof_orig[1:maxCovIndex,]
     x <- kmer_prof[start:maxCovIndex,1]
     y <- kmer_prof[start:maxCovIndex,2]
 

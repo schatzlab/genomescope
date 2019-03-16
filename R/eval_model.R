@@ -9,7 +9,8 @@
 #' @return A list (nls, nlsscore) where nls is the nlsLM model object (with some additional components)
 #' and nlsscore is the score (model RSSE) corresponding to the best fit (of the p forms).
 #' @export
-eval_model<-function(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments) {
+
+eval_model <- function(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments) {
   nls0score = -1
   nls1score = -1
 
@@ -40,8 +41,7 @@ eval_model<-function(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments
       dir.create(mdir, showWarnings=FALSE)
       report_results(kmer_prof_orig, kmer_prof_orig, k, p, (list(nls1, nls1score)) , mdir, arguments)
     }
-  }
-  else {
+  } else {
     if (VERBOSE) {cat("nls1score failed to converge\n")}
   }
 
@@ -58,9 +58,8 @@ eval_model<-function(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments
         if (het1 + 0.01 < het0) {
           if (VERBOSE) {cat("returning nls0, similar score, higher het\n")}
           return (list(nls1, nls1score))
-        }
-        #else if (het0 * SCORE_HET_FOLD_DIFFERENCE < het1) {
-        else if (het0  + 0.01 < het1) {
+        } else if (het0  + 0.01 < het1) {
+          #else if (het0 * SCORE_HET_FOLD_DIFFERENCE < het1) {
           if (VERBOSE) {cat("returning nls1, similar score, higher het\n")}
           return (list(nls0, nls0score))
         }
@@ -69,13 +68,11 @@ eval_model<-function(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments
       if (nls0score$all[[1]] < nls1score$all[[1]]) {
         if (VERBOSE) {cat("returning nls0, better score\n")}
         return (list(nls0, nls0score))
-      }
-      else {
+      } else {
         if (VERBOSE) {cat("returning nls1, better score\n")}
         return (list(nls1, nls1score))
       }
-    }
-    else {
+    } else {
       if (VERBOSE) {cat("returning nls0, nls1 fail\n")}
       return (list(nls0, nls0score))
     }

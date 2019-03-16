@@ -9,13 +9,14 @@
 #' Additionally, the variables "allscore", "fullscore", and "uniquescore" are the
 #' corresponding percentage of kmers that are correctly modeled.
 #' @export
-score_model<-function(kmer_hist_orig, nls, round, foldername) {
+
+score_model <- function(kmer_hist_orig, nls, round, foldername) {
   x = kmer_hist_orig[[1]]
   y = kmer_hist_orig[[2]]
 
-  pred=predict(nls, newdata=data.frame(x))
-  model_sum=summary(nls)
-  p=nls$p
+  pred = predict(nls, newdata=data.frame(x))
+  model_sum = summary(nls)
+  p = nls$p
   kcovfloor = max(1, floor(min_max(model_sum$coefficients['kmercov',])[[1]]))
 
   ## Compute error rate, by counting kmers unexplained by model through first peak

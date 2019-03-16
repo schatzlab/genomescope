@@ -10,11 +10,12 @@
 #' @param max_iterations An integer corresponding to the maximum number iterations to use for nlsLM.
 #' @return An nlsLM model object with some additional components.
 #' @export
-nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
+
+nls_peak <- function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   #Initiate variables
   model = NULL
   d_min = 0
-  if (d_init!=-1) {
+  if (d_init != -1) {
     d_initial = d_init
   } else {
     d_initial = 0.10
@@ -22,15 +23,15 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   d_max = 1
   r_min = 0
   r_initial = 0.001
-  if (top==0) {
+  if (top == 0) {
     p_to_num_r = c(0, 1, 2, 4, 6, 10)
   } else {
     p_to_num_r = c(0, 1, 2, 3, 4, 5)
   }
   num_r = p_to_num_r[p]
-  if (r_inits!=-1) {
-    r_initials = unlist(lapply(strsplit(r_inits,","),as.numeric))
-    if (length(r_initials)!=num_r) {
+  if (r_inits != -1) {
+    r_initials = unlist(lapply(strsplit(r_inits,","), as.numeric))
+    if (length(r_initials)!=num_r) { # I recommend to text validity of the input in a separated class at the very beginning of the exectuction
       stop("Incorrect number of initial rates supplied.")
     }
   } else {

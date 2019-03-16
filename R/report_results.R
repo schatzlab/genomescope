@@ -1,11 +1,11 @@
 ## Format numbers
 ###############################################################################
 
-bp_format<-function(num) {paste(formatC(round(num),format="f",big.mark=",", digits=0), "bp",sep=" ")}
+bp_format <- function(num) { paste(formatC(round(num), format="f", big.mark=",", digits=0), "bp", sep=" ") }
 
-percentage_format<-function(num) {paste(signif(num,6)*100,"%",sep="")}
+percentage_format <- function(num) { paste(signif(num,6)*100,"%",sep="") }
 
-X_format<-function(num) {paste(signif(num,4),"X",sep="")}
+X_format <- function(num) { paste(signif(num,4), "X", sep="") }
 
 #' Report results and make plots
 #'
@@ -18,8 +18,9 @@ X_format<-function(num) {paste(signif(num,4),"X",sep="")}
 #' @param foldername A character vector corresponding to the name of the output directory.
 #' @param arguments A data frame of the user-specified inputs.
 #' @export
-report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, arguments) {
-  
+
+report_results <- function(kmer_hist,kmer_hist_orig, k, p, container, foldername, arguments) {
+
   x=kmer_hist_orig[[1]]
   y=kmer_hist_orig[[2]]
   if (TRANSFORM) {
@@ -41,15 +42,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   x_limit = which(y == max(y[start:length(zoomx)])) * 3
 
   if (min(zoomy) > zoomy[1]){
-    x_limit=max(which(zoomy<zoomy[1])[2],600)
+    x_limit = max(which(zoomy<zoomy[1])[2],600)
   }
 
-  if (!is.null(model))
-  {
-    model_sum=summary(model)
+  if (!is.null(model)) {
+    model_sum = summary(model)
     kcov = min_max(model_sum$coefficients['kmercov',])[1]
     x_limit = max(kcov*(2*p+1.1), x_limit)
-    if (model$top==0) {
+    if (model$top == 0) {
       p_to_num_r = c(0, 1, 2, 4, 6, 10)
     } else {
       p_to_num_r = c(0, 1, 2, 3, 4, 5)
@@ -62,8 +62,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   # x_limit=150
 
   ## Features to report
-  het=c(-1,-1)
-  homo=c(-1,-1)
+  het=c(-1, -1)
+  homo=c(-1, -1)
   num_r = p_to_num_r[p]
   if (p > 1) {
     hets = lapply(1:(num_r), function(x) c(-1, -1))
@@ -75,12 +75,12 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   amlen = -1
   atotal_len = -1
   top = -1
-  total_len=c(-1,-1)
-  repeat_len=c(-1,-1)
-  unique_len=c(-1,-1)
-  dups=c(-1,-1)
-  error_rate=c(-1,-1)
-  model_status="fail"
+  total_len = c(-1,-1)
+  repeat_len = c(-1,-1)
+  unique_len = c(-1,-1)
+  dups = c(-1,-1)
+  error_rate = c(-1,-1)
+  model_status = "fail"
 
   model_fit_unique      = c(0,0,0)
   model_fit_full        = c(0,0,0)
@@ -89,9 +89,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   model_fit_fullscore   = c(0,0,0)
   model_fit_uniquescore = c(0,0,0)
 
-  plot_size=2000
-  font_size=1.2
-  resolution=300
+  plot_size = 2000
+  font_size = 1.2
+  resolution = 300
 
   ## Plot the distribution, and hopefully with the model fit
   if (TRANSFORM) {
@@ -100,13 +100,13 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     kmer_hist_plot = kmer_hist_orig
   }
   png(paste(foldername, "/", arguments$name_prefix, "_plot.png", sep=""),
-  width=plot_size, height=plot_size, res=resolution)
+      width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,5.1,2.1))
   plot(kmer_hist_plot, type="n", main="GenomeScope Profile\n\n\n",
-  xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit),
-  cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
+       xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit),
+       cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   #rect(0, 0, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
-  rect(0, 0, x_limit*1.1 , y_limit*1.1, col=COLOR_BGCOLOR)
+  rect(0, 0, x_limit*1.1, y_limit*1.1, col=COLOR_BGCOLOR)
   points(kmer_hist_plot, type="h", col=COLOR_HIST, lwd=2)
 #  if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
 #    abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
@@ -122,14 +122,13 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   rect(1e-10, 1e-10, max(kmer_hist_orig[,1])*10 , max(kmer_hist_orig[,2])*10, col=COLOR_BGCOLOR)
   points(kmer_hist_plot, type="h", col=COLOR_HIST, lwd=2)
-  if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
+  if (length(kmer_hist[,1])!=length(kmer_hist_orig[,1])) {
     abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
   }
   box(col="black")
 
 
-  if(!is.null(model))
-  {
+  if(!is.null(model)) {
     x=kmer_hist[[1]]
     y=kmer_hist[[2]]
     if (TRANSFORM) {
@@ -168,8 +167,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     ## Compute error rate, by counting kmers unexplained by model through first peak
     ## truncate errors as soon as it goes to zero, dont allow it to go back up
     error_xcutoff = max(1, floor(kcov[1]))
-    error_xcutoff_ind = tail(which(x<=error_xcutoff),n=1)
-    if (length(error_xcutoff_ind)==0) {error_xcutoff_ind=1}
+    error_xcutoff_ind = tail(which(x<=error_xcutoff), n=1)
+    if ( length(error_xcutoff_ind)==0 ) { error_xcutoff_ind = 1}
 
     if (TRANSFORM) {
       error_kmers = y_transform[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
@@ -179,24 +178,19 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     first_zero = -1
 
-    for (i in 1:error_xcutoff_ind)
-    {
-      if (first_zero == -1)
-      {
-        if (error_kmers[i] < 1.0)
-        {
+    for (i in 1:error_xcutoff_ind) {
+      if (first_zero == -1) {
+        if (error_kmers[i] < 1.0) {
           first_zero = i
           if (VERBOSE) {cat(paste("Truncating errors at", i, "\n"))}
         }
       }
-      else
-      {
+      else {
         error_kmers[i] = 0
       }
     }
 
-    if (first_zero == -1)
-    {
+    if (first_zero == -1) {
       first_zero = error_xcutoff_ind
     }
 
@@ -209,45 +203,39 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       total_error_kmers = sum(as.numeric(error_kmers) * as.numeric(x[1:error_xcutoff_ind]))
     }
 
-    total_kmers = sum(as.numeric(x)*as.numeric(y))
+    total_kmers = sum(as.numeric(x) * as.numeric(y))
 
-    error_rate = 1-(1-(total_error_kmers/total_kmers))**(1/k)
+    error_rate = 1 - (1 - (total_error_kmers / total_kmers))**(1 / k)
     error_rate = c(error_rate, error_rate)
 
-    total_len = (total_kmers-total_error_kmers)/(p*kcov)
-    atotal_len = (total_kmers-total_error_kmers)/(p*akcov)
+    total_len = (total_kmers-total_error_kmers) / (p * kcov)
+    atotal_len = (total_kmers-total_error_kmers) / (p * akcov)
 
     ## find kmers that fit the p peak model (no repeats)
-    if (p==1)
-    {
+    if (p == 1) {
       unique_hist = amlen*predict1_1_unique(k, amd, akcov, adups, x)
     }
-    if (p==2)
-    {
-      unique_hist = amlen*predict2_1_unique(ahets[[1]], k, amd, akcov, adups, x)
+    if (p==2) {
+      unique_hist = amlen * predict2_1_unique(ahets[[1]], k, amd, akcov, adups, x)
     }
-    if (p==3)
-    {
+    if (p==3) {
       unique_hist = amlen*predict3_1_unique(ahets[[1]], ahets[[2]], k, amd, akcov, adups, x)
     }
-    if (p==4)
-    {
+    if (p==4) {
       if (top==0) {
         unique_hist = amlen*predict4_0_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], k, amd, akcov, adups, x)
       } else {
         unique_hist = eval(parse(text = paste("amlen*predict4_", top, "_unique(ahets[[1]], ahets[[2]], ahets[[3]], k, amd, akcov, adups, x)", sep="")))
       }
     }
-    if (p==5)
-    {
+    if (p==5) {
       if (top==0) {
         unique_hist = amlen*predict5_0_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], k, amd, akcov, adups, x)
       } else {
         unique_hist = eval(parse(text = paste("amlen*predict5_", top, "_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], k, amd, akcov, adups, x)", sep="")))
       }
     }
-    if (p==6) #need to change
-    {
+    if (p==6) { #need to change
       if (top==0) {
         unique_hist = amlen*predict6_0_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], ahets[[7]], ahets[[8]], ahets[[9]], ahets[[10]], k, amd, akcov, adups, x)
       } else {
@@ -259,11 +247,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       unique_hist_transform = x*unique_hist
     }
 
-    unique_kmers = sum(as.numeric(x)*as.numeric(unique_hist))
+    unique_kmers = sum(as.numeric(x) * as.numeric(unique_hist))
     repeat_kmers = total_kmers - unique_kmers - total_error_kmers
 
-    repeat_len=repeat_kmers/(p*kcov)
-    unique_len=unique_kmers/(p*kcov)
+    repeat_len = repeat_kmers / (p * kcov)
+    unique_len = unique_kmers / (p * kcov)
 
     score = container[[2]]
 
@@ -281,68 +269,68 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     }
 
     if (p==1) {
-      hetline = paste0("a:", format(100*ahomo, digits=3), "%")
+      hetline = paste0("a:", format(100 * ahomo, digits=3), "%")
     }
     if (p==2) {
-      hetline = paste0("aa:", format(100*ahomo,      digits=3), "% ",
-                       "ab:", format(100*ahets[[1]], digits=3), "%")
+      hetline = paste0("aa:", format(100 * ahomo,      digits=3), "% ",
+                       "ab:", format(100 * ahets[[1]], digits=3), "%")
     }
     if (p==3) {
-      hetline = paste0("aaa:", format(100*ahomo,      digits=3), "% ",
-                       "aab:", format(100*ahets[[1]], digits=3), "% ",
-                       "abc:", format(100*ahets[[2]], digits=3), "%")
+      hetline = paste0("aaa:", format(100 * ahomo,      digits=3), "% ",
+                       "aab:", format(100 * ahets[[1]], digits=3), "% ",
+                       "abc:", format(100 * ahets[[2]], digits=3), "%")
     }
     if (p==4) {
       if (top==0) {
-        hetline = paste0("aaaa:", format(100*ahomo,      digits=3), "% ",
-                         "aaab:", format(100*ahets[[1]], digits=3), "% ",
-                         "aabb:", format(100*ahets[[2]], digits=3), "% ",
-                         "aabc:", format(100*ahets[[3]], digits=3), "% ",
-                         "abcd:", format(100*ahets[[4]], digits=3), "%")
+        hetline = paste0("aaaa:", format(100 * ahomo,      digits=3), "% ",
+                         "aaab:", format(100 * ahets[[1]], digits=3), "% ",
+                         "aabb:", format(100 * ahets[[2]], digits=3), "% ",
+                         "aabc:", format(100 * ahets[[3]], digits=3), "% ",
+                         "abcd:", format(100 * ahets[[4]], digits=3), "%")
       } else {
-        hetline = paste0("aaaa:",                       format(100*ahomo,      digits=3), "% ",
-                         switch(top, "aaab:", "aabb:"), format(100*ahets[[1]], digits=3), "% ",
-                         "aabc:",                       format(100*ahets[[2]], digits=3), "% ",
-                         "abcd:",                       format(100*ahets[[3]], digits=3), "%")
+        hetline = paste0("aaaa:",                       format(100 * ahomo,      digits=3), "% ",
+                         switch(top, "aaab:", "aabb:"), format(100 * ahets[[1]], digits=3), "% ",
+                         "aabc:",                       format(100 * ahets[[2]], digits=3), "% ",
+                         "abcd:",                       format(100 * ahets[[3]], digits=3), "%")
       }
     }
     if (p==5) {
       if (top==0) {
-        hetline = paste0("aaaaa:", format(100*ahomo,      digits=3), "% ",
-                         "aaaab:", format(100*ahets[[1]], digits=3), "% ",
-                         "aaabb:", format(100*ahets[[2]], digits=3), "% ",'\n',
-                         "aaabc:", format(100*ahets[[3]], digits=3), "% ",
-                         "aabbc:", format(100*ahets[[4]], digits=3), "% ",
-                         "aabcd:", format(100*ahets[[5]], digits=3), "% ",
-                         "abcde:", format(100*ahets[[6]], digits=3), "%")
+        hetline = paste0("aaaaa:", format(100 * ahomo,      digits=3), "% ",
+                         "aaaab:", format(100 * ahets[[1]], digits=3), "% ",
+                         "aaabb:", format(100 * ahets[[2]], digits=3), "% ",'\n',
+                         "aaabc:", format(100 * ahets[[3]], digits=3), "% ",
+                         "aabbc:", format(100 * ahets[[4]], digits=3), "% ",
+                         "aabcd:", format(100 * ahets[[5]], digits=3), "% ",
+                         "abcde:", format(100 * ahets[[6]], digits=3), "%")
       } else {
-        hetline = paste0("aaaaa:",                                                      format(100*ahomo,      digits=3), "% ",
-                         switch(top, "aaaab:", "aaaab:", "aaabb:", "aaabb:", "aaabb:"), format(100*ahets[[1]], digits=3), "% ",
-                         switch(top, "aaabc:", "aabbc:", "aaabc:", "aabcc:", "aabcc:"), format(100*ahets[[2]], digits=3), "% ",'\n',
-                         switch(top, "aabcd:", "aabcd:", "aabcd:", "aabcd:", "abcdd:"), format(100*ahets[[3]], digits=3), "% ",
-                         "abcde:",                                                      format(100*ahets[[4]], digits=3), "%")
+        hetline = paste0("aaaaa:",                                                      format(100 * ahomo,      digits=3), "% ",
+                         switch(top, "aaaab:", "aaaab:", "aaabb:", "aaabb:", "aaabb:"), format(100 * ahets[[1]], digits=3), "% ",
+                         switch(top, "aaabc:", "aabbc:", "aaabc:", "aabcc:", "aabcc:"), format(100 * ahets[[2]], digits=3), "% ",'\n',
+                         switch(top, "aabcd:", "aabcd:", "aabcd:", "aabcd:", "abcdd:"), format(100 * ahets[[3]], digits=3), "% ",
+                         "abcde:",                                                      format(100 * ahets[[4]], digits=3), "%")
       }
     }
     if (p==6) {
       if (top==0) {
-        hetline = paste0("aaaaaa:", format(100*ahomo, digits=3), "% ",
-                         "aaaaab:", format(100*ahets[[1]], digits=3), "% ",
-                         "aaaabb:", format(100*ahets[[2]], digits=3), "% ",
-                         "aaabbb:", format(100*ahets[[3]], digits=3), "% ",
-                         "aaaabc:", format(100*ahets[[4]], digits=3), "% ",'\n',
-                         "aaabbc:", format(100*ahets[[5]], digits=3), "% ",
-                         "aabbcc:", format(100*ahets[[6]], digits=3), "% ",
-                         "aaabcd:", format(100*ahets[[7]], digits=3), "% ",
-                         "aabbcd:", format(100*ahets[[8]], digits=3), "% ",
-                         "aabcde:", format(100*ahets[[9]], digits=3), "% ",
-                         "abcdef:", format(100*ahets[[10]], digits=3), "%")
+        hetline = paste0("aaaaaa:", format(100 * ahomo, digits=3), "% ",
+                         "aaaaab:", format(100 * ahets[[1]], digits=3), "% ",
+                         "aaaabb:", format(100 * ahets[[2]], digits=3), "% ",
+                         "aaabbb:", format(100 * ahets[[3]], digits=3), "% ",
+                         "aaaabc:", format(100 * ahets[[4]], digits=3), "% ",'\n',
+                         "aaabbc:", format(100 * ahets[[5]], digits=3), "% ",
+                         "aabbcc:", format(100 * ahets[[6]], digits=3), "% ",
+                         "aaabcd:", format(100 * ahets[[7]], digits=3), "% ",
+                         "aabbcd:", format(100 * ahets[[8]], digits=3), "% ",
+                         "aabcde:", format(100 * ahets[[9]], digits=3), "% ",
+                         "abcdef:", format(100 * ahets[[10]], digits=3), "%")
       } else {
-        hetline = paste0("aaaaaa:", format(100*ahomo, digits=3), "% ",
-                         switch(top, "aaaaab:", "aaaaab:", "aaaaab:", "aaaaab:", "aaaaab:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaabbb:", "aaabbb:", "aaabbb:"), format(100*ahets[[1]], digits=3), "% ",
-                         switch(top, "aaaabc:", "aaaabc:", "aaabbc:", "aaabbc:", "aaabbc:", "aaaabc:", "aaaabc:", "aaabcc:", "aaabcc:", "aaabcc:", "aabbcc:", "aabbcc:", "aabbcc:", "aaabbc:", "aaabbc:", "aaabbc:"), format(100*ahets[[2]], digits=3), "% ",'\n',
-                         switch(top, "aaabcd:", "aabbcd:", "aaabcd:", "aabccd:", "aabccd:", "aaabcd:", "aabbcd:", "aaabcd:", "aabcdd:", "aabcdd:", "aabbcd:", "aabcdd:", "aabcdd:", "aaabcd:", "aabccd:", "aabccd:"), format(100*ahets[[3]], digits=3), "% ",
-                         switch(top, "aabcde:", "aabcde:", "aabcde:", "aabcde:", "abcdde:", "aabcde:", "aabcde:", "aabcde:", "aabcde:", "abcdee:", "aabcde:", "aabcde:", "abcdee:", "aabcde:", "aabcde:", "abcdde:"), format(100*ahets[[4]], digits=3), "% ",
-                         "abcdef:", format(100*ahets[[5]], digits=3), "%")
+        hetline = paste0("aaaaaa:", format(100 * ahomo, digits=3), "% ",
+                         switch(top, "aaaaab:", "aaaaab:", "aaaaab:", "aaaaab:", "aaaaab:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaabbb:", "aaabbb:", "aaabbb:"), format(100 * ahets[[1]], digits=3), "% ",
+                         switch(top, "aaaabc:", "aaaabc:", "aaabbc:", "aaabbc:", "aaabbc:", "aaaabc:", "aaaabc:", "aaabcc:", "aaabcc:", "aaabcc:", "aabbcc:", "aabbcc:", "aabbcc:", "aaabbc:", "aaabbc:", "aaabbc:"), format(100 * ahets[[2]], digits=3), "% ",'\n',
+                         switch(top, "aaabcd:", "aabbcd:", "aaabcd:", "aabccd:", "aabccd:", "aaabcd:", "aabbcd:", "aaabcd:", "aabcdd:", "aabcdd:", "aabbcd:", "aabcdd:", "aabcdd:", "aaabcd:", "aabccd:", "aabccd:"), format(100 * ahets[[3]], digits=3), "% ",
+                         switch(top, "aabcde:", "aabcde:", "aabcde:", "aabcde:", "abcdde:", "aabcde:", "aabcde:", "aabcde:", "aabcde:", "abcdee:", "aabcde:", "aabcde:", "abcdee:", "aabcde:", "aabcde:", "abcdde:"), format(100 * ahets[[4]], digits=3), "% ",
+                         "abcdef:", format(100 * ahets[[5]], digits=3), "%")
       }
     }
     print(hetline)
@@ -406,9 +394,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
         col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
         bg="white")
       }
-    }
-    else
-    {
+    } else {
       if (NO_UNIQUE_SEQUENCE) {
         legend("topright",
         ##legend(exp(.62 * log(max(x))), 1.0 * max(y),
@@ -496,9 +482,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     " err:", format(error_rate[1], digits=3),
     " model fit:", format(adups, digits=3),
     " len:", round(total_len[1]), "\n", sep=""))
-  }
-  else
-  {
+  } else {
     title("\nFailed to converge")
     dev.set(dev.next())
     title("\nFailed to converge")
@@ -524,16 +508,16 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   }
   cat(paste("k = ", k,sep=""), file=summaryFile, sep="\n", append=TRUE)
   cat(paste("p = ", p,sep=""), file=summaryFile, sep="\n", append=TRUE)
-  if (arguments$lambda!=-1) {
+  if (arguments$lambda != -1) {
     cat(paste("initial kmercov estimate = ", arguments$lambda, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (arguments$max_kmercov!=-1) {
+  if (arguments$max_kmercov != -1) {
     cat(paste("max_kmercov = ", arguments$max_kmercov, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (VERBOSE) {
     cat(paste("VERBOSE set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (topology!=-1) {
+  if (topology != -1) {
     cat(paste("topology = ", topology, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (TESTING) {
@@ -548,31 +532,27 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (ALPHA_RATES) {
     cat(paste("ALPHA_RATES set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (r_inits!=-1) {
+  if (r_inits != -1) {
     cat(paste("initial rates = ", r_inits, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (d_init!=-1) {
+  if (d_init != -1) {
     cat(paste("initial repetitiveness = ", d_init, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   cat(paste("\n",sprintf(format_column_1,"property"),               sprintf(format_column_2,"min"),                              sprintf(format_column_3,"max"), sep=""),                                     file=summaryFile, sep="\n", append=TRUE)
-  if (p==1)
-  {
+  if (p==1) {
     cat(paste(sprintf(format_column_1,"Homozygous (a)"),            sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
   }
-  if (p==2)
-  {
+  if (p==2) {
     cat(paste(sprintf(format_column_1,"Homozygous (aa)"),           sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Heterozygous (ab)"),         sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
   }
-  if (p==3)
-  {
+  if (p==3) {
     cat(paste(sprintf(format_column_1,"Homozygous (aaa)"),          sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Heterozygous (not aaa)"),    sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"aab"),                       sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"abc"),                       sprintf(format_column_2,percentage_format(hets[[2]][1])),         sprintf(format_column_3,percentage_format(hets[[2]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
   }
-  if (p==4)
-  {
+  if (p==4) {
     cat(paste(sprintf(format_column_1,"Homozygous (aaaa)"),                    sprintf(format_column_2,percentage_format(homo[2])),      sprintf(format_column_3,percentage_format(homo[1])),      sep=""), file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Heterozygous (not aaaa)"),              sprintf(format_column_2,percentage_format(het[1])),       sprintf(format_column_3,percentage_format(het[2])),       sep=""), file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1, switch(top+1, "aaab", "aaab", "aabb")), sprintf(format_column_2,percentage_format(hets[[1]][1])), sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""), file=summaryFile, sep="\n", append=TRUE)
@@ -582,8 +562,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       cat(paste(sprintf(format_column_1,"abcd"),                               sprintf(format_column_2,percentage_format(hets[[4]][1])), sprintf(format_column_3,percentage_format(hets[[4]][2])), sep=""), file=summaryFile, sep="\n", append=TRUE)
     }
   }
-  if (p==5)
-  {
+  if (p==5) {
     cat(paste(sprintf(format_column_1,"Homozygous (aaaaa)"),        sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_2,"Heterozygous (not aaaaa)"),  sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])),  sep=""),                file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1, switch(top+1,"aaaab", "aaaab", "aaaab", "aaabb", "aaabb", "aaabb")),                     sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
@@ -595,8 +574,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       cat(paste(sprintf(format_column_1,"abcde"),                     sprintf(format_column_2,percentage_format(hets[[6]][1])),         sprintf(format_column_3,percentage_format(hets[[6]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     }
   }
-  if (p==6)
-  {
+  if (p==6) {
     cat(paste(sprintf(format_column_1,"Homozygous (aaaaaa)"),       sprintf(format_column_2,percentage_format(homo[2])),         sprintf(format_column_3,percentage_format(homo[1])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1,"Heterozygous (not aaaaaa)"), sprintf(format_column_2,percentage_format(het[1])),          sprintf(format_column_3,percentage_format(het[2])), sep=""),                 file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1, switch(top+1, "aaaaab", "aaaaab:", "aaaaab:", "aaaaab:", "aaaaab:", "aaaaab:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaabbb:", "aaabbb:", "aaabbb:")),                    sprintf(format_column_2,percentage_format(hets[[1]][1])),         sprintf(format_column_3,percentage_format(hets[[1]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
@@ -617,15 +595,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   cat(paste(sprintf(format_column_1,"Genome Unique Length"),  sprintf(format_column_2,bp_format(unique_len[2])),                 sprintf(format_column_3,bp_format(unique_len[1])), sep=""),                  file=summaryFile, sep="\n", append=TRUE)
   cat(paste(sprintf(format_column_1,"Model Fit "),            sprintf(format_column_2,percentage_format(model_fit_allscore[1])), sprintf(format_column_3,percentage_format(model_fit_fullscore[1])), sep=""), file=summaryFile, sep="\n", append=TRUE)
   cat(paste(sprintf(format_column_1,"Read Error Rate"),       sprintf(format_column_2,percentage_format(error_rate[1])),         sprintf(format_column_3,percentage_format(error_rate[2])), sep=""),          file=summaryFile, sep="\n", append=TRUE)
-  if (VERBOSE)
-  {
+  if (VERBOSE) {
     cat(paste("\nPercent Kmers Modeled (All Kmers) = ",  percentage_format(model_fit_allscore[1]),    " [", model_fit_allscore[2],    ", ", model_fit_allscore[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
     cat(paste("Percent Kmers Modeled (Full Model) = ",   percentage_format(model_fit_fullscore[1]),   " [", model_fit_fullscore[2],   ", ", model_fit_fullscore[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
     cat(paste("Percent Kmers Modeled (Unique Kmers) = ", percentage_format(model_fit_uniquescore[1]), " [", model_fit_uniquescore[2], ", ", model_fit_uniquescore[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
 
     cat(paste("\nModel RSSE (All Kmers) = ",  model_fit_all[1],    " [", model_fit_all[2],    ", ", model_fit_all[3],    "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
     cat(paste("Model RSSE (Full Model) = ",   model_fit_full[1],   " [", model_fit_full[2],   ", ", model_fit_full[3],   "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
-    cat(paste("Model RSSE (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], ", ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)	
+    cat(paste("Model RSSE (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], ", ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   ## Finalize the progress
   progressFilename=paste(foldername,"/", arguments$name_prefix, "_progress.txt",sep="")

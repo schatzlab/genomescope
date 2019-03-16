@@ -13,13 +13,13 @@
 #' @return A list (nls, nlsscore) where nls is the nlsLM model object (with some additional components)
 #' and nlsscore is the score (model RSSE) corresponding to the best fit (of the p forms).
 #' @export
-estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov, round, foldername, arguments) {
+
+estimate_Genome_peakp <- function(kmer_hist_orig, x, y, k, p, topology, estKmercov, round, foldername, arguments) {
   if (topology==-1) {
     p_to_num_topologies = c(1, 1, 1, 2, 5, 16)
     num_topologies = p_to_num_topologies[p]
     topologies = 1:num_topologies
-  }
-  else {
+  } else {
     num_topologies = 1
     topologies = c(topology)
   }
@@ -74,7 +74,7 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov
 #    else {
 #      return(eval_model(kmer_hist_orig, nls0, nls0, p, round, foldername, arguments))
 #    }
-#    
+#
   }
   return(eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments))
 }
