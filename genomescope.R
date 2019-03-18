@@ -70,6 +70,7 @@ parser$add_argument("-n", "--name_prefix", default = "OUTPUT", help = "name pref
 parser$add_argument("-t", "--topology", type = "integer", default = -1, help = "optional topology for model to use")
 parser$add_argument("--verbose", action="store_true", default=FALSE, help = "optional flag to print messages during execution")
 parser$add_argument("--testing", action="store_true", default=FALSE, help = "optional flag to create testing.tsv file with model parameters")
+parser$add_argument("--true_params", type="character", default = -1, help = "optional flag to state true simulated parameters for testing mode")
 parser$add_argument("--transform", action="store_true", default=FALSE, help = "optional flag to fit to transformed (x*y vs. x) kmer histogram")
 parser$add_argument("--d_initial", type="character", default = -1, help = "optional flag to set initial value for repetitiveness")
 parser$add_argument("--initial_rates", type="character", default = -1, help = "optional flag to set initial values for nucleotide (or kmer or alpha) rates")
@@ -88,7 +89,7 @@ if (arguments$version) {
 if (is.null(arguments$input) | is.null(arguments$output)) {
   cat("USAGE: genomescope.R -i input_histogram_file -k kmer_length -p ploidy -o output_dir\n")
   cat("OPTIONAL PARAMETERS: -l lambda -m max_kmercov -n 'name_prefix' --verbose\n")
-  cat("ADVANCED PARAMETERS: -t topology --testing --transform --initial_rates --kmer_rates --alpha_rates\n")
+  cat("ADVANCED PARAMETERS: -t topology --testing --true_params --transform --initial_rates --kmer_rates --alpha_rates --no_unique_sequence\n")
   cat("HELP: genomescope.R --help\n")
 } else {
 
@@ -104,6 +105,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   r_inits     <- arguments$initial_rates
   VERBOSE     <- arguments$verbose
   TESTING     <- arguments$testing
+  TRUE_PARAMS <- arguments$true_params
   TRANSFORM   <- arguments$transform
   KMER_RATES  <- arguments$kmer_rates
   ALPHA_RATES <- arguments$alpha_rates
