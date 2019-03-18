@@ -628,11 +628,15 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     cat(paste("Model RSSE (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], ", ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)	
   }
   ## Finalize the progress
-  progressFilename=paste(foldername,"/", arguments$name_prefix, "_progress.txt",sep="")
+  progressFilename=paste(foldername, "/", arguments$name_prefix, "_progress.txt",sep="")
   cat(model_status, file=progressFilename, sep="\n", append=TRUE)
 
   if (TESTING) {
-    testingFile <- paste(foldername,"/SIMULATED_testing.tsv",sep="")
+    if (TRUE_PARAMS!=-1) {
+      testingFile <- paste(foldername, "/", arguments$name_prefix, "_SIMULATED_testing.tsv",sep="")
+    } else {
+      testingFile <- paste(foldername,"/SIMULATED_testing.tsv",sep="")
+    }
     if (p==1) {
       cat(paste(amd, akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
