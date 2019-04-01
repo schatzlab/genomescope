@@ -644,7 +644,12 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       cat(paste(amd, ahets[[1]], akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
     }
     if (p==3) {
-      cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      if (TRUE_PARAMS!=-1) {
+        true_params = unlist(lapply(strsplit(TRUE_PARAMS, ","), as.numeric))
+        cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, atotal_len, top, true_params[1], true_params[2], true_params[3], true_params[4], sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      } else {
+        cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
+      }
     }
     if (p==4) {
       if (top==0) {
