@@ -646,7 +646,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     if (p==3) {
       if (TRUE_PARAMS!=-1) {
         true_params = unlist(lapply(strsplit(TRUE_PARAMS, ","), as.numeric))
-        cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, atotal_len, top, true_params[1], true_params[2], true_params[3], true_params[4], sep="\t"), file=testingFile, sep="\n", append=TRUE)
+        cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, atotal_len, top, true_params[1], true_params[2], true_params[3], true_params[4], sep="\t"), file=testingFile, sep="\n", append=FALSE)
       } else {
         cat(paste(amd, ahets[[1]], ahets[[2]], akcov, adups, atotal_len, top, sep="\t"), file=testingFile, sep="\n", append=TRUE)
       }
