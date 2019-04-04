@@ -27,7 +27,7 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov
   if (estKmercov==-1) {
     ## First we see what happens when we set the estimated kmer coverage to be the x-coordinate where the max peak occurs (typically the homozygous peak)
     if (TRANSFORM) {
-      y_transform = as.numeric(x)*as.numeric(y)
+      y_transform = as.numeric(x)**2*as.numeric(y)
       estKmercov1 = x[which(y_transform==max(y_transform))][1]
     } else {
       estKmercov1  = x[which(y==max(y))][1]
