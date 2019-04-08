@@ -12,6 +12,9 @@
 score_model<-function(kmer_hist_orig, nls, round, foldername) {
   x = kmer_hist_orig[[1]]
   y = kmer_hist_orig[[2]]
+  if (TRANSFORM) {
+    y_transform = as.numeric(x)**transform_exp*as.numeric(y)
+  }
 
   pred=predict(nls, newdata=data.frame(x))
   model_sum=summary(nls)
@@ -24,7 +27,11 @@ score_model<-function(kmer_hist_orig, nls, round, foldername) {
   error_xcutoff_ind = tail(which(x<=error_xcutoff),n=1)
   if (length(error_xcutoff_ind)==0) {error_xcutoff_ind=1}
 
-  error_kmers = y[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
+  if (TRANSFORM) {
+    error_kmers = x[1:error_xcutoff_ind]**(1-transform_exp)*(y_transform[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind])
+  } else {
+    error_kmers = y[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
+  }
 
   first_zero = -1
 
@@ -44,15 +51,21 @@ score_model<-function(kmer_hist_orig, nls, round, foldername) {
     first_zero = error_xcutoff_ind
   }
 
+  if (TRANSFORM) {
+    y_fit = y_transform
+  } else {
+    y_fit = y
+  }
+
   ## The fit is residual sum of square error, excluding sequencing errors
-  model_fit_all    = c(sum(as.numeric(y[first_zero:length(y)]                          - pred[first_zero:length(y)])                           ** 2), first_zero, x[length(y)])
-  model_fit_full   = c(sum(as.numeric(y[first_zero:(min(length(y),(2*p+1)*kcovfloor))] - pred[first_zero:(min(length(y), (2*p+1)*kcovfloor))]) ** 2), first_zero, (min(length(y), (2*p+1)*kcovfloor)))
-  model_fit_unique = c(sum(as.numeric(y[first_zero:((p+1)*kcovfloor)]                  - pred[first_zero:((p+1)*kcovfloor)])                   ** 2), first_zero, ((p+1)*kcovfloor))
+  model_fit_all    = c(sum(as.numeric(y_fit[first_zero:length(y_fit)]                          - pred[first_zero:length(y_fit)])                           ** 2), first_zero, x[length(y_fit)])
+  model_fit_full   = c(sum(as.numeric(y_fit[first_zero:(min(length(y_fit),(2*p+1)*kcovfloor))] - pred[first_zero:(min(length(y_fit), (2*p+1)*kcovfloor))]) ** 2), first_zero, (min(length(y_fit), (2*p+1)*kcovfloor)))
+  model_fit_unique = c(sum(as.numeric(y_fit[first_zero:((p+1)*kcovfloor)]                  - pred[first_zero:((p+1)*kcovfloor)])                   ** 2), first_zero, ((p+1)*kcovfloor))
 
   ## The score is the percentage of kmers correctly modeled, excluding sequencing errors
-  model_fit_allscore    = c(1-sum(abs(as.numeric(y[first_zero:length(y)]                           - pred[first_zero:length(y)])))                           / sum(as.numeric(y[first_zero:length(y)])),                           first_zero, x[length(y)])
-  model_fit_fullscore   = c(1-sum(abs(as.numeric(y[first_zero:(min(length(y), (2*p+1)*kcovfloor))] - pred[first_zero:(min(length(y), (2*p+1)*kcovfloor))]))) / sum(as.numeric(y[first_zero:(min(length(y), (2*p+1)*kcovfloor))])), first_zero, (min(length(y), (2*p+1)*kcovfloor)))
-  model_fit_uniquescore = c(1-sum(abs(as.numeric(y[first_zero:((p+1)*kcovfloor)]                   - pred[first_zero:((p+1)*kcovfloor)])))                   / sum(as.numeric(y[first_zero:((p+1)*kcovfloor)])),                   first_zero, ((p+1)*kcovfloor))
+  model_fit_allscore    = c(1-sum(abs(as.numeric(y_fit[first_zero:length(y_fit)]                           - pred[first_zero:length(y_fit)])))                           / sum(as.numeric(y_fit[first_zero:length(y_fit)])),                           first_zero, x[length(y_fit)])
+  model_fit_fullscore   = c(1-sum(abs(as.numeric(y_fit[first_zero:(min(length(y_fit), (2*p+1)*kcovfloor))] - pred[first_zero:(min(length(y_fit), (2*p+1)*kcovfloor))]))) / sum(as.numeric(y_fit[first_zero:(min(length(y_fit), (2*p+1)*kcovfloor))])), first_zero, (min(length(y_fit), (2*p+1)*kcovfloor)))
+  model_fit_uniquescore = c(1-sum(abs(as.numeric(y_fit[first_zero:((p+1)*kcovfloor)]                   - pred[first_zero:((p+1)*kcovfloor)])))                   / sum(as.numeric(y_fit[first_zero:((p+1)*kcovfloor)])),                   first_zero, ((p+1)*kcovfloor))
 
   fit = data.frame(all  = model_fit_all,      allscore  = model_fit_allscore,
                    full = model_fit_full,     fullscore = model_fit_fullscore,
