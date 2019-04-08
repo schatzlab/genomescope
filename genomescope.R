@@ -71,7 +71,8 @@ parser$add_argument("-t", "--topology", type = "integer", default = -1, help = "
 parser$add_argument("--verbose", action="store_true", default=FALSE, help = "optional flag to print messages during execution")
 parser$add_argument("--testing", action="store_true", default=FALSE, help = "optional flag to create testing.tsv file with model parameters")
 parser$add_argument("--true_params", type="character", default = -1, help = "optional flag to state true simulated parameters for testing mode")
-parser$add_argument("--transform", action="store_true", default=FALSE, help = "optional flag to fit to transformed (x*y vs. x) kmer histogram")
+parser$add_argument("--transform", action="store_true", default=FALSE, help = "optional flag to fit to transformed (x**transform_exp*y vs. x) kmer histogram")
+parser$add_argument("--transform_exp", type="integer", default=1, help = "optional parameter for the exponent when fitting a transformed histogram [default 1]")
 parser$add_argument("--d_initial", type="character", default = -1, help = "optional flag to set initial value for repetitiveness")
 parser$add_argument("--initial_rates", type="character", default = -1, help = "optional flag to set initial values for nucleotide (or kmer or alpha) rates")
 parser$add_argument("--kmer_rates", action="store_true", default=FALSE, help = "optional flag to fit using kmer heterozygosity rates instead of nucleotide heterozygosity rates")
@@ -107,6 +108,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   TESTING     <- arguments$testing
   TRUE_PARAMS <- arguments$true_params
   TRANSFORM   <- arguments$transform
+  transform_exp <- arguments$transform_exp
   KMER_RATES  <- arguments$kmer_rates
   ALPHA_RATES <- arguments$alpha_rates
   NO_UNIQUE_SEQUENCE <- arguments$no_unique_sequence
@@ -133,7 +135,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   ## try to find the local minimum between errors and the first (heterozygous) peak
   start <- tail(which(kmer_prof[1:TYPICAL_ERROR,2]==min(kmer_prof[1:TYPICAL_ERROR,2])),n=1)
   if (TRANSFORM) {
-    start <- tail(which(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1])==min(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1]))),n=1)
+    start <- tail(which(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1])**transform_exp==min(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1]**transform_exp))),n=1)
   }
 
   maxCovIndex = -1

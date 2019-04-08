@@ -23,9 +23,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   x=kmer_hist_orig[[1]]
   y=kmer_hist_orig[[2]]
   if (TRANSFORM) {
-    y = as.numeric(x)*as.numeric(y)
+    y = as.numeric(x)**transform_exp*as.numeric(y)
     kmer_hist_transform = kmer_hist_orig
-    kmer_hist_transform$V2 = as.numeric(kmer_hist_transform$V1) * as.numeric(kmer_hist_transform$V2)
+    kmer_hist_transform$V2 = as.numeric(kmer_hist_transform$V1)**transform_exp * as.numeric(kmer_hist_transform$V2)
   }
   model = container[[1]]
 
@@ -133,7 +133,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     x=kmer_hist[[1]]
     y=kmer_hist[[2]]
     if (TRANSFORM) {
-      y_transform = as.numeric(x)*as.numeric(y)
+      y_transform = as.numeric(x)**transform_exp*as.numeric(y)
     }
 
     ## The model converged!
@@ -172,7 +172,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     if (length(error_xcutoff_ind)==0) {error_xcutoff_ind=1}
 
     if (TRANSFORM) {
-      error_kmers = y_transform[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
+      error_kmers = x[1:error_xcutoff_ind]**(1-transform_exp)*(y_transform[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind])
     } else {
       error_kmers = y[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
     }
@@ -256,7 +256,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     }
 
     if (TRANSFORM) {
-      unique_hist_transform = x*unique_hist
+      unique_hist_transform = x**transform_exp*unique_hist
     }
 
     unique_kmers = sum(as.numeric(x)*as.numeric(unique_hist))
@@ -541,6 +541,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   }
   if (TRANSFORM) {
     cat(paste("TRANSFORM set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (transform_exp != 1) {
+    cat(paste("TRANSFORM_EXP =", transform_exp, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (KMER_RATES) {
     cat(paste("KMER_RATES set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
