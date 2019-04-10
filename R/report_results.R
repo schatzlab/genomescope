@@ -543,7 +543,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     cat(paste("TRANSFORM set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (transform_exp != 1) {
-    cat(paste("TRANSFORM_EXP =", transform_exp, sep=""), file=summaryFile, sep="\n", append=TRUE)
+    cat(paste("TRANSFORM_EXP = ", transform_exp, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (KMER_RATES) {
     cat(paste("KMER_RATES set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)

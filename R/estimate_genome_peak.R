@@ -25,7 +25,11 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov
   }
   numofKmers = sum(as.numeric(x)*as.numeric(y))
   if (estKmercov==-1) {
-    ## First we see what happens when we set the estimated kmer coverage to be the x-coordinate where the max peak occurs (typically the homozygous peak)
+    #In situations with low heterozygosity, the peak with highest amplitude typically corresponds to the homozygous peak (i.e. the p-th peak).
+    #However, with increasing heterozygosity, the highest amplitude peak may be an earlier peak.
+    #Thus, when setting the estimated kmer coverage, we will need to iterate through these possibilities.
+    #num_peak_indices indicates how many possibilities we need to iterate through.
+    num_peak_indices = p
     if (TRANSFORM) {
       y_transform = as.numeric(x)**transform_exp*as.numeric(y)
       estKmercov1 = x[which(y_transform==max(y_transform))][1]
@@ -34,47 +38,69 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov
     }
   }
   else {
+    # When the user sets the estimated kmer coverage, we only need to iterate through one possibility
+    num_peak_indices = 1
     ## We set the estimated kmer coverage to be the user specified value
     estKmercov1 = estKmercov
   }
   estLength1 = numofKmers/estKmercov1
 
-  if (VERBOSE) {cat(paste("trying with kmercov: ", estKmercov1, "\n"))}
+  #if (VERBOSE) {cat(paste("trying with kmercov: ", estKmercov1, "\n"))}
 
-  nls0 = NULL
-  top_count = 0
-  for (top in topologies) {
-    top_count = top_count + 1
-    nls1 = nls_peak(x, y, k, p, top, estKmercov1, estLength1, MAX_ITERATIONS)
-    if (top_count < num_topologies || (estKmercov==-1 && p>=2)) { #if this is not the last evaluation
+  nls00 = NULL
+  peak_indices = 1:num_peak_indices
+  for (i in peak_indices) {
+    nls0 = NULL
+    top_count = 0
+    ## We see what happens when we set the estimated kmer coverage to be 1/i times the x-coordinate where the max peak occurs (1 <= i <= p if the user doesn't set the estimated kmer coverage, and i=1 if they do)
+    estKmercov2 = estKmercov1 / i
+    estLength2 = numofKmers/estKmercov2
+
+    if (VERBOSE) {cat(paste("trying with kmercov: ", estKmercov2, "\n"))}
+
+    for (top in topologies) {
+      if (VERBOSE) {cat(paste("trying with topology: ", top, "\n"))}
+      top_count = top_count + 1
+      nls1 = nls_peak(x, y, k, p, top, estKmercov2, estLength2, MAX_ITERATIONS)
+      if (VERBOSE) {print(summary(nls1))}
       nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
     }
-
-    if (VERBOSE) {print(summary(nls0))}
-
-    if (estKmercov==-1 && p>=2) {
-      ploidies = 2:p
-      for (i in ploidies) {
-        ## Next we see what happens when we set the estimated kmer coverage to be 1/i times the x-coordinate where the max peak occurs (2 <= i <= p)
-        estKmercov2  = estKmercov1 / i
-        estLength2 = numofKmers/estKmercov2
-
-        if (VERBOSE) {cat(paste("trying with kmercov: ", estKmercov2, "\n"))}
-
-        nls1 = nls_peak(x, y, k, p, top, estKmercov2, estLength2, MAX_ITERATIONS)
-
-        if (VERBOSE) {print(summary(nls1))}
-
-        if (i<p || top_count < num_topologies) { #if this is not the last evaluation
-          nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
-        }
-      }
-      #nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
+    if (i < num_peak_indices) { #if this is not the last evaluation
+      nls00 = eval_model(kmer_hist_orig, nls00, nls0, p, round, foldername, arguments)[[1]]
     }
-#    else {
-#      return(eval_model(kmer_hist_orig, nls0, nls0, p, round, foldername, arguments))
-#    }
-#    
   }
-  return(eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments))
+#  for (top in topologies) {
+#    top_count = top_count + 1
+#    nls1 = nls_peak(x, y, k, p, top, estKmercov1, estLength1, MAX_ITERATIONS)
+#    if (top_count < num_topologies || (estKmercov==-1 && p>=2)) { #if this is not the last evaluation
+#      nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
+#    }
+
+#    if (VERBOSE) {print(summary(nls0))}
+
+#    if (estKmercov==-1 && p>=2) {
+#      ploidies = 2:p
+#      for (i in ploidies) {
+#        ## Next we see what happens when we set the estimated kmer coverage to be 1/i times the x-coordinate where the max peak occurs (2 <= i <= p)
+#        estKmercov2  = estKmercov1 / i
+#        estLength2 = numofKmers/estKmercov2
+
+#        if (VERBOSE) {cat(paste("trying with kmercov: ", estKmercov2, "\n"))}
+
+#        nls1 = nls_peak(x, y, k, p, top, estKmercov2, estLength2, MAX_ITERATIONS)
+
+#        if (VERBOSE) {print(summary(nls1))}
+
+#        if (i<p || top_count < num_topologies) { #if this is not the last evaluation
+#          nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
+#        }
+#      }
+#      #nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
+#    }
+##    else {
+##      return(eval_model(kmer_hist_orig, nls0, nls0, p, round, foldername, arguments))
+##    }
+##    
+#  }
+  return(eval_model(kmer_hist_orig, nls00, nls0, p, round, foldername, arguments))
 }
