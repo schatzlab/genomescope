@@ -62,7 +62,7 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov
       if (VERBOSE) {cat(paste("trying with topology: ", top, "\n"))}
       top_count = top_count + 1
       nls1 = nls_peak(x, y, k, p, top, estKmercov2, estLength2, MAX_ITERATIONS)
-      if (VERBOSE) {print(summary(nls1))}
+      #if (VERBOSE) {print(summary(nls1))}
       nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
     }
     if (i < num_peak_indices) { #if this is not the last evaluation

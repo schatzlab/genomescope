@@ -151,7 +151,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
     maxCovIndex <- length(x[x<=max_kmercov])
   }
 
-  if (VERBOSE) {cat(paste("using max_kmercov:", max_kmercov, " with index:", maxCovIndex, "trying 2p peak model... \n"))}
+  if (VERBOSE) {cat(paste("using max_kmercov:", max_kmercov, " with index:", maxCovIndex, "\n"))}
 
   # terminate after NUM_ROUND iterations, store best result so far in container
   round <- 0
@@ -174,7 +174,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
       if (VERBOSE) {
         mdir = paste(foldername, "/round", round, sep="")
         dir.create(mdir, showWarnings=FALSE)
-        report_results(kmer_prof,kmer_prof_orig, k, p, model_peaks, mdir, arguments)
+        report_results(kmer_prof,kmer_prof_orig, k, p, model_peaks, mdir, arguments, TRUE)
       }
     }
     else {
@@ -221,7 +221,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
     round <- round + 1
   }
   ## Report the results, note using the original full profile
-  report_results(kmer_prof,kmer_prof_orig, k, p, best_container, foldername, arguments)
+  report_results(kmer_prof,kmer_prof_orig, k, p, best_container, foldername, arguments, FALSE)
   if (!is.null(best_container[[1]])) {
     print('model score')
     print(best_container[[2]]$all[[1]])

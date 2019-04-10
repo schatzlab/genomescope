@@ -17,12 +17,12 @@ eval_model<-function(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments
   if (!is.null(nls0)) {
     nls0score = score_model(kmer_hist_orig, nls0, round+0.1, foldername)
 
-    if(VERBOSE) {cat(paste("nls0score$all:\t", nls0score$all[[1]], "\n"))}
+    #if(VERBOSE) {cat(paste("nls0score$all:\t", nls0score$all[[1]], "\n"))}
 
     if (VERBOSE) {
       mdir = paste(foldername, "/round", round, ".1", sep="")
       dir.create(mdir, showWarnings=FALSE)
-      report_results(kmer_prof_orig,kmer_prof_orig, k, p, (list(nls0, nls0score)) , mdir, arguments)
+      report_results(kmer_prof_orig,kmer_prof_orig, k, p, (list(nls0, nls0score)) , mdir, arguments, TRUE)
     }
   }
   else {
@@ -38,7 +38,7 @@ eval_model<-function(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments
     if (VERBOSE) {
       mdir = paste(foldername, "/round", round, ".2", sep="")
       dir.create(mdir, showWarnings=FALSE)
-      report_results(kmer_prof_orig, kmer_prof_orig, k, p, (list(nls1, nls1score)) , mdir, arguments)
+      report_results(kmer_prof_orig, kmer_prof_orig, k, p, (list(nls1, nls1score)) , mdir, arguments, FALSE)
     }
   }
   else {

@@ -39,7 +39,6 @@ score_model<-function(kmer_hist_orig, nls, round, foldername) {
     if (first_zero == -1) {
       if (error_kmers[i] < 1.0) {
         first_zero = i
-        if (VERBOSE) {cat(paste("Truncating errors at", i, "\n"))}
       }
     }
     else {

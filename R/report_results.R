@@ -17,8 +17,9 @@ X_format<-function(num) {paste(signif(num,4),"X",sep="")}
 #' and nlsscore is the score (model RSSE) corresponding to the best fit (of the p forms).
 #' @param foldername A character vector corresponding to the name of the output directory.
 #' @param arguments A data frame of the user-specified inputs.
+#' @param IN_VERBOSE A boolean flag to designate whether report_results is being called in a VERBOSE block.
 #' @export
-report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, arguments) {
+report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, arguments, IN_VERBOSE) {
   
   x=kmer_hist_orig[[1]]
   y=kmer_hist_orig[[2]]
@@ -198,6 +199,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     if (first_zero == -1)
     {
       first_zero = error_xcutoff_ind
+      if (VERBOSE) {cat(paste("Truncating errors at", error_xcutoff_ind, "\n"))}
     }
 
     ## Rather than "0", set to be some very small number so log-log plot looks okay
@@ -345,7 +347,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
                          "abcdef:", format(100*ahets[[5]], digits=3), "%")
       }
     }
-    print(hetline)
+    if (!IN_VERBOSE) {
+      print(hetline)
+    }
     ## Finish Log plot
     title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
     "bp",
@@ -491,11 +495,13 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     model_status="done"
 
-    cat(paste("Model converged het:", format(ahet, digits=3),
-    " kcov:", format(akcov, digits=3),
-    " err:", format(error_rate[1], digits=3),
-    " model fit:", format(adups, digits=3),
-    " len:", round(total_len[1]), "\n", sep=""))
+    if (!IN_VERBOSE) {
+      cat(paste("Model converged het:", format(ahet, digits=3),
+      " kcov:", format(akcov, digits=3),
+      " err:", format(error_rate[1], digits=3),
+      " model fit:", format(adups, digits=3),
+      " len:", round(total_len[1]), "\n", sep=""))
+    }
   }
   else
   {
