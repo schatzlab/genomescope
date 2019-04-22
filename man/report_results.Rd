@@ -5,7 +5,7 @@
 \title{Report results and make plots}
 \usage{
 report_results(kmer_hist, kmer_hist_orig, k, p, container, foldername,
-  arguments)
+  arguments, IN_VERBOSE)
 }
 \arguments{
 \item{kmer_hist}{A data frame of the original histogram data (starting at 1 and going up to the max kmer coverage threshold).}
@@ -22,6 +22,8 @@ and nlsscore is the score (model RSSE) corresponding to the best fit (of the p f
 \item{foldername}{A character vector corresponding to the name of the output directory.}
 
 \item{arguments}{A data frame of the user-specified inputs.}
+
+\item{IN_VERBOSE}{A boolean flag to designate whether report_results is being called in a VERBOSE block.}
 }
 \description{
 Report results and make plots

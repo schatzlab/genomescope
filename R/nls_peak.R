@@ -23,7 +23,7 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   r_min = 0
   r_initial = 0.001
   if (top==0) {
-    p_to_num_r = c(0, 1, 2, 4, 6, 10)
+    p_to_num_r = c(0, 1, 2, 4, 8, 15)
   } else {
     p_to_num_r = c(0, 1, 2, 3, 4, 5)
   }
@@ -40,7 +40,7 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
       r_initials = c(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05)
     } else {
       r_initials = rep(r_initial, num_r)
-      r_initials = c(0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.010)
+      r_initials = c(0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.010, 0.011, 0.012, 0.013, 0.014, 0.015)
       #r_initials = c(0.010, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004, 0.003, 0.002, 0.001)
     }
   }
