@@ -83,7 +83,7 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
                      start   = c(list(d = d_initial), r_start, list(kmercov = kmercov_initial, bias = bias_initial, length = length_initial)),
                      lower   = c(c(d_min), rep(r_min, num_r), c(kmercov_min, bias_min, length_min)),
                      upper   = c(c(d_max), rep(r_max, num_r), c(kmercov_max, bias_max, length_max)),
-                     control = list(minFactor=1e-12, maxiter=max_iterations, trace=TRACE_FLAG)), silent = TRUE)
+                     control = list(minFactor=1e-12, maxiter=max_iterations), trace=TRACE_FLAG), silent = TRUE)
 
   if (!is.null(model))
   {
