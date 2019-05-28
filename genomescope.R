@@ -78,6 +78,7 @@ parser$add_argument("--initial_rates", type="character", default = -1, help = "o
 parser$add_argument("--kmer_rates", action="store_true", default=FALSE, help = "optional flag to fit using kmer heterozygosity rates instead of nucleotide heterozygosity rates")
 parser$add_argument("--alpha_rates", action="store_true", default=FALSE, help = "optional flag to fit user alpha rates")
 parser$add_argument("--no_unique_sequence", action="store_true", default=FALSE, help = "optional flag to turn off yellow unique sequence line in plots")
+parser$add_argument("--trace_flag", action="store_true", default=FALSE, help = "optional flag to turn on printing of iteration progress of nlsLM function")
 
 arguments <- parser$parse_args()
 version_message <- "GenomeScope 2.0\n"
@@ -112,6 +113,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   KMER_RATES  <- arguments$kmer_rates
   ALPHA_RATES <- arguments$alpha_rates
   NO_UNIQUE_SEQUENCE <- arguments$no_unique_sequence
+  TRACE_FLAG <- arguments$trace_flag
 
   cat(paste("GenomeScope analyzing ", histfile, " k=", k, " p=", p, " outdir=", foldername, "\n", sep=""))
 
