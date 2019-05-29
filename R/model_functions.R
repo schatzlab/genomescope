@@ -99,6 +99,39 @@ predict2_1_unique = function(r1, k, d, kmercov, bias, x)
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
+predict3_0 = function(r1, r2, k, d, kmercov, bias, x)
+{
+  predict3_1(r1, r2, k, d, kmercov, bias, x)
+}
+
+#ABC -> AAB -> AAA
+#' Produce model estimated (p=3, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param r1,r2 Numerics corresponding to the nucleotide heterozygosities aab and abc respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+
+predict3_0_unique = function(r1, r2, k, d, kmercov, bias, x)
+{
+  predict3_1_unique(r1, r2, k, d, kmercov, bias, x)
+}
+
+#ABC -> AAB -> AAA
+#' Produce model estimated (p=3) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param r1,r2 Numerics corresponding to the nucleotide heterozygosities aab and abc respectively.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
 predict3_1 = function(r1, r2, k, d, kmercov, bias, x)
 {
   r0 = 1-r1-r2 #aaa
