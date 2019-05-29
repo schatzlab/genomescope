@@ -447,6 +447,102 @@ predict4_2_unique = function(raabb, raabc, rabcd, k, d, kmercov, bias, x)
   alpha_4_unique * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)
 }
 
+#' Produce model estimated (p=5, full model) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaaab,raaabb,raaabc,raabbc,raabcc,raabcd,rabcdd,rabcde Numerics corresponding to the nucleotide heterozygosities.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict5_0 = function(raaaab, raaabb, raaabc, raabbc, raabcc, raabcd, rabcdd, rabcde, k, d, kmercov, bias, x)
+{
+  raaaaa = 1-raaaab-raaabb-raaabc-raabbc-raabcc-raabcd-rabcdd-rabcde
+  if (raaaaa < 0) {return(0)}
+  tAAAAA = (raaaaa)**k
+  tAAAAB = (raaaaa+raaaab)**k
+  tAAABB = (raaaaa+raaabb)**k
+  tAAABC = (raaaaa+raaaab+raaabb+raaabc)**k
+  tAABBC = (raaaaa+raaaab+raabbc)**k
+  tAABCC = (raaaaa+raaabb+raabcc)**k
+  tAABCD = (raaaaa+raaaab+raaabb+raaabc+raabbc+raabcc+raabcd)**k
+  tABCDD = (raaaaa+raaabb+raabcc+rabcdd)**k
+  sAAAAA = tAAAAA
+  sAAAAB = tAAAAB-tAAAAA
+  sAAABB = tAAABB-tAAAAA
+  sAAABC = tAAABC-tAAAAB-tAAABB+tAAAAA
+  sAABBC = tAABBC-tAAAAB
+  sAABCC = tAABCC-tAAABB
+  sAABCD = tAABCD-tAAABC-tAABBC-tAABCC+tAAAAB+tAAABB
+  sABCDD = tABCDD-tAABCC
+  sABCDE = 1-tAABCD-tABCDD+tAABCC
+  alpha_1  = (1-d)*(sAAAAB + 2*sAAABC + sAABBC + sAABCC + 3*sAABCD + 3*sABCDD + 5*sABCDE) + d*(2*sAAAAA*sAAAAB + 2*sAAAAB**2 + 2*sAAAAB*sAAABB + 4*sAAAAA*sAAABC + 6*sAAAAB*sAAABC + 4*sAAABB*sAAABC + 4*sAAABC**2 + 2*sAAAAA*sAABBC + 4*sAAAAB*sAABBC + 2*sAAABB*sAABBC + 6*sAAABC*sAABBC + 2*sAABBC**2 + 2*sAAAAA*sAABCC + 4*sAAAAB*sAABCC + 2*sAAABB*sAABCC + 6*sAAABC*sAABCC + 4*sAABBC*sAABCC + 2*sAABCC**2 + 6*sAAAAA*sAABCD + 8*sAAAAB*sAABCD + 6*sAAABB*sAABCD + 10*sAAABC*sAABCD + 8*sAABBC*sAABCD + 8*sAABCC*sAABCD + 6*sAABCD**2 + 4*sAAAAA*sABCDD + 6*sAAAAB*sABCDD + 4*sAAABB*sABCDD + 8*sAAABC*sABCDD + 6*sAABBC*sABCDD + 6*sAABCC*sABCDD + 10*sAABCD*sABCDD + 4*sABCDD**2 + 8*sAAAAA*sABCDE + 10*sAAAAB*sABCDE + 8*sAAABB*sABCDE + 12*sAAABC*sABCDE + 10*sAABBC*sABCDE + 10*sAABCC*sABCDE + 14*sAABCD*sABCDE + 12*sABCDD*sABCDE + 8*sABCDE**2)
+  alpha_2  = (1-d)*(sAAABB + 2*sAABBC + 2*sAABCC + sAABCD + sABCDD) + d*(2*sAAAAA*sAAABB + 2*sAAAAB*sAAABB + 2*sAAABB**2 + 2*sAAABB*sAAABC + 2*sAAAAA*sAABBC + 2*sAAAAB*sAABBC + 4*sAAABB*sAABBC + 2*sAAABC*sAABBC + 2*sAABBC**2 + 2*sAAAAA*sAABCC + 2*sAAAAB*sAABCC + 4*sAAABB*sAABCC + 2*sAAABC*sAABCC + 4*sAABBC*sAABCC + 2*sAABCC**2 + 2*sAAABB*sAABCD + 2*sAABBC*sAABCD + 2*sAABCC*sAABCD + 2*sAAAAA*sABCDD + 2*sAAAAB*sABCDD + 4*sAAABB*sABCDD + 2*sAAABC*sABCDD + 4*sAABBC*sABCDD + 4*sAABCC*sABCDD + 2*sAABCD*sABCDD + 3*sABCDD**2 + 2*sAAABB*sABCDE + 2*sAABBC*sABCDE + 2*sAABCC*sABCDE + 4*sABCDD*sABCDE + sABCDE**2)
+  alpha_3  = (1-d)*(sAAABB + sAAABC) + d*(2*sAABBC*sABCDD + 2*sAABCC*sABCDD + 2*sAABCD*sABCDD + 2*sAABBC*sABCDE + 2*sAABCC*sABCDE + 2*sAABCD*sABCDE)
+  alpha_4  = (1-d)*(sAAAAB) + d*(sAABBC**2 + 2*sAABBC*sAABCC + sAABCC**2 + 2*sAABBC*sAABCD + 2*sAABCC*sAABCD + sAABCD**2 + 2*sAAABB*sABCDD + 2*sAAABC*sABCDD + 2*sAAABB*sABCDE + 2*sAAABC*sABCDE)
+  alpha_5  = (1-d)*(sAAAAA) + d*(2*sAAABB*sAABBC + 2*sAAABC*sAABBC + 2*sAAABB*sAABCC + 2*sAAABC*sAABCC + 2*sAAABB*sAABCD + 2*sAAABC*sAABCD + 2*sAAAAB*sABCDD + 2*sAAAAB*sABCDE)
+  alpha_6  = d*(sAAABB**2 + 2*sAAABB*sAAABC + sAAABC**2 + 2*sAAAAB*sAABBC + 2*sAAAAB*sAABCC + 2*sAAAAB*sAABCD + 2*sAAAAA*sABCDD + 2*sAAAAA*sABCDE)
+  alpha_7  = d*(2*sAAAAB*sAAABB + 2*sAAAAB*sAAABC + 2*sAAAAA*sAABBC + 2*sAAAAA*sAABCC + 2*sAAAAA*sAABCD)
+  alpha_8  = d*(sAAAAB**2 + 2*sAAAAA*sAAABB + 2*sAAAAA*sAAABC)
+  alpha_9  = d*(2*sAAAAA*sAAAAB)
+  alpha_10 = d*(sAAAAA**2)
+  alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)+
+  alpha_7  * dnbinom(x, size = kmercov*7 / bias, mu = kmercov*7)+
+  alpha_8  * dnbinom(x, size = kmercov*8 / bias, mu = kmercov*8)+
+  alpha_9  * dnbinom(x, size = kmercov*9 / bias, mu = kmercov*9)+
+  alpha_10 * dnbinom(x, size = kmercov*10 / bias, mu = kmercov*10)
+}
+
+#' Produce model estimated (p=5, full model, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#'
+#' @param raaaab,raaabb,raaabc,raabbc,raabcc,raabcd,rabcdd,rabcde Numerics corresponding to the nucleotide heterozygosities.
+#' @param k An integer corresponding to the kmer length.
+#' @param d A numeric corresponding to the repetitiveness.
+#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
+#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
+#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
+#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
+#' @export
+predict5_0_unique = function(raaaab, raaabb, raaabc, raabbc, raabcc, raabcd, rabcdd, rabcde, k, d, kmercov, bias, x)
+{
+  raaaaa = 1-raaaab-raaabb-raaabc-raabbc-raabcc-raabcd-rabcdd-rabcde
+  if (raaaaa < 0) {return(0)}
+  tAAAAA = (raaaaa)**k
+  tAAAAB = (raaaaa+raaaab)**k
+  tAAABB = (raaaaa+raaabb)**k
+  tAAABC = (raaaaa+raaaab+raaabb+raaabc)**k
+  tAABBC = (raaaaa+raaaab+raabbc)**k
+  tAABCC = (raaaaa+raaabb+raabcc)**k
+  tAABCD = (raaaaa+raaaab+raaabb+raaabc+raabbc+raabcc+raabcd)**k
+  tABCDD = (raaaaa+raaabb+raabcc+rabcdd)**k
+  sAAAAA = tAAAAA
+  sAAAAB = tAAAAB-tAAAAA
+  sAAABB = tAAABB-tAAAAA
+  sAAABC = tAAABC-tAAAAB-tAAABB+tAAAAA
+  sAABBC = tAABBC-tAAAAB
+  sAABCC = tAABCC-tAAABB
+  sAABCD = tAABCD-tAAABC-tAABBC-tAABCC+tAAAAB+tAAABB
+  sABCDD = tABCDD-tAABCC
+  sABCDE = 1-tAABCD-tABCDD+tAABCC
+  alpha_1_unique  = (1-d)*(sAAAAB + 2*sAAABC + sAABBC + sAABCC + 3*sAABCD + 3*sABCDD + 5*sABCDE)
+  alpha_2_unique  = (1-d)*(sAAABB + 2*sAABBC + 2*sAABCC + sAABCD + sABCDD)
+  alpha_3_unique  = (1-d)*(sAAABB + sAAABC)
+  alpha_4_unique  = (1-d)*(sAAAAB)
+  alpha_5_unique  = (1-d)*(sAAAAA)
+  alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
+  alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
+  alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
+  alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
+  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)
+}
+
 #' Produce model estimated (p=5, topology=1) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
 #' @param raaaab,raaabc,raabcd,rabcde Numerics corresponding to the nucleotide heterozygosities aaaab, aaabc, aabcd, and abcde respectively.
@@ -927,9 +1023,9 @@ predict5_5_unique = function(raaabb, raabcc, rabcdd, rabcde, k, d, kmercov, bias
   alpha_5_unique * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)
 }
 
-#' Produce model estimated (p=5, full model) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+#' Produce model estimated (p=6, full model) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param r1,r2,r3,r4,r5,r6 Numerics corresponding to the nucleotide heterozygosities aaaab, aaabb, aaabc, aabbc, aabcd, and abcde respectively.
+#' @param raaaaab,raaaabb,raaabbb,raaaabc,raaabbc,raaabcc,raabbcc,raaabcd,raabbcd,raabccd,raabcdd,raabcde,rabcdde,rabcdee,rabcdef Numerics corresponding to the nucleotide heterozygosities.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -937,33 +1033,53 @@ predict5_5_unique = function(raaabb, raabcc, rabcdd, rabcde, k, d, kmercov, bias
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict5_0 = function(r1, r2, r3, r4, r5, r6, k, d, kmercov, bias, x)
+predict6_0 = function(raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raaabcc, raabbcc, raaabcd, raabbcd, raabccd, raabcdd, raabcde, rabcdde, rabcdee, rabcdef, k, d, kmercov, bias, x)
 {
-  r0 = 1-r1-r2-r3-r4-r5-r6
-  if (r0 < 0) {return(0)}
-  t0 = (r0)**k
-  t1 = (r0+r1)**k
-  t2 = (r0+r2)**k
-  t3 = (r0+r1+r2+r3)**k
-  t4 = (r0+r1+r2+r4)**k
-  t5 = (r0+r1+r2+r3+r4+r5)**k
-  s0 = t0
-  s1 = t1-t0
-  s2 = t2-t0
-  s3 = t3-t1-t2+t0
-  s4 = t4-t1-t2+t0
-  s5 = t5-t3-t4+t1+t2-t0
-  s6 = 1-t5
-  alpha_1  = (1-d)*(s1 + 2*s3 + s4 + 3*s5 + 5*s6) + d*(2*s0*s1 + 2*s1**2 + 2*s1*s2 + 4*s0*s3 + 6*s1*s3 + 4*s2*s3 + 4*s3**2 + 2*s0*s4 + 4*s1*s4 + 2*s2*s4 + 6*s3*s4 + 2*s4**2 + 6*s0*s5 + 8*s1*s5 + 6*s2*s5 + 10*s3*s5 + 8*s4*s5 + 6*s5**2 + 8*s0*s6 + 10*s1*s6 + 8*s2*s6 + 12*s3*s6 + 10*s4*s6 + 14*s5*s6 + 8*s6**2)
-  alpha_2  = (1-d)*(s2 + 2*s4 + s5) + d*(2*s0*s2 + 2*s1*s2 + 2*s2**2 + 2*s2*s3 + 2*s0*s4 + 2*s1*s4 + 4*s2*s4 + 2*s3*s4 + 2*s4**2 + 2*s2*s5 + 2*s4*s5 + 2*s2*s6 + 2*s4*s6 + s6**2)
-  alpha_3  = (1-d)*(s2 + s3) + d*(2*s4*s6 + 2*s5*s6)
-  alpha_4  = (1-d)*(s1) + d*(s4**2 + 2*s4*s5 + s5**2 + 2*s2*s6 + 2*s3*s6)
-  alpha_5  = (1-d)*(s0) + d*(2*s2*s4 + 2*s3*s4 + 2*s2*s5 + 2*s3*s5 + 2*s1*s6)
-  alpha_6  = d*(s2**2 + 2*s2*s3 + s3**2 + 2*s1*s4 + 2*s1*s5 + 2*s0*s6)
-  alpha_7  = d*(2*s1*s2 + 2*s1*s3 + 2*s0*s4 + 2*s0*s5)
-  alpha_8  = d*(s1**2 + 2*s0*s2 + 2*s0*s3)
-  alpha_9  = d*(2*s0*s1)
-  alpha_10 = d*(s0**2)
+  raaaaaa  = 1-raaaaab-raaaabb-raaabbb-raaaabc-raaabbc-raaabcc-raabbcc-raaabcd-raabbcd-raabccd-raabcdd-raabcde-rabcdde-rabcdee-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaabbb  = (raaaaaa+raaabbb)**k
+  taaaabc  = (raaaaaa+raaaaab+raaaabb+raaaabc)**k
+  taaabbc  = (raaaaaa+raaaaab+raaabbb+raaabbc)**k
+  taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+  taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+  taaabcd  = (raaaaaa+raaaaab+raaaabb+raaabbb+raaaabc+raaabbc+raaabcc+raaabcd)**k
+  taabbcd  = (raaaaaa+raaaaab+raaaabb+raaaabc+raabbcc+raabbcd)**k
+  taabccd  = (raaaaaa+raaaaab+raaabbb+raaabbc+raabccd)**k
+  taabcdd  = (raaaaaa+raaaabb+raaabcc+raabbcc+raabcdd)**k
+  taabcde  = (raaaaaa+raaaaab+raaaabb+raaabbb+raaaabc+raaabbc+raaabcc+raabbcc+raaabcd+raabbcd+raabccd+raabcdd+raabcde)**k
+  tabcdde  = (raaaaaa+raaaaab+raaabbb+raaabbc+raabccd+rabcdde)**k
+  tabcdee  = (raaaaaa+raaaabb+raaabcc+raabbcc+raabcdd+rabcdee)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAABBB  = taaabbb-taaaaaa
+  sAAAABC  = taaaabc-taaaaab-taaaabb+taaaaaa
+  sAAABBC  = taaabbc-taaaaab-taaabbb+taaaaaa
+  sAAABCC  = taaabcc-taaaabb
+  sAABBCC  = taabbcc-taaaabb
+  sAAABCD  = taaabcd-taaaabc-taaabbc-taaabcc+taaaaab+taaaabb
+  sAABBCD  = taabbcd-taaaabc-taabbcc+taaaabb
+  sAABCCD  = taabccd-taaabbc
+  sAABCDD  = taabcdd-taaabcc-taabbcc+taaaabb
+  sAABCDE  = taabcde-taaabcd-taabbcd-taabccd-taabcdd+taaaabc+taaabbc+taaabcc+taabbcc-taaaabb
+  sABCDDE  = tabcdde-taabccd
+  sABCDEE  = tabcdee-taabcdd
+  sABCDEF  = 1-taabcde-tabcdde-tabcdee+taabccd+taabcdd
+  alpha_1  = (1-d)*(sAAAAAB + 2*sAAAABC + sAAABBC + sAAABCC + 3*sAAABCD + 2*sAABBCD + 2*sAABCCD + 2*sAABCDD + 4*sAABCDE + 4*sABCDDE + 4*sABCDEE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 2*sAAAAAB*sAAAABB + 4*sAAAAAA*sAAAABC + 6*sAAAAAB*sAAAABC + 4*sAAAABB*sAAAABC + 4*sAAAABC**2 + 2*sAAAAAB*sAAABBB + 4*sAAAABC*sAAABBB + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAAABB*sAAABBC + 6*sAAAABC*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAAABCC + 4*sAAAAAB*sAAABCC + 2*sAAAABB*sAAABCC + 6*sAAAABC*sAAABCC + 2*sAAABBB*sAAABCC + 4*sAAABBC*sAAABCC + 2*sAAABCC**2 + 6*sAAAAAA*sAAABCD + 8*sAAAAAB*sAAABCD + 6*sAAAABB*sAAABCD + 10*sAAAABC*sAAABCD + 6*sAAABBB*sAAABCD + 8*sAAABBC*sAAABCD + 8*sAAABCC*sAAABCD + 6*sAAABCD**2 + 2*sAAAAAB*sAABBCC + 4*sAAAABC*sAABBCC + 2*sAAABBC*sAABBCC + 2*sAAABCC*sAABBCC + 6*sAAABCD*sAABBCC + 4*sAAAAAA*sAABBCD + 6*sAAAAAB*sAABBCD + 4*sAAAABB*sAABBCD + 8*sAAAABC*sAABBCD + 4*sAAABBB*sAABBCD + 6*sAAABBC*sAABBCD + 6*sAAABCC*sAABBCD + 10*sAAABCD*sAABBCD + 4*sAABBCC*sAABBCD + 4*sAABBCD**2 + 4*sAAAAAA*sAABCCD + 6*sAAAAAB*sAABCCD + 4*sAAAABB*sAABCCD + 8*sAAAABC*sAABCCD + 4*sAAABBB*sAABCCD + 6*sAAABBC*sAABCCD + 6*sAAABCC*sAABCCD + 10*sAAABCD*sAABCCD + 4*sAABBCC*sAABCCD + 8*sAABBCD*sAABCCD + 4*sAABCCD**2 + 4*sAAAAAA*sAABCDD + 6*sAAAAAB*sAABCDD + 4*sAAAABB*sAABCDD + 8*sAAAABC*sAABCDD + 4*sAAABBB*sAABCDD + 6*sAAABBC*sAABCDD + 6*sAAABCC*sAABCDD + 10*sAAABCD*sAABCDD + 4*sAABBCC*sAABCDD + 8*sAABBCD*sAABCDD + 8*sAABCCD*sAABCDD + 4*sAABCDD**2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 8*sAAAABB*sAABCDE + 12*sAAAABC*sAABCDE + 8*sAAABBB*sAABCDE + 10*sAAABBC*sAABCDE + 10*sAAABCC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABBCC*sAABCDE + 12*sAABBCD*sAABCDE + 12*sAABCCD*sAABCDE + 12*sAABCDD*sAABCDE + 8*sAABCDE**2 + 6*sAAAAAA*sABCDDE + 8*sAAAAAB*sABCDDE + 6*sAAAABB*sABCDDE + 10*sAAAABC*sABCDDE + 6*sAAABBB*sABCDDE + 8*sAAABBC*sABCDDE + 8*sAAABCC*sABCDDE + 12*sAAABCD*sABCDDE + 6*sAABBCC*sABCDDE + 10*sAABBCD*sABCDDE + 10*sAABCCD*sABCDDE + 10*sAABCDD*sABCDDE + 14*sAABCDE*sABCDDE + 6*sABCDDE**2 + 6*sAAAAAA*sABCDEE + 8*sAAAAAB*sABCDEE + 6*sAAAABB*sABCDEE + 10*sAAAABC*sABCDEE + 6*sAAABBB*sABCDEE + 8*sAAABBC*sABCDEE + 8*sAAABCC*sABCDEE + 12*sAAABCD*sABCDEE + 6*sAABBCC*sABCDEE + 10*sAABBCD*sABCDEE + 10*sAABCCD*sABCDEE + 10*sAABCDD*sABCDEE + 14*sAABCDE*sABCDEE + 12*sABCDDE*sABCDEE + 6*sABCDEE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 10*sAAAABB*sABCDEF + 14*sAAAABC*sABCDEF + 10*sAAABBB*sABCDEF + 12*sAAABBC*sABCDEF + 12*sAAABCC*sABCDEF + 16*sAAABCD*sABCDEF + 10*sAABBCC*sABCDEF + 14*sAABBCD*sABCDEF + 14*sAABCCD*sABCDEF + 14*sAABCDD*sABCDEF + 18*sAABCDE*sABCDEF + 16*sABCDDE*sABCDEF + 16*sABCDEE*sABCDEF + 10*sABCDEF**2)
+  alpha_2  = (1-d)*(sAAAABB + sAAABBC + sAAABCC + 3*sAABBCC + 2*sAABBCD + 2*sAABCCD + 2*sAABCDD + sAABCDE + sABCDDE + sABCDEE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAAAB*sAAAABB + 2*sAAAABB**2 + 2*sAAAABB*sAAAABC + 2*sAAAABB*sAAABBB + 2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 4*sAAAABB*sAAABBC + 2*sAAAABC*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAAABCC + 2*sAAAAAB*sAAABCC + 4*sAAAABB*sAAABCC + 2*sAAAABC*sAAABCC + 2*sAAABBB*sAAABCC + 4*sAAABBC*sAAABCC + 2*sAAABCC**2 + 2*sAAAABB*sAAABCD + 2*sAAABBC*sAAABCD + 2*sAAABCC*sAAABCD + 4*sAAAAAA*sAABBCC + 4*sAAAAAB*sAABBCC + 6*sAAAABB*sAABBCC + 4*sAAAABC*sAABBCC + 4*sAAABBB*sAABBCC + 6*sAAABBC*sAABBCC + 6*sAAABCC*sAABBCC + 4*sAAABCD*sAABBCC + 4*sAABBCC**2 + 2*sAAAAAA*sAABBCD + 2*sAAAAAB*sAABBCD + 4*sAAAABB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAAABBB*sAABBCD + 4*sAAABBC*sAABBCD + 4*sAAABCC*sAABBCD + 2*sAAABCD*sAABBCD + 6*sAABBCC*sAABBCD + 2*sAABBCD**2 + 2*sAAAAAA*sAABCCD + 2*sAAAAAB*sAABCCD + 4*sAAAABB*sAABCCD + 2*sAAAABC*sAABCCD + 2*sAAABBB*sAABCCD + 4*sAAABBC*sAABCCD + 4*sAAABCC*sAABCCD + 2*sAAABCD*sAABCCD + 6*sAABBCC*sAABCCD + 4*sAABBCD*sAABCCD + 2*sAABCCD**2 + 2*sAAAAAA*sAABCDD + 2*sAAAAAB*sAABCDD + 4*sAAAABB*sAABCDD + 2*sAAAABC*sAABCDD + 2*sAAABBB*sAABCDD + 4*sAAABBC*sAABCDD + 4*sAAABCC*sAABCDD + 2*sAAABCD*sAABCDD + 6*sAABBCC*sAABCDD + 4*sAABBCD*sAABCDD + 4*sAABCCD*sAABCDD + 2*sAABCDD**2 + 2*sAAAABB*sAABCDE + 2*sAAABBC*sAABCDE + 2*sAAABCC*sAABCDE + 4*sAABBCC*sAABCDE + 2*sAABBCD*sAABCDE + 2*sAABCCD*sAABCDE + 2*sAABCDD*sAABCDE + 2*sAAAAAA*sABCDDE + 2*sAAAAAB*sABCDDE + 4*sAAAABB*sABCDDE + 2*sAAAABC*sABCDDE + 2*sAAABBB*sABCDDE + 4*sAAABBC*sABCDDE + 4*sAAABCC*sABCDDE + 2*sAAABCD*sABCDDE + 6*sAABBCC*sABCDDE + 4*sAABBCD*sABCDDE + 4*sAABCCD*sABCDDE + 4*sAABCDD*sABCDDE + 2*sAABCDE*sABCDDE + 3*sABCDDE**2 + 2*sAAAAAA*sABCDEE + 2*sAAAAAB*sABCDEE + 4*sAAAABB*sABCDEE + 2*sAAAABC*sABCDEE + 2*sAAABBB*sABCDEE + 4*sAAABBC*sABCDEE + 4*sAAABCC*sABCDEE + 2*sAAABCD*sABCDEE + 6*sAABBCC*sABCDEE + 4*sAABBCD*sABCDEE + 4*sAABCCD*sABCDEE + 4*sAABCDD*sABCDEE + 2*sAABCDE*sABCDEE + 6*sABCDDE*sABCDEE + 3*sABCDEE**2 + 2*sAAAABB*sABCDEF + 2*sAAABBC*sABCDEF + 2*sAAABCC*sABCDEF + 4*sAABBCC*sABCDEF + 2*sAABBCD*sABCDEF + 2*sAABCCD*sABCDEF + 2*sAABCDD*sABCDEF + 4*sABCDDE*sABCDEF + 4*sABCDEE*sABCDEF + sABCDEF**2)
+  alpha_3  = (1-d)*(2*sAAABBB + sAAABBC + sAAABCC + sAAABCD) + d*(2*sAAAAAA*sAAABBB + 2*sAAAAAB*sAAABBB + 2*sAAAABB*sAAABBB + 2*sAAAABC*sAAABBB + 2*sAAABBB**2 + 2*sAAABBB*sAAABBC + 2*sAAABBB*sAAABCC + 2*sAAABBB*sAAABCD + 2*sAAABBB*sAABBCC + 2*sAAABBB*sAABBCD + 2*sAAABBB*sAABCCD + 2*sAAABBB*sAABCDD + 2*sAAABBB*sAABCDE + 2*sAAABBB*sABCDDE + 2*sAABBCC*sABCDDE + 2*sAABBCD*sABCDDE + 2*sAABCCD*sABCDDE + 2*sAABCDD*sABCDDE + 2*sAABCDE*sABCDDE + 2*sAAABBB*sABCDEE + 2*sAABBCC*sABCDEE + 2*sAABBCD*sABCDEE + 2*sAABCCD*sABCDEE + 2*sAABCDD*sABCDEE + 2*sAABCDE*sABCDEE + 2*sAAABBB*sABCDEF + 2*sAABBCC*sABCDEF + 2*sAABBCD*sABCDEF + 2*sAABCCD*sABCDEF + 2*sAABCDD*sABCDEF + 2*sAABCDE*sABCDEF)
+  alpha_4  = (1-d)*(sAAAABB + sAAAABC) + d*(sAABBCC**2 + 2*sAABBCC*sAABBCD + sAABBCD**2 + 2*sAABBCC*sAABCCD + 2*sAABBCD*sAABCCD + sAABCCD**2 + 2*sAABBCC*sAABCDD + 2*sAABBCD*sAABCDD + 2*sAABCCD*sAABCDD + sAABCDD**2 + 2*sAABBCC*sAABCDE + 2*sAABBCD*sAABCDE + 2*sAABCCD*sAABCDE + 2*sAABCDD*sAABCDE + sAABCDE**2 + 2*sAAABBB*sABCDDE + 2*sAAABBC*sABCDDE + 2*sAAABCC*sABCDDE + 2*sAAABCD*sABCDDE + 2*sAAABBB*sABCDEE + 2*sAAABBC*sABCDEE + 2*sAAABCC*sABCDEE + 2*sAAABCD*sABCDEE + 2*sAAABBB*sABCDEF + 2*sAAABBC*sABCDEF + 2*sAAABCC*sABCDEF + 2*sAAABCD*sABCDEF)
+  alpha_5  = (1-d)*(sAAAAAB) + d*(2*sAAABBB*sAABBCC + 2*sAAABBC*sAABBCC + 2*sAAABCC*sAABBCC + 2*sAAABCD*sAABBCC + 2*sAAABBB*sAABBCD + 2*sAAABBC*sAABBCD + 2*sAAABCC*sAABBCD + 2*sAAABCD*sAABBCD + 2*sAAABBB*sAABCCD + 2*sAAABBC*sAABCCD + 2*sAAABCC*sAABCCD + 2*sAAABCD*sAABCCD + 2*sAAABBB*sAABCDD + 2*sAAABBC*sAABCDD + 2*sAAABCC*sAABCDD + 2*sAAABCD*sAABCDD + 2*sAAABBB*sAABCDE + 2*sAAABBC*sAABCDE + 2*sAAABCC*sAABCDE + 2*sAAABCD*sAABCDE + 2*sAAAABB*sABCDDE + 2*sAAAABC*sABCDDE + 2*sAAAABB*sABCDEE + 2*sAAAABC*sABCDEE + 2*sAAAABB*sABCDEF + 2*sAAAABC*sABCDEF)
+  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBB**2 + 2*sAAABBB*sAAABBC + sAAABBC**2 + 2*sAAABBB*sAAABCC + 2*sAAABBC*sAAABCC + sAAABCC**2 + 2*sAAABBB*sAAABCD + 2*sAAABBC*sAAABCD + 2*sAAABCC*sAAABCD + sAAABCD**2 + 2*sAAAABB*sAABBCC + 2*sAAAABC*sAABBCC + 2*sAAAABB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAAAABB*sAABCCD + 2*sAAAABC*sAABCCD + 2*sAAAABB*sAABCDD + 2*sAAAABC*sAABCDD + 2*sAAAABB*sAABCDE + 2*sAAAABC*sAABCDE + 2*sAAAAAB*sABCDDE + 2*sAAAAAB*sABCDEE + 2*sAAAAAB*sABCDEF)
+  alpha_7  = d*(2*sAAAABB*sAAABBB + 2*sAAAABC*sAAABBB + 2*sAAAABB*sAAABBC + 2*sAAAABC*sAAABBC + 2*sAAAABB*sAAABCC + 2*sAAAABC*sAAABCC + 2*sAAAABB*sAAABCD + 2*sAAAABC*sAAABCD + 2*sAAAAAB*sAABBCC + 2*sAAAAAB*sAABBCD + 2*sAAAAAB*sAABCCD + 2*sAAAAAB*sAABCDD + 2*sAAAAAB*sAABCDE + 2*sAAAAAA*sABCDDE + 2*sAAAAAA*sABCDEE + 2*sAAAAAA*sABCDEF)
+  alpha_8  = d*(sAAAABB**2 + 2*sAAAABB*sAAAABC + sAAAABC**2 + 2*sAAAAAB*sAAABBB + 2*sAAAAAB*sAAABBC + 2*sAAAAAB*sAAABCC + 2*sAAAAAB*sAAABCD + 2*sAAAAAA*sAABBCC + 2*sAAAAAA*sAABBCD + 2*sAAAAAA*sAABCCD + 2*sAAAAAA*sAABCDD + 2*sAAAAAA*sAABCDE)
+  alpha_9  = d*(2*sAAAAAB*sAAAABB + 2*sAAAAAB*sAAAABC + 2*sAAAAAA*sAAABBB + 2*sAAAAAA*sAAABBC + 2*sAAAAAA*sAAABCC + 2*sAAAAAA*sAAABCD)
+  alpha_10 = d*(sAAAAAB**2 + 2*sAAAAAA*sAAAABB + 2*sAAAAAA*sAAAABC)
+  alpha_11 = d*(2*sAAAAAA*sAAAAAB)
+  alpha_12 = d*(sAAAAAA**2)
   alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
@@ -973,12 +1089,15 @@ predict5_0 = function(r1, r2, r3, r4, r5, r6, k, d, kmercov, bias, x)
   alpha_7  * dnbinom(x, size = kmercov*7 / bias, mu = kmercov*7)+
   alpha_8  * dnbinom(x, size = kmercov*8 / bias, mu = kmercov*8)+
   alpha_9  * dnbinom(x, size = kmercov*9 / bias, mu = kmercov*9)+
-  alpha_10 * dnbinom(x, size = kmercov*10 / bias, mu = kmercov*10)
+  alpha_10 * dnbinom(x, size = kmercov*10 / bias, mu = kmercov*10)+
+  alpha_11 * dnbinom(x, size = kmercov*11 / bias, mu = kmercov*11)+
+  alpha_12 * dnbinom(x, size = kmercov*12 / bias, mu = kmercov*12)
 }
 
-#' Produce model estimated (p=5, full model, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
+
+#' Produce model estimated (p=6, full model, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param r1,r2,r3,r4,r5,r6 Numerics corresponding to the nucleotide heterozygosities aaaab, aaabb, aaabc, aabbc, aabcd, and abcde respectively.
+#' @param raaaaab,raaaabb,raaabbb,raaaabc,raaabbc,raaabcc,raabbcc,raaabcd,raabbcd,raabccd,raabcdd,raabcde,rabcdde,rabcdee,rabcdef Numerics corresponding to the nucleotide heterozygosities.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -986,33 +1105,53 @@ predict5_0 = function(r1, r2, r3, r4, r5, r6, k, d, kmercov, bias, x)
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict5_0_unique = function(r1, r2, r3, r4, r5, r6, k, d, kmercov, bias, x)
+predict6_0_unique = function(raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raaabcc, raabbcc, raaabcd, raabbcd, raabccd, raabcdd, raabcde, rabcdde, rabcdee, rabcdef, k, d, kmercov, bias, x)
 {
-  r0 = 1-r1-r2-r3-r4-r5-r6
-  if (r0 < 0) {return(0)}
-  t0 = (r0)**k
-  t1 = (r0+r1)**k
-  t2 = (r0+r2)**k
-  t3 = (r0+r1+r2+r3)**k
-  t4 = (r0+r1+r2+r4)**k
-  t5 = (r0+r1+r2+r3+r4+r5)**k
-  s0 = t0
-  s1 = t1-t0
-  s2 = t2-t0
-  s3 = t3-t1-t2+t0
-  s4 = t4-t1-t2+t0
-  s5 = t5-t3-t4+t1+t2-t0
-  s6 = 1-t5
-  alpha_1_unique  = (1-d)*(s1 + 2*s3 + s4 + 3*s5 + 5*s6)
-  alpha_2_unique  = (1-d)*(s2 + 2*s4 + s5)
-  alpha_3_unique  = (1-d)*(s2 + s3)
-  alpha_4_unique  = (1-d)*(s1)
-  alpha_5_unique  = (1-d)*(s0)
+  raaaaaa  = 1-raaaaab-raaaabb-raaabbb-raaaabc-raaabbc-raaabcc-raabbcc-raaabcd-raabbcd-raabccd-raabcdd-raabcde-rabcdde-rabcdee-rabcdef
+  if (raaaaaa < 0) {return(0)}
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaabbb  = (raaaaaa+raaabbb)**k
+  taaaabc  = (raaaaaa+raaaaab+raaaabb+raaaabc)**k
+  taaabbc  = (raaaaaa+raaaaab+raaabbb+raaabbc)**k
+  taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+  taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+  taaabcd  = (raaaaaa+raaaaab+raaaabb+raaabbb+raaaabc+raaabbc+raaabcc+raaabcd)**k
+  taabbcd  = (raaaaaa+raaaaab+raaaabb+raaaabc+raabbcc+raabbcd)**k
+  taabccd  = (raaaaaa+raaaaab+raaabbb+raaabbc+raabccd)**k
+  taabcdd  = (raaaaaa+raaaabb+raaabcc+raabbcc+raabcdd)**k
+  taabcde  = (raaaaaa+raaaaab+raaaabb+raaabbb+raaaabc+raaabbc+raaabcc+raabbcc+raaabcd+raabbcd+raabccd+raabcdd+raabcde)**k
+  tabcdde  = (raaaaaa+raaaaab+raaabbb+raaabbc+raabccd+rabcdde)**k
+  tabcdee  = (raaaaaa+raaaabb+raaabcc+raabbcc+raabcdd+rabcdee)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAABBB  = taaabbb-taaaaaa
+  sAAAABC  = taaaabc-taaaaab-taaaabb+taaaaaa
+  sAAABBC  = taaabbc-taaaaab-taaabbb+taaaaaa
+  sAAABCC  = taaabcc-taaaabb
+  sAABBCC  = taabbcc-taaaabb
+  sAAABCD  = taaabcd-taaaabc-taaabbc-taaabcc+taaaaab+taaaabb
+  sAABBCD  = taabbcd-taaaabc-taabbcc+taaaabb
+  sAABCCD  = taabccd-taaabbc
+  sAABCDD  = taabcdd-taaabcc-taabbcc+taaaabb
+  sAABCDE  = taabcde-taaabcd-taabbcd-taabccd-taabcdd+taaaabc+taaabbc+taaabcc+taabbcc-taaaabb
+  sABCDDE  = tabcdde-taabccd
+  sABCDEE  = tabcdee-taabcdd
+  sABCDEF  = 1-taabcde-tabcdde-tabcdee+taabccd+taabcdd
+  alpha_1_unique  = (1-d)*(sAAAAAB + 2*sAAAABC + sAAABBC + sAAABCC + 3*sAAABCD + 2*sAABBCD + 2*sAABCCD + 2*sAABCDD + 4*sAABCDE + 4*sABCDDE + 4*sABCDEE + 6*sABCDEF)
+  alpha_2_unique  = (1-d)*(sAAAABB + sAAABBC + sAAABCC + 3*sAABBCC + 2*sAABBCD + 2*sAABCCD + 2*sAABCDD + sAABCDE + sABCDDE + sABCDEE)
+  alpha_3_unique  = (1-d)*(2*sAAABBB + sAAABBC + sAAABCC + sAAABCD)
+  alpha_4_unique  = (1-d)*(sAAAABB + sAAAABC)
+  alpha_5_unique  = (1-d)*(sAAAAAB)
+  alpha_6_unique  = (1-d)*(sAAAAAA)
   alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
   alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
   alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
-  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)
+  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
+  alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
 }
 
 #' Produce model estimated (p=6, topology=1) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
@@ -2734,137 +2873,6 @@ predict6_16_unique = function(raaabbb, raaabbc, raabccd, rabcdde, rabcdef, k, d,
   alpha_3_unique  = (1-d)*(2*sAAABBB + sAAABBC)
   alpha_4_unique  = (1-d)*(0)
   alpha_5_unique  = (1-d)*(0)
-  alpha_6_unique  = (1-d)*(sAAAAAA)
-  alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
-  alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
-  alpha_3_unique  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
-  alpha_4_unique  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
-  alpha_5_unique  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
-  alpha_6_unique  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)
-}
-
-#' Produce model estimated (p=6, full model) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
-#'
-#' @param raaaaab,raaaabb,raaabbb,raaaabc,raaabbc,raaabcc,raabbcc,raaabcd,raabbcd,raabccd,raabcdd,raabcde,rabcdde,rabcdee,rabcdef Numerics corresponding to the nucleotide heterozygosities.
-#' @param k An integer corresponding to the kmer length.
-#' @param d A numeric corresponding to the repetitiveness.
-#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
-#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
-#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
-#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
-#' @export
-predict6_0 = function(raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raaabcc, raabbcc, raaabcd, raabbcd, raabccd, raabcdd, raabcde, rabcdde, rabcdee, rabcdef, k, d, kmercov, bias, x)
-{
-  raaaaaa  = 1-raaaaab-raaaabb-raaabbb-raaaabc-raaabbc-raaabcc-raabbcc-raaabcd-raabbcd-raabccd-raabcdd-raabcde-rabcdde-rabcdee-rabcdef
-  if (raaaaaa < 0) {return(0)}
-  taaaaaa  = (raaaaaa)**k
-  taaaaab  = (raaaaaa+raaaaab)**k
-  taaaabb  = (raaaaaa+raaaabb)**k
-  taaabbb  = (raaaaaa+raaabbb)**k
-  taaaabc  = (raaaaaa+raaaaab+raaaabb+raaaabc)**k
-  taaabbc  = (raaaaaa+raaaaab+raaabbb+raaabbc)**k
-  taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
-  taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
-  taaabcd  = (raaaaaa+raaaaab+raaaabb+raaabbb+raaaabc+raaabbc+raaabcc+raaabcd)**k
-  taabbcd  = (raaaaaa+raaaaab+raaaabb+raaaabc+raabbcc+raabbcd)**k
-  taabccd  = (raaaaaa+raaaaab+raaabbb+raaabbc+raabccd)**k
-  taabcdd  = (raaaaaa+raaaabb+raaabcc+raabbcc+raabcdd)**k
-  taabcde  = (raaaaaa+raaaaab+raaaabb+raaabbb+raaaabc+raaabbc+raaabcc+raabbcc+raaabcd+raabbcd+raabccd+raabcdd+raabcde)**k
-  tabcdde  = (raaaaaa+raaaaab+raaabbb+raaabbc+raabccd+rabcdde)**k
-  tabcdee  = (raaaaaa+raaaabb+raaabcc+raabbcc+raabcdd+rabcdee)**k
-  sAAAAAA  = taaaaaa
-  sAAAAAB  = taaaaab-taaaaaa
-  sAAAABB  = taaaabb-taaaaaa
-  sAAABBB  = taaabbb-taaaaaa
-  sAAAABC  = taaaabc-taaaaab-taaaabb+taaaaaa
-  sAAABBC  = taaabbc-taaaaab-taaabbb+taaaaaa
-  sAAABCC  = taaabcc-taaaabb
-  sAABBCC  = taabbcc-taaaabb
-  sAAABCD  = taaabcd-taaaabc-taaabbc-taaabcc+taaaaab+taaaabb
-  sAABBCD  = taabbcd-taaaabc-taabbcc+taaaabb
-  sAABCCD  = taabccd-taaabbc
-  sAABCDD  = taabcdd-taaabcc-taabbcc+taaaabb
-  sAABCDE  = taabcde-taaabcd-taabbcd-taabccd-taabcdd+taaaabc+taaabbc+taaabcc+taabbcc-taaaabb
-  sABCDDE  = tabcdde-taabccd
-  sABCDEE  = tabcdee-taabcdd
-  sABCDEF  = 1-taabcde-tabcdde-tabcdee+taabccd+taabcdd
-  alpha_1  = (1-d)*(sAAAAAB + 2*sAAAABC + sAAABBC + sAAABCC + 3*sAAABCD + 2*sAABBCD + 2*sAABCCD + 2*sAABCDD + 4*sAABCDE + 4*sABCDDE + 4*sABCDEE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 2*sAAAAAB*sAAAABB + 4*sAAAAAA*sAAAABC + 6*sAAAAAB*sAAAABC + 4*sAAAABB*sAAAABC + 4*sAAAABC**2 + 2*sAAAAAB*sAAABBB + 4*sAAAABC*sAAABBB + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAAABB*sAAABBC + 6*sAAAABC*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAAABCC + 4*sAAAAAB*sAAABCC + 2*sAAAABB*sAAABCC + 6*sAAAABC*sAAABCC + 2*sAAABBB*sAAABCC + 4*sAAABBC*sAAABCC + 2*sAAABCC**2 + 6*sAAAAAA*sAAABCD + 8*sAAAAAB*sAAABCD + 6*sAAAABB*sAAABCD + 10*sAAAABC*sAAABCD + 6*sAAABBB*sAAABCD + 8*sAAABBC*sAAABCD + 8*sAAABCC*sAAABCD + 6*sAAABCD**2 + 2*sAAAAAB*sAABBCC + 4*sAAAABC*sAABBCC + 2*sAAABBC*sAABBCC + 2*sAAABCC*sAABBCC + 6*sAAABCD*sAABBCC + 4*sAAAAAA*sAABBCD + 6*sAAAAAB*sAABBCD + 4*sAAAABB*sAABBCD + 8*sAAAABC*sAABBCD + 4*sAAABBB*sAABBCD + 6*sAAABBC*sAABBCD + 6*sAAABCC*sAABBCD + 10*sAAABCD*sAABBCD + 4*sAABBCC*sAABBCD + 4*sAABBCD**2 + 4*sAAAAAA*sAABCCD + 6*sAAAAAB*sAABCCD + 4*sAAAABB*sAABCCD + 8*sAAAABC*sAABCCD + 4*sAAABBB*sAABCCD + 6*sAAABBC*sAABCCD + 6*sAAABCC*sAABCCD + 10*sAAABCD*sAABCCD + 4*sAABBCC*sAABCCD + 8*sAABBCD*sAABCCD + 4*sAABCCD**2 + 4*sAAAAAA*sAABCDD + 6*sAAAAAB*sAABCDD + 4*sAAAABB*sAABCDD + 8*sAAAABC*sAABCDD + 4*sAAABBB*sAABCDD + 6*sAAABBC*sAABCDD + 6*sAAABCC*sAABCDD + 10*sAAABCD*sAABCDD + 4*sAABBCC*sAABCDD + 8*sAABBCD*sAABCDD + 8*sAABCCD*sAABCDD + 4*sAABCDD**2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 8*sAAAABB*sAABCDE + 12*sAAAABC*sAABCDE + 8*sAAABBB*sAABCDE + 10*sAAABBC*sAABCDE + 10*sAAABCC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABBCC*sAABCDE + 12*sAABBCD*sAABCDE + 12*sAABCCD*sAABCDE + 12*sAABCDD*sAABCDE + 8*sAABCDE**2 + 6*sAAAAAA*sABCDDE + 8*sAAAAAB*sABCDDE + 6*sAAAABB*sABCDDE + 10*sAAAABC*sABCDDE + 6*sAAABBB*sABCDDE + 8*sAAABBC*sABCDDE + 8*sAAABCC*sABCDDE + 12*sAAABCD*sABCDDE + 6*sAABBCC*sABCDDE + 10*sAABBCD*sABCDDE + 10*sAABCCD*sABCDDE + 10*sAABCDD*sABCDDE + 14*sAABCDE*sABCDDE + 6*sABCDDE**2 + 6*sAAAAAA*sABCDEE + 8*sAAAAAB*sABCDEE + 6*sAAAABB*sABCDEE + 10*sAAAABC*sABCDEE + 6*sAAABBB*sABCDEE + 8*sAAABBC*sABCDEE + 8*sAAABCC*sABCDEE + 12*sAAABCD*sABCDEE + 6*sAABBCC*sABCDEE + 10*sAABBCD*sABCDEE + 10*sAABCCD*sABCDEE + 10*sAABCDD*sABCDEE + 14*sAABCDE*sABCDEE + 12*sABCDDE*sABCDEE + 6*sABCDEE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 10*sAAAABB*sABCDEF + 14*sAAAABC*sABCDEF + 10*sAAABBB*sABCDEF + 12*sAAABBC*sABCDEF + 12*sAAABCC*sABCDEF + 16*sAAABCD*sABCDEF + 10*sAABBCC*sABCDEF + 14*sAABBCD*sABCDEF + 14*sAABCCD*sABCDEF + 14*sAABCDD*sABCDEF + 18*sAABCDE*sABCDEF + 16*sABCDDE*sABCDEF + 16*sABCDEE*sABCDEF + 10*sABCDEF**2)
-  alpha_2  = (1-d)*(sAAAABB + sAAABBC + sAAABCC + 3*sAABBCC + 2*sAABBCD + 2*sAABCCD + 2*sAABCDD + sAABCDE + sABCDDE + sABCDEE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAAAB*sAAAABB + 2*sAAAABB**2 + 2*sAAAABB*sAAAABC + 2*sAAAABB*sAAABBB + 2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 4*sAAAABB*sAAABBC + 2*sAAAABC*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAAABCC + 2*sAAAAAB*sAAABCC + 4*sAAAABB*sAAABCC + 2*sAAAABC*sAAABCC + 2*sAAABBB*sAAABCC + 4*sAAABBC*sAAABCC + 2*sAAABCC**2 + 2*sAAAABB*sAAABCD + 2*sAAABBC*sAAABCD + 2*sAAABCC*sAAABCD + 4*sAAAAAA*sAABBCC + 4*sAAAAAB*sAABBCC + 6*sAAAABB*sAABBCC + 4*sAAAABC*sAABBCC + 4*sAAABBB*sAABBCC + 6*sAAABBC*sAABBCC + 6*sAAABCC*sAABBCC + 4*sAAABCD*sAABBCC + 4*sAABBCC**2 + 2*sAAAAAA*sAABBCD + 2*sAAAAAB*sAABBCD + 4*sAAAABB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAAABBB*sAABBCD + 4*sAAABBC*sAABBCD + 4*sAAABCC*sAABBCD + 2*sAAABCD*sAABBCD + 6*sAABBCC*sAABBCD + 2*sAABBCD**2 + 2*sAAAAAA*sAABCCD + 2*sAAAAAB*sAABCCD + 4*sAAAABB*sAABCCD + 2*sAAAABC*sAABCCD + 2*sAAABBB*sAABCCD + 4*sAAABBC*sAABCCD + 4*sAAABCC*sAABCCD + 2*sAAABCD*sAABCCD + 6*sAABBCC*sAABCCD + 4*sAABBCD*sAABCCD + 2*sAABCCD**2 + 2*sAAAAAA*sAABCDD + 2*sAAAAAB*sAABCDD + 4*sAAAABB*sAABCDD + 2*sAAAABC*sAABCDD + 2*sAAABBB*sAABCDD + 4*sAAABBC*sAABCDD + 4*sAAABCC*sAABCDD + 2*sAAABCD*sAABCDD + 6*sAABBCC*sAABCDD + 4*sAABBCD*sAABCDD + 4*sAABCCD*sAABCDD + 2*sAABCDD**2 + 2*sAAAABB*sAABCDE + 2*sAAABBC*sAABCDE + 2*sAAABCC*sAABCDE + 4*sAABBCC*sAABCDE + 2*sAABBCD*sAABCDE + 2*sAABCCD*sAABCDE + 2*sAABCDD*sAABCDE + 2*sAAAAAA*sABCDDE + 2*sAAAAAB*sABCDDE + 4*sAAAABB*sABCDDE + 2*sAAAABC*sABCDDE + 2*sAAABBB*sABCDDE + 4*sAAABBC*sABCDDE + 4*sAAABCC*sABCDDE + 2*sAAABCD*sABCDDE + 6*sAABBCC*sABCDDE + 4*sAABBCD*sABCDDE + 4*sAABCCD*sABCDDE + 4*sAABCDD*sABCDDE + 2*sAABCDE*sABCDDE + 3*sABCDDE**2 + 2*sAAAAAA*sABCDEE + 2*sAAAAAB*sABCDEE + 4*sAAAABB*sABCDEE + 2*sAAAABC*sABCDEE + 2*sAAABBB*sABCDEE + 4*sAAABBC*sABCDEE + 4*sAAABCC*sABCDEE + 2*sAAABCD*sABCDEE + 6*sAABBCC*sABCDEE + 4*sAABBCD*sABCDEE + 4*sAABCCD*sABCDEE + 4*sAABCDD*sABCDEE + 2*sAABCDE*sABCDEE + 6*sABCDDE*sABCDEE + 3*sABCDEE**2 + 2*sAAAABB*sABCDEF + 2*sAAABBC*sABCDEF + 2*sAAABCC*sABCDEF + 4*sAABBCC*sABCDEF + 2*sAABBCD*sABCDEF + 2*sAABCCD*sABCDEF + 2*sAABCDD*sABCDEF + 4*sABCDDE*sABCDEF + 4*sABCDEE*sABCDEF + sABCDEF**2)
-  alpha_3  = (1-d)*(2*sAAABBB + sAAABBC + sAAABCC + sAAABCD) + d*(2*sAAAAAA*sAAABBB + 2*sAAAAAB*sAAABBB + 2*sAAAABB*sAAABBB + 2*sAAAABC*sAAABBB + 2*sAAABBB**2 + 2*sAAABBB*sAAABBC + 2*sAAABBB*sAAABCC + 2*sAAABBB*sAAABCD + 2*sAAABBB*sAABBCC + 2*sAAABBB*sAABBCD + 2*sAAABBB*sAABCCD + 2*sAAABBB*sAABCDD + 2*sAAABBB*sAABCDE + 2*sAAABBB*sABCDDE + 2*sAABBCC*sABCDDE + 2*sAABBCD*sABCDDE + 2*sAABCCD*sABCDDE + 2*sAABCDD*sABCDDE + 2*sAABCDE*sABCDDE + 2*sAAABBB*sABCDEE + 2*sAABBCC*sABCDEE + 2*sAABBCD*sABCDEE + 2*sAABCCD*sABCDEE + 2*sAABCDD*sABCDEE + 2*sAABCDE*sABCDEE + 2*sAAABBB*sABCDEF + 2*sAABBCC*sABCDEF + 2*sAABBCD*sABCDEF + 2*sAABCCD*sABCDEF + 2*sAABCDD*sABCDEF + 2*sAABCDE*sABCDEF)
-  alpha_4  = (1-d)*(sAAAABB + sAAAABC) + d*(sAABBCC**2 + 2*sAABBCC*sAABBCD + sAABBCD**2 + 2*sAABBCC*sAABCCD + 2*sAABBCD*sAABCCD + sAABCCD**2 + 2*sAABBCC*sAABCDD + 2*sAABBCD*sAABCDD + 2*sAABCCD*sAABCDD + sAABCDD**2 + 2*sAABBCC*sAABCDE + 2*sAABBCD*sAABCDE + 2*sAABCCD*sAABCDE + 2*sAABCDD*sAABCDE + sAABCDE**2 + 2*sAAABBB*sABCDDE + 2*sAAABBC*sABCDDE + 2*sAAABCC*sABCDDE + 2*sAAABCD*sABCDDE + 2*sAAABBB*sABCDEE + 2*sAAABBC*sABCDEE + 2*sAAABCC*sABCDEE + 2*sAAABCD*sABCDEE + 2*sAAABBB*sABCDEF + 2*sAAABBC*sABCDEF + 2*sAAABCC*sABCDEF + 2*sAAABCD*sABCDEF)
-  alpha_5  = (1-d)*(sAAAAAB) + d*(2*sAAABBB*sAABBCC + 2*sAAABBC*sAABBCC + 2*sAAABCC*sAABBCC + 2*sAAABCD*sAABBCC + 2*sAAABBB*sAABBCD + 2*sAAABBC*sAABBCD + 2*sAAABCC*sAABBCD + 2*sAAABCD*sAABBCD + 2*sAAABBB*sAABCCD + 2*sAAABBC*sAABCCD + 2*sAAABCC*sAABCCD + 2*sAAABCD*sAABCCD + 2*sAAABBB*sAABCDD + 2*sAAABBC*sAABCDD + 2*sAAABCC*sAABCDD + 2*sAAABCD*sAABCDD + 2*sAAABBB*sAABCDE + 2*sAAABBC*sAABCDE + 2*sAAABCC*sAABCDE + 2*sAAABCD*sAABCDE + 2*sAAAABB*sABCDDE + 2*sAAAABC*sABCDDE + 2*sAAAABB*sABCDEE + 2*sAAAABC*sABCDEE + 2*sAAAABB*sABCDEF + 2*sAAAABC*sABCDEF)
-  alpha_6  = (1-d)*(sAAAAAA) + d*(sAAABBB**2 + 2*sAAABBB*sAAABBC + sAAABBC**2 + 2*sAAABBB*sAAABCC + 2*sAAABBC*sAAABCC + sAAABCC**2 + 2*sAAABBB*sAAABCD + 2*sAAABBC*sAAABCD + 2*sAAABCC*sAAABCD + sAAABCD**2 + 2*sAAAABB*sAABBCC + 2*sAAAABC*sAABBCC + 2*sAAAABB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAAAABB*sAABCCD + 2*sAAAABC*sAABCCD + 2*sAAAABB*sAABCDD + 2*sAAAABC*sAABCDD + 2*sAAAABB*sAABCDE + 2*sAAAABC*sAABCDE + 2*sAAAAAB*sABCDDE + 2*sAAAAAB*sABCDEE + 2*sAAAAAB*sABCDEF)
-  alpha_7  = d*(2*sAAAABB*sAAABBB + 2*sAAAABC*sAAABBB + 2*sAAAABB*sAAABBC + 2*sAAAABC*sAAABBC + 2*sAAAABB*sAAABCC + 2*sAAAABC*sAAABCC + 2*sAAAABB*sAAABCD + 2*sAAAABC*sAAABCD + 2*sAAAAAB*sAABBCC + 2*sAAAAAB*sAABBCD + 2*sAAAAAB*sAABCCD + 2*sAAAAAB*sAABCDD + 2*sAAAAAB*sAABCDE + 2*sAAAAAA*sABCDDE + 2*sAAAAAA*sABCDEE + 2*sAAAAAA*sABCDEF)
-  alpha_8  = d*(sAAAABB**2 + 2*sAAAABB*sAAAABC + sAAAABC**2 + 2*sAAAAAB*sAAABBB + 2*sAAAAAB*sAAABBC + 2*sAAAAAB*sAAABCC + 2*sAAAAAB*sAAABCD + 2*sAAAAAA*sAABBCC + 2*sAAAAAA*sAABBCD + 2*sAAAAAA*sAABCCD + 2*sAAAAAA*sAABCDD + 2*sAAAAAA*sAABCDE)
-  alpha_9  = d*(2*sAAAAAB*sAAAABB + 2*sAAAAAB*sAAAABC + 2*sAAAAAA*sAAABBB + 2*sAAAAAA*sAAABBC + 2*sAAAAAA*sAAABCC + 2*sAAAAAA*sAAABCD)
-  alpha_10 = d*(sAAAAAB**2 + 2*sAAAAAA*sAAAABB + 2*sAAAAAA*sAAAABC)
-  alpha_11 = d*(2*sAAAAAA*sAAAAAB)
-  alpha_12 = d*(sAAAAAA**2)
-  alpha_1  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
-  alpha_2  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
-  alpha_3  * dnbinom(x, size = kmercov*3 / bias, mu = kmercov*3)+
-  alpha_4  * dnbinom(x, size = kmercov*4 / bias, mu = kmercov*4)+
-  alpha_5  * dnbinom(x, size = kmercov*5 / bias, mu = kmercov*5)+
-  alpha_6  * dnbinom(x, size = kmercov*6 / bias, mu = kmercov*6)+
-  alpha_7  * dnbinom(x, size = kmercov*7 / bias, mu = kmercov*7)+
-  alpha_8  * dnbinom(x, size = kmercov*8 / bias, mu = kmercov*8)+
-  alpha_9  * dnbinom(x, size = kmercov*9 / bias, mu = kmercov*9)+
-  alpha_10 * dnbinom(x, size = kmercov*10 / bias, mu = kmercov*10)+
-  alpha_11 * dnbinom(x, size = kmercov*11 / bias, mu = kmercov*11)+
-  alpha_12 * dnbinom(x, size = kmercov*12 / bias, mu = kmercov*12)
-}
-
-
-#' Produce model estimated (p=6, full model, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
-#'
-#' @param raaaaab,raaaabb,raaabbb,raaaabc,raaabbc,raaabcc,raabbcc,raaabcd,raabbcd,raabccd,raabcdd,raabcde,rabcdde,rabcdee,rabcdef Numerics corresponding to the nucleotide heterozygosities.
-#' @param k An integer corresponding to the kmer length.
-#' @param d A numeric corresponding to the repetitiveness.
-#' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
-#' @param bias A numeric corresponding to the overdispersion of the negative binomial distribution.
-#' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
-#' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
-#' @export
-predict6_0_unique = function(raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raaabcc, raabbcc, raaabcd, raabbcd, raabccd, raabcdd, raabcde, rabcdde, rabcdee, rabcdef, k, d, kmercov, bias, x)
-{
-  raaaaaa  = 1-raaaaab-raaaabb-raaabbb-raaaabc-raaabbc-raaabcc-raabbcc-raaabcd-raabbcd-raabccd-raabcdd-raabcde-rabcdde-rabcdee-rabcdef
-  if (raaaaaa < 0) {return(0)}
-  taaaaaa  = (raaaaaa)**k
-  taaaaab  = (raaaaaa+raaaaab)**k
-  taaaabb  = (raaaaaa+raaaabb)**k
-  taaabbb  = (raaaaaa+raaabbb)**k
-  taaaabc  = (raaaaaa+raaaaab+raaaabb+raaaabc)**k
-  taaabbc  = (raaaaaa+raaaaab+raaabbb+raaabbc)**k
-  taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
-  taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
-  taaabcd  = (raaaaaa+raaaaab+raaaabb+raaabbb+raaaabc+raaabbc+raaabcc+raaabcd)**k
-  taabbcd  = (raaaaaa+raaaaab+raaaabb+raaaabc+raabbcc+raabbcd)**k
-  taabccd  = (raaaaaa+raaaaab+raaabbb+raaabbc+raabccd)**k
-  taabcdd  = (raaaaaa+raaaabb+raaabcc+raabbcc+raabcdd)**k
-  taabcde  = (raaaaaa+raaaaab+raaaabb+raaabbb+raaaabc+raaabbc+raaabcc+raabbcc+raaabcd+raabbcd+raabccd+raabcdd+raabcde)**k
-  tabcdde  = (raaaaaa+raaaaab+raaabbb+raaabbc+raabccd+rabcdde)**k
-  tabcdee  = (raaaaaa+raaaabb+raaabcc+raabbcc+raabcdd+rabcdee)**k
-  sAAAAAA  = taaaaaa
-  sAAAAAB  = taaaaab-taaaaaa
-  sAAAABB  = taaaabb-taaaaaa
-  sAAABBB  = taaabbb-taaaaaa
-  sAAAABC  = taaaabc-taaaaab-taaaabb+taaaaaa
-  sAAABBC  = taaabbc-taaaaab-taaabbb+taaaaaa
-  sAAABCC  = taaabcc-taaaabb
-  sAABBCC  = taabbcc-taaaabb
-  sAAABCD  = taaabcd-taaaabc-taaabbc-taaabcc+taaaaab+taaaabb
-  sAABBCD  = taabbcd-taaaabc-taabbcc+taaaabb
-  sAABCCD  = taabccd-taaabbc
-  sAABCDD  = taabcdd-taaabcc-taabbcc+taaaabb
-  sAABCDE  = taabcde-taaabcd-taabbcd-taabccd-taabcdd+taaaabc+taaabbc+taaabcc+taabbcc-taaaabb
-  sABCDDE  = tabcdde-taabccd
-  sABCDEE  = tabcdee-taabcdd
-  sABCDEF  = 1-taabcde-tabcdde-tabcdee+taabccd+taabcdd
-  alpha_1_unique  = (1-d)*(sAAAAAB + 2*sAAAABC + sAAABBC + sAAABCC + 3*sAAABCD + 2*sAABBCD + 2*sAABCCD + 2*sAABCDD + 4*sAABCDE + 4*sABCDDE + 4*sABCDEE + 6*sABCDEF)
-  alpha_2_unique  = (1-d)*(sAAAABB + sAAABBC + sAAABCC + 3*sAABBCC + 2*sAABBCD + 2*sAABCCD + 2*sAABCDD + sAABCDE + sABCDDE + sABCDEE)
-  alpha_3_unique  = (1-d)*(2*sAAABBB + sAAABBC + sAAABCC + sAAABCD)
-  alpha_4_unique  = (1-d)*(sAAAABB + sAAAABC)
-  alpha_5_unique  = (1-d)*(sAAAAAB)
   alpha_6_unique  = (1-d)*(sAAAAAA)
   alpha_1_unique  * dnbinom(x, size = kmercov*1 / bias, mu = kmercov*1)+
   alpha_2_unique  * dnbinom(x, size = kmercov*2 / bias, mu = kmercov*2)+
