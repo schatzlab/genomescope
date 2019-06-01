@@ -56,7 +56,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       p_to_num_r = c(0, 1, 2, 3, 4, 5)
     }
   } else {
-    if (top==0) {
+    if (topology==0) {
       p_to_num_r = c(0, 1, 2, 4, 8, 15)
     } else {
       p_to_num_r = c(0, 1, 2, 3, 4, 5)
