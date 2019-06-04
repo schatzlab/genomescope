@@ -23,7 +23,7 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   r_min = 0
   r_initial = 0.001
   if (top==0) {
-    p_to_num_r = c(0, 1, 2, 4, 8, 15)
+    p_to_num_r = c(0, 1, 2, 4, 6, 10)
   } else {
     p_to_num_r = c(0, 1, 2, 3, 4, 5)
   }

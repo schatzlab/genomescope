@@ -4,11 +4,11 @@
 \alias{predict5_0}
 \title{Produce model estimated (p=5, full model) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.}
 \usage{
-predict5_0(raaaab, raaabb, raaabc, raabbc, raabcc, raabcd, rabcdd, rabcde,
-  k, d, kmercov, bias, x)
+predict5_0(raaaab, raaabb, raaabc, raabbc, raabcd, rabcde, k, d, kmercov,
+  bias, x)
 }
 \arguments{
-\item{raaaab, raaabb, raaabc, raabbc, raabcc, raabcd, rabcdd, rabcde}{Numerics corresponding to the nucleotide heterozygosities.}
+\item{raaaab, raaabb, raaabc, raabbc, raabcd, rabcde}{Numerics corresponding to the nucleotide heterozygosities.}
 
 \item{k}{An integer corresponding to the kmer length.}
 
