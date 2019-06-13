@@ -119,7 +119,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
 
   dir.create(foldername, showWarnings=FALSE)
 
-  kmer_prof <- read.csv(file=histfile,sep="", header=FALSE)
+  kmer_prof <- read.csv(file=histfile,sep="", header=FALSE,colClasses=c("numeric","numeric"))
 
   minkmerx = 1;
   if (kmer_prof[1,1] == 0) {
