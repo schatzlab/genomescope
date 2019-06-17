@@ -13,6 +13,7 @@
 nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   #Initiate variables
   model = NULL
+  best_deviance = Inf
   d_min = 0
   if (d_init!=-1) {
     d_initial = d_init
@@ -40,7 +41,7 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
       r_initials = c(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05)
     } else {
       r_initials = rep(r_initial, num_r)
-      r_initials = c(0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.010, 0.011, 0.012, 0.013, 0.014, 0.015)
+      #r_initials = c(0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.010, 0.011, 0.012, 0.013, 0.014, 0.015)
       #r_initials = c(0.010, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004, 0.003, 0.002, 0.001)
     }
   }
@@ -79,11 +80,35 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
 
   if (VERBOSE) {cat("trying nlsLM algorithm (Levenberg-Marquardt)\n")}
 
-  try(model <- nlsLM(formula = formula,
-                     start   = c(list(d = d_initial), r_start, list(kmercov = kmercov_initial, bias = bias_initial, length = length_initial)),
-                     lower   = c(c(d_min), rep(r_min, num_r), c(kmercov_min, bias_min, length_min)),
-                     upper   = c(c(d_max), rep(r_max, num_r), c(kmercov_max, bias_max, length_max)),
-                     control = list(minFactor=1e-12, maxiter=max_iterations), trace=TRACE_FLAG), silent = FALSE)
+  for (r_initials in list(rep(0.001, num_r), 0.001*(1:num_r), 0.001*(num_r:1), rep(0.01, num_r), 0.01*(1:num_r), 0.01*(num_r:1))) {
+
+    model1 = NULL
+    r_start = vector("list", num_r)
+    if (p > 1) {
+      names(r_start) = paste("r", 1:(num_r), sep="")
+      for (i in 1:(num_r)) {
+        r_start[[paste("r",i,sep="")]] = r_initials[i]
+      }
+    }
+
+    try(model1 <- nlsLM(formula = formula,
+                       start   = c(list(d = d_initial), r_start, list(kmercov = kmercov_initial, bias = bias_initial, length = length_initial)),
+                       lower   = c(c(d_min), rep(r_min, num_r), c(kmercov_min, bias_min, length_min)),
+                       upper   = c(c(d_max), rep(r_max, num_r), c(kmercov_max, bias_max, length_max)),
+                       control = list(minFactor=1e-12, maxiter=max_iterations), trace=TRACE_FLAG), silent = FALSE)
+
+    if (!is.null(model1)) {
+      current_deviance = model1$m$deviance()
+      #cat("Model deviance: ", current_deviance, "\n")
+      if (current_deviance < best_deviance) {
+        model = model1
+        best_deviance = current_deviance
+      }
+    } else {
+      #print("Model did not converge.")
+    }
+
+  }
 
   if (!is.null(model))
   {
