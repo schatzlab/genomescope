@@ -66,13 +66,13 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   if (p==1) {
     r_text = ""
   } else {
-    r_text = paste(paste(lapply(1:(num_r), function(x) paste("exp(r", as.character(x), ")", sep="")), collapse=", "), ", ")
+    r_text = paste(paste(lapply(1:(num_r), function(x) paste("r", as.character(x), sep="")), collapse=", "), ", ")
   }
   if (TRANSFORM) {
     #x = head(x,100)
     #y_transform = head(x,100)*head(y,100)
     y_transform = as.numeric(x)**transform_exp*as.numeric(y)
-    formula = as.formula(paste("y_transform ~ as.numeric(x)**transform_exp*length*predict",p,"_",top,"(",r_text, "k, exp(d), kmercov, exp(bias), x)",sep=""))
+    formula = as.formula(paste("y_transform ~ as.numeric(x)**transform_exp*length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
   } else {
     formula = as.formula(paste("y ~ length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
   }
@@ -81,8 +81,8 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
 
   try(model <- nlsLM(formula = formula,
                      start   = c(list(d = d_initial), r_start, list(kmercov = kmercov_initial, bias = bias_initial, length = length_initial)),
-                     #lower   = c(c(d_min), rep(r_min, num_r), c(kmercov_min, bias_min, length_min)),
-                     #upper   = c(c(d_max), rep(r_max, num_r), c(kmercov_max, bias_max, length_max)),
+                     lower   = c(c(d_min), rep(r_min, num_r), c(kmercov_min, bias_min, length_min)),
+                     upper   = c(c(d_max), rep(r_max, num_r), c(kmercov_max, bias_max, length_max)),
                      control = list(minFactor=1e-12, maxiter=max_iterations), trace=TRACE_FLAG), silent = FALSE)
 
   if (!is.null(model))
