@@ -1019,7 +1019,7 @@ predict5_5_unique = function(raaabb, raabcc, rabcdd, rabcde, k, d, kmercov, bias
 
 #' Produce model estimated (p=6, full model) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param raaaaaa,raaaaab,raaaabb,raaabbb,raaaabc,raaabbc,raabbcc,raaabcd,raabbcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities.
+#' @param raaaaab,raaaabb,raaabbb,raaaabc,raaabbc,raabbcc,raaabcd,raabbcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -1027,7 +1027,7 @@ predict5_5_unique = function(raaabb, raabcc, rabcdd, rabcde, k, d, kmercov, bias
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict6_0 = function(raaaaaa, raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raabbcc, raaabcd, raabbcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+predict6_0 = function(raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raabbcc, raaabcd, raabbcd, raabcde, rabcdef, k, d, kmercov, bias, x)
 {
   raaaaaa = 1-raaaaab-raaaabb-raaabbb-raaaabc-raaabbc-raabbcc-raaabcd-raabbcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
@@ -1080,7 +1080,7 @@ predict6_0 = function(raaaaaa, raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raab
 
 #' Produce model estimated (p=6, full model, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.
 #'
-#' @param raaaaaa,raaaaab,raaaabb,raaabbb,raaaabc,raaabbc,raabbcc,raaabcd,raabbcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities.
+#' @param raaaaab,raaaabb,raaabbb,raaaabc,raaabbc,raabbcc,raaabcd,raabbcd,raabcde,rabcdef Numerics corresponding to the nucleotide heterozygosities.
 #' @param k An integer corresponding to the kmer length.
 #' @param d A numeric corresponding to the repetitiveness.
 #' @param kmercov A numeric corresponding to the estimated average kmer coverage of the polyploid genome.
@@ -1088,7 +1088,7 @@ predict6_0 = function(raaaaaa, raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raab
 #' @param x An integer vector of the x-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @return A numeric vector of the model estimated y-coordinates of the kmer spectra.
 #' @export
-predict6_0_unique = function(raaaaaa, raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raabbcc, raaabcd, raabbcd, raabcde, rabcdef, k, d, kmercov, bias, x)
+predict6_0_unique = function(raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raabbcc, raaabcd, raabbcd, raabcde, rabcdef, k, d, kmercov, bias, x)
 {
   raaaaaa = 1-raaaaab-raaaabb-raaabbb-raaaabc-raaabbc-raabbcc-raaabcd-raabbcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
