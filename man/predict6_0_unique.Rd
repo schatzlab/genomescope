@@ -4,12 +4,11 @@
 \alias{predict6_0_unique}
 \title{Produce model estimated (p=6, full model, unique portion) y-coordinates of the kmer spectra given the kmer size, repetitiveness, average polyploid kmer coverage, bias, and x-coordinates of the kmer spectra.}
 \usage{
-predict6_0_unique(raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raaabcc,
-  raabbcc, raaabcd, raabbcd, raabccd, raabcdd, raabcde, rabcdde, rabcdee,
-  rabcdef, k, d, kmercov, bias, x)
+predict6_0_unique(raaaaaa, raaaaab, raaaabb, raaabbb, raaaabc, raaabbc,
+  raabbcc, raaabcd, raabbcd, raabcde, rabcdef, k, d, kmercov, bias, x)
 }
 \arguments{
-\item{raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raaabcc, raabbcc, raaabcd, raabbcd, raabccd, raabcdd, raabcde, rabcdde, rabcdee, rabcdef}{Numerics corresponding to the nucleotide heterozygosities.}
+\item{raaaaaa, raaaaab, raaaabb, raaabbb, raaaabc, raaabbc, raabbcc, raaabcd, raabbcd, raabcde, rabcdef}{Numerics corresponding to the nucleotide heterozygosities.}
 
 \item{k}{An integer corresponding to the kmer length.}
 
