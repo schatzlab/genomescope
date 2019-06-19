@@ -200,23 +200,15 @@ predict4_0 = function(raaab, raabb, raabc, rabcd, k, d, kmercov, bias, x)
 {
   raaaa = 1-raaab-raabb-raabc-rabcd
   if (raaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAA = raaaa
-    sAAAB = raaab
-    sAABB = raabb
-    sAABC = raabc
-    sABCD = rabcd
-  } else {
-    tAAAA = raaaa**k
-    tAAAB = (raaaa+raaab)**k
-    tAABB = (raaaa+raabb)**k
-    tAABC = (raaaa+raaab+raabb+raabc)**k
-    sAAAA = tAAAA
-    sAAAB = tAAAB-tAAAA
-    sAABB = tAABB-tAAAA
-    sAABC = tAABC-tAAAB-tAABB+tAAAA
-    sABCD = 1-tAABC
-  }
+  tAAAA = raaaa**k
+  tAAAB = (raaaa+raaab)**k
+  tAABB = (raaaa+raabb)**k
+  tAABC = (raaaa+raaab+raabb+raabc)**k
+  sAAAA = tAAAA
+  sAAAB = tAAAB-tAAAA
+  sAABB = tAABB-tAAAA
+  sAABC = tAABC-tAAAB-tAABB+tAAAA
+  sABCD = 1-tAABC
   alpha_1 = (1-d)*(sAAAB + 2*sAABC + 4*sABCD) + d*(2*sAAAA*sAAAB + 2*sAAAB**2 + 2*sAAAB*sAABB + 4*sAAAA*sAABC + 6*sAAAB*sAABC + 4*sAABB*sAABC + 4*sAABC**2 + 6*sAAAA*sABCD + 8*sAAAB*sABCD + 6*sAABB*sABCD + 10*sAABC*sABCD + 6*sABCD**2)
   alpha_2 = (1-d)*(2*sAABB + sAABC) + d*(2*sAAAA*sAABB + 2*sAAAB*sAABB + 2*sAABB**2 + 2*sAABB*sAABC + 2*sAABB*sABCD + sABCD**2)
   alpha_3 = (1-d)*(sAAAB) + d*(2*sAABB*sABCD + 2*sAABC*sABCD)
@@ -250,23 +242,15 @@ predict4_0_unique = function(raaab, raabb, raabc, rabcd, k, d, kmercov, bias, x)
 {
   raaaa = 1-raaab-raabb-raabc-rabcd
   if (raaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAA = raaaa
-    sAAAB = raaab
-    sAABB = raabb
-    sAABC = raabc
-    sABCD = rabcd
-  } else {
-    tAAAA = raaaa**k
-    tAAAB = (raaaa+raaab)**k
-    tAABB = (raaaa+raabb)**k
-    tAABC = (raaaa+raaab+raabb+raabc)**k
-    sAAAA = tAAAA
-    sAAAB = tAAAB-tAAAA
-    sAABB = tAABB-tAAAA
-    sAABC = tAABC-tAAAB-tAABB+tAAAA
-    sABCD = 1-tAABC
-  }
+  tAAAA = raaaa**k
+  tAAAB = (raaaa+raaab)**k
+  tAABB = (raaaa+raabb)**k
+  tAABC = (raaaa+raaab+raabb+raabc)**k
+  sAAAA = tAAAA
+  sAAAB = tAAAB-tAAAA
+  sAABB = tAABB-tAAAA
+  sAABC = tAABC-tAAAB-tAABB+tAAAA
+  sABCD = 1-tAABC
   alpha_1_unique = (1-d)*(sAAAB + 2*sAABC + 4*sABCD)
   alpha_2_unique = (1-d)*(2*sAABB + sAABC)
   alpha_3_unique = (1-d)*(sAAAB)
@@ -292,20 +276,13 @@ predict4_1 = function(raaab, raabc, rabcd, k, d, kmercov, bias, x)
 {
   raaaa = 1-raaab-raabc-rabcd
   if (raaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAA = raaaa
-    sAAAB = raaab
-    sAABC = raabc
-    sABCD = rabcd
-  } else {
-    tAAAA = raaaa**k
-    tAAAB = (raaaa+raaab)**k
-    tAABC = (raaaa+raaab+raabc)**k
-    sAAAA = tAAAA
-    sAAAB = tAAAB-tAAAA
-    sAABC = tAABC-tAAAB
-    sABCD = 1-tAABC
-  }
+  tAAAA = raaaa**k
+  tAAAB = (raaaa+raaab)**k
+  tAABC = (raaaa+raaab+raabc)**k
+  sAAAA = tAAAA
+  sAAAB = tAAAB-tAAAA
+  sAABC = tAABC-tAAAB
+  sABCD = 1-tAABC
   alpha_1 = (1-d)*(sAAAB + 2*sAABC + 4*sABCD) + d*(2*sAAAA*sAAAB + 2*sAAAB**2 + 4*sAAAA*sAABC + 6*sAAAB*sAABC + 4*sAABC**2 + 6*sAAAA*sABCD + 8*sAAAB*sABCD + 10*sAABC*sABCD + 6*sABCD**2)
   alpha_2 = (1-d)*(sAABC) + d*(sABCD**2)
   alpha_3 = (1-d)*(sAAAB) + d*(2*sAABC*sABCD)
@@ -339,20 +316,13 @@ predict4_1_unique = function(raaab, raabc, rabcd, k, d, kmercov, bias, x)
 {
   raaaa = 1-raaab-raabc-rabcd
   if (raaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAA = raaaa
-    sAAAB = raaab
-    sAABC = raabc
-    sABCD = rabcd
-  } else {
-    tAAAA = raaaa**k
-    tAAAB = (raaaa+raaab)**k
-    tAABC = (raaaa+raaab+raabc)**k
-    sAAAA = tAAAA
-    sAAAB = tAAAB-tAAAA
-    sAABC = tAABC-tAAAB
-    sABCD = 1-tAABC
-  }
+  tAAAA = raaaa**k
+  tAAAB = (raaaa+raaab)**k
+  tAABC = (raaaa+raaab+raabc)**k
+  sAAAA = tAAAA
+  sAAAB = tAAAB-tAAAA
+  sAABC = tAABC-tAAAB
+  sABCD = 1-tAABC
   alpha_1_unique = (1-d)*(sAAAB + 2*sAABC + 4*sABCD)
   alpha_2_unique = (1-d)*(sAABC)
   alpha_3_unique = (1-d)*(sAAAB)
@@ -378,20 +348,13 @@ predict4_2 = function(raabb, raabc, rabcd, k, d, kmercov, bias, x)
 {
   raaaa = 1-raabb-raabc-rabcd
   if (raaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAA = raaaa
-    sAABB = raabb
-    sAABC = raabc
-    sABCD = rabcd
-  } else {
-    tAAAA = raaaa**k
-    tAABB = (raaaa+raabb)**k
-    tAABC = (raaaa+raabb+raabc)**k
-    sAAAA = tAAAA
-    sAABB = tAABB-tAAAA
-    sAABC = tAABC-tAABB
-    sABCD = 1-tAABC
-  }
+  tAAAA = raaaa**k
+  tAABB = (raaaa+raabb)**k
+  tAABC = (raaaa+raabb+raabc)**k
+  sAAAA = tAAAA
+  sAABB = tAABB-tAAAA
+  sAABC = tAABC-tAABB
+  sABCD = 1-tAABC
   alpha_1 = (1-d)*(2*sAABC + 4*sABCD) + d*(4*sAAAA*sAABC + 4*sAABB*sAABC + 4*sAABC**2 + 6*sAAAA*sABCD + 6*sAABB*sABCD + 10*sAABC*sABCD + 6*sABCD**2)
   alpha_2 = (1-d)*(2*sAABB + sAABC) + d*(2*sAAAA*sAABB + 2*sAABB**2 + 2*sAABB*sAABC + 2*sAABB*sABCD + sABCD**2)
   alpha_3 = (1-d)*(0) + d*(2*sAABB*sABCD + 2*sAABC*sABCD)
@@ -425,20 +388,13 @@ predict4_2_unique = function(raabb, raabc, rabcd, k, d, kmercov, bias, x)
 {
   raaaa = 1-raabb-raabc-rabcd
   if (raaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAA = raaaa
-    sAABB = raabb
-    sAABC = raabc
-    sABCD = rabcd
-  } else {
-    tAAAA = raaaa**k
-    tAABB = (raaaa+raabb)**k
-    tAABC = (raaaa+raabb+raabc)**k
-    sAAAA = tAAAA
-    sAABB = tAABB-tAAAA
-    sAABC = tAABC-tAABB
-    sABCD = 1-tAABC
-  }
+  tAAAA = raaaa**k
+  tAABB = (raaaa+raabb)**k
+  tAABC = (raaaa+raabb+raabc)**k
+  sAAAA = tAAAA
+  sAABB = tAABB-tAAAA
+  sAABC = tAABC-tAABB
+  sABCD = 1-tAABC
   alpha_1_unique = (1-d)*(2*sAABC + 4*sABCD)
   alpha_2_unique = (1-d)*(2*sAABB + sAABC)
   alpha_3_unique = (1-d)*(0)
@@ -551,23 +507,15 @@ predict5_1 = function(raaaab, raaabc, raabcd, rabcde, k, d, kmercov, bias, x)
 {
   raaaaa = 1-raaaab-raaabc-raabcd-rabcde
   if (raaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAA = raaaaa
-    sAAAAB = raaaab
-    sAAABC = raaabc
-    sAABCD = raabcd
-    sABCDE = rabcde
-  } else {
-    tAAAAA = raaaaa**k
-    tAAAAB = (raaaaa+raaaab)**k
-    tAAABC = (raaaaa+raaaab+raaabc)**k
-    tAABCD = (raaaaa+raaaab+raaabc+raabcd)**k
-    sAAAAA = tAAAAA
-    sAAAAB = tAAAAB-tAAAAA
-    sAAABC = tAAABC-tAAAAB
-    sAABCD = tAABCD-tAAABC
-    sABCDE = 1-tAABCD
-  }
+  tAAAAA = raaaaa**k
+  tAAAAB = (raaaaa+raaaab)**k
+  tAAABC = (raaaaa+raaaab+raaabc)**k
+  tAABCD = (raaaaa+raaaab+raaabc+raabcd)**k
+  sAAAAA = tAAAAA
+  sAAAAB = tAAAAB-tAAAAA
+  sAAABC = tAAABC-tAAAAB
+  sAABCD = tAABCD-tAAABC
+  sABCDE = 1-tAABCD
   alpha_1 = (1-d)*(sAAAAB + 2*sAAABC + 3*sAABCD + 5*sABCDE) + d*(2*sAAAAA*sAAAAB + 2*sAAAAB**2 + 4*sAAAAA*sAAABC + 6*sAAAAB*sAAABC + 4*sAAABC**2 + 6*sAAAAA*sAABCD + 8*sAAAAB*sAABCD + 10*sAAABC*sAABCD + 6*sAABCD**2 + 8*sAAAAA*sABCDE + 10*sAAAAB*sABCDE + 12*sAAABC*sABCDE + 14*sAABCD*sABCDE + 8*sABCDE**2)
   alpha_2 = (1-d)*(sAABCD) + d*(sABCDE**2)
   alpha_3 = (1-d)*(sAAABC) + d*(2*sAABCD*sABCDE)
@@ -604,23 +552,15 @@ predict5_1_unique = function(raaaab, raaabc, raabcd, rabcde, k, d, kmercov, bias
 {
   raaaaa = 1-raaaab-raaabc-raabcd-rabcde
   if (raaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAA = raaaaa
-    sAAAAB = raaaab
-    sAAABC = raaabc
-    sAABCD = raabcd
-    sABCDE = rabcde
-  } else {
-    tAAAAA = raaaaa**k
-    tAAAAB = (raaaaa+raaaab)**k
-    tAAABC = (raaaaa+raaaab+raaabc)**k
-    tAABCD = (raaaaa+raaaab+raaabc+raabcd)**k
-    sAAAAA = tAAAAA
-    sAAAAB = tAAAAB-tAAAAA
-    sAAABC = tAAABC-tAAAAB
-    sAABCD = tAABCD-tAAABC
-    sABCDE = 1-tAABCD
-  }
+  tAAAAA = raaaaa**k
+  tAAAAB = (raaaaa+raaaab)**k
+  tAAABC = (raaaaa+raaaab+raaabc)**k
+  tAABCD = (raaaaa+raaaab+raaabc+raabcd)**k
+  sAAAAA = tAAAAA
+  sAAAAB = tAAAAB-tAAAAA
+  sAAABC = tAAABC-tAAAAB
+  sAABCD = tAABCD-tAAABC
+  sABCDE = 1-tAABCD
   alpha_1_unique = (1-d)*(sAAAAB + 2*sAAABC + 3*sAABCD + 5*sABCDE)
   alpha_2_unique = (1-d)*(sAABCD)
   alpha_3_unique = (1-d)*(sAAABC)
@@ -647,23 +587,15 @@ predict5_2 = function(raaaab, raabbc, raabcd, rabcde, k, d, kmercov, bias, x)
 {
   raaaaa = 1-raaaab-raabbc-raabcd-rabcde
   if (raaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAA = raaaaa
-    sAAAAB = raaaab
-    sAABBC = raabbc
-    sAABCD = raabcd
-    sABCDE = rabcde
-  } else {
-    tAAAAA = raaaaa**k
-    tAAAAB = (raaaaa+raaaab)**k
-    tAABBC = (raaaaa+raaaab+raabbc)**k
-    tAABCD = (raaaaa+raaaab+raabbc+raabcd)**k
-    sAAAAA = tAAAAA
-    sAAAAB = tAAAAB-tAAAAA
-    sAABBC = tAABBC-tAAAAB
-    sAABCD = tAABCD-tAABBC
-    sABCDE = 1-tAABCD
-  }
+  tAAAAA = raaaaa**k
+  tAAAAB = (raaaaa+raaaab)**k
+  tAABBC = (raaaaa+raaaab+raabbc)**k
+  tAABCD = (raaaaa+raaaab+raabbc+raabcd)**k
+  sAAAAA = tAAAAA
+  sAAAAB = tAAAAB-tAAAAA
+  sAABBC = tAABBC-tAAAAB
+  sAABCD = tAABCD-tAABBC
+  sABCDE = 1-tAABCD
   alpha_1 = (1-d)*(sAAAAB + sAABBC + 3*sAABCD + 5*sABCDE) + d*(2*sAAAAA*sAAAAB + 2*sAAAAB**2 + 2*sAAAAA*sAABBC + 4*sAAAAB*sAABBC + 2*sAABBC**2 + 6*sAAAAA*sAABCD + 8*sAAAAB*sAABCD + 8*sAABBC*sAABCD + 6*sAABCD**2 + 8*sAAAAA*sABCDE + 10*sAAAAB*sABCDE + 10*sAABBC*sABCDE + 14*sAABCD*sABCDE + 8*sABCDE**2)
   alpha_2 = (1-d)*(2*sAABBC + sAABCD) + d*(2*sAAAAA*sAABBC + 2*sAAAAB*sAABBC + 2*sAABBC**2 + 2*sAABBC*sAABCD + 2*sAABBC*sABCDE + sABCDE**2)
   alpha_3 = (1-d)*(0) + d*(2*sAABBC*sABCDE + 2*sAABCD*sABCDE)
@@ -700,23 +632,15 @@ predict5_2_unique = function(raaaab, raabbc, raabcd, rabcde, k, d, kmercov, bias
 {
   raaaaa = 1-raaaab-raabbc-raabcd-rabcde
   if (raaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAA = raaaaa
-    sAAAAB = raaaab
-    sAABBC = raabbc
-    sAABCD = raabcd
-    sABCDE = rabcde
-  } else {
-    tAAAAA = raaaaa**k
-    tAAAAB = (raaaaa+raaaab)**k
-    tAABBC = (raaaaa+raaaab+raabbc)**k
-    tAABCD = (raaaaa+raaaab+raabbc+raabcd)**k
-    sAAAAA = tAAAAA
-    sAAAAB = tAAAAB-tAAAAA
-    sAABBC = tAABBC-tAAAAB
-    sAABCD = tAABCD-tAABBC
-    sABCDE = 1-tAABCD
-  }
+  tAAAAA = raaaaa**k
+  tAAAAB = (raaaaa+raaaab)**k
+  tAABBC = (raaaaa+raaaab+raabbc)**k
+  tAABCD = (raaaaa+raaaab+raabbc+raabcd)**k
+  sAAAAA = tAAAAA
+  sAAAAB = tAAAAB-tAAAAA
+  sAABBC = tAABBC-tAAAAB
+  sAABCD = tAABCD-tAABBC
+  sABCDE = 1-tAABCD
   alpha_1_unique = (1-d)*(sAAAAB + sAABBC + 3*sAABCD + 5*sABCDE)
   alpha_2_unique = (1-d)*(2*sAABBC + sAABCD)
   alpha_3_unique = (1-d)*(0)
@@ -743,23 +667,15 @@ predict5_3 = function(raaabb, raaabc, raabcd, rabcde, k, d, kmercov, bias, x)
 {
   raaaaa = 1-raaabb-raaabc-raabcd-rabcde
   if (raaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAA = raaaaa
-    sAAABB = raaabb
-    sAAABC = raaabc
-    sAABCD = raabcd
-    sABCDE = rabcde
-  } else {
-    tAAAAA = raaaaa**k
-    tAAABB = (raaaaa+raaabb)**k
-    tAAABC = (raaaaa+raaabb+raaabc)**k
-    tAABCD = (raaaaa+raaabb+raaabc+raabcd)**k
-    sAAAAA = tAAAAA
-    sAAABB = tAAABB-tAAAAA
-    sAAABC = tAAABC-tAAABB
-    sAABCD = tAABCD-tAAABC
-    sABCDE = 1-tAABCD
-  }
+  tAAAAA = raaaaa**k
+  tAAABB = (raaaaa+raaabb)**k
+  tAAABC = (raaaaa+raaabb+raaabc)**k
+  tAABCD = (raaaaa+raaabb+raaabc+raabcd)**k
+  sAAAAA = tAAAAA
+  sAAABB = tAAABB-tAAAAA
+  sAAABC = tAAABC-tAAABB
+  sAABCD = tAABCD-tAAABC
+  sABCDE = 1-tAABCD
   alpha_1 = (1-d)*(2*sAAABC + 3*sAABCD + 5*sABCDE) + d*(4*sAAAAA*sAAABC + 4*sAAABB*sAAABC + 4*sAAABC**2 + 6*sAAAAA*sAABCD + 6*sAAABB*sAABCD + 10*sAAABC*sAABCD + 6*sAABCD**2 + 8*sAAAAA*sABCDE + 8*sAAABB*sABCDE + 12*sAAABC*sABCDE + 14*sAABCD*sABCDE + 8*sABCDE**2)
   alpha_2 = (1-d)*(sAAABB + sAABCD) + d*(2*sAAAAA*sAAABB + 2*sAAABB**2 + 2*sAAABB*sAAABC + 2*sAAABB*sAABCD + 2*sAAABB*sABCDE + sABCDE**2)
   alpha_3 = (1-d)*(sAAABB + sAAABC) + d*(2*sAABCD*sABCDE)
@@ -796,23 +712,15 @@ predict5_3_unique = function(raaabb, raaabc, raabcd, rabcde, k, d, kmercov, bias
 {
   raaaaa = 1-raaabb-raaabc-raabcd-rabcde
   if (raaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAA = raaaaa
-    sAAABB = raaabb
-    sAAABC = raaabc
-    sAABCD = raabcd
-    sABCDE = rabcde
-  } else {
-    tAAAAA = raaaaa**k
-    tAAABB = (raaaaa+raaabb)**k
-    tAAABC = (raaaaa+raaabb+raaabc)**k
-    tAABCD = (raaaaa+raaabb+raaabc+raabcd)**k
-    sAAAAA = tAAAAA
-    sAAABB = tAAABB-tAAAAA
-    sAAABC = tAAABC-tAAABB
-    sAABCD = tAABCD-tAAABC
-    sABCDE = 1-tAABCD
-  }
+  tAAAAA = raaaaa**k
+  tAAABB = (raaaaa+raaabb)**k
+  tAAABC = (raaaaa+raaabb+raaabc)**k
+  tAABCD = (raaaaa+raaabb+raaabc+raabcd)**k
+  sAAAAA = tAAAAA
+  sAAABB = tAAABB-tAAAAA
+  sAAABC = tAAABC-tAAABB
+  sAABCD = tAABCD-tAAABC
+  sABCDE = 1-tAABCD
   alpha_1_unique = (1-d)*(2*sAAABC + 3*sAABCD + 5*sABCDE)
   alpha_2_unique = (1-d)*(sAAABB + sAABCD)
   alpha_3_unique = (1-d)*(sAAABB + sAAABC)
@@ -839,23 +747,15 @@ predict5_4 = function(raaabb, raabcc, raabcd, rabcde, k, d, kmercov, bias, x)
 {
   raaaaa = 1-raaabb-raabcc-raabcd-rabcde
   if (raaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAA = raaaaa
-    sAAABB = raaabb
-    sAABCC = raabcc
-    sAABCD = raabcd
-    sABCDE = rabcde
-  } else {
-    tAAAAA = raaaaa**k
-    tAAABB = (raaaaa+raaabb)**k
-    tAABCC = (raaaaa+raaabb+raabcc)**k
-    tAABCD = (raaaaa+raaabb+raabcc+raabcd)**k
-    sAAAAA = tAAAAA
-    sAAABB = tAAABB-tAAAAA
-    sAABCC = tAABCC-tAAABB
-    sAABCD = tAABCD-tAABCC
-    sABCDE = 1-tAABCD
-  }
+  tAAAAA = raaaaa**k
+  tAAABB = (raaaaa+raaabb)**k
+  tAABCC = (raaaaa+raaabb+raabcc)**k
+  tAABCD = (raaaaa+raaabb+raabcc+raabcd)**k
+  sAAAAA = tAAAAA
+  sAAABB = tAAABB-tAAAAA
+  sAABCC = tAABCC-tAAABB
+  sAABCD = tAABCD-tAABCC
+  sABCDE = 1-tAABCD
   alpha_1 = (1-d)*(sAABCC + 3*sAABCD + 5*sABCDE) + d*(2*sAAAAA*sAABCC + 2*sAAABB*sAABCC + 2*sAABCC**2 + 6*sAAAAA*sAABCD + 6*sAAABB*sAABCD + 8*sAABCC*sAABCD + 6*sAABCD**2 + 8*sAAAAA*sABCDE + 8*sAAABB*sABCDE + 10*sAABCC*sABCDE + 14*sAABCD*sABCDE + 8*sABCDE**2)
   alpha_2 = (1-d)*(sAAABB + 2*sAABCC + sAABCD) + d*(2*sAAAAA*sAAABB + 2*sAAABB**2 + 2*sAAAAA*sAABCC + 4*sAAABB*sAABCC + 2*sAABCC**2 + 2*sAAABB*sAABCD + 2*sAABCC*sAABCD + 2*sAAABB*sABCDE + 2*sAABCC*sABCDE + sABCDE**2)
   alpha_3 = (1-d)*(sAAABB) + d*(2*sAABCC*sABCDE + 2*sAABCD*sABCDE)
@@ -892,23 +792,15 @@ predict5_4_unique = function(raaabb, raabcc, raabcd, rabcde, k, d, kmercov, bias
 {
   raaaaa = 1-raaabb-raabcc-raabcd-rabcde
   if (raaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAA = raaaaa
-    sAAABB = raaabb
-    sAABCC = raabcc
-    sAABCD = raabcd
-    sABCDE = rabcde
-  } else {
-    tAAAAA = raaaaa**k
-    tAAABB = (raaaaa+raaabb)**k
-    tAABCC = (raaaaa+raaabb+raabcc)**k
-    tAABCD = (raaaaa+raaabb+raabcc+raabcd)**k
-    sAAAAA = tAAAAA
-    sAAABB = tAAABB-tAAAAA
-    sAABCC = tAABCC-tAAABB
-    sAABCD = tAABCD-tAABCC
-    sABCDE = 1-tAABCD
-  }
+  tAAAAA = raaaaa**k
+  tAAABB = (raaaaa+raaabb)**k
+  tAABCC = (raaaaa+raaabb+raabcc)**k
+  tAABCD = (raaaaa+raaabb+raabcc+raabcd)**k
+  sAAAAA = tAAAAA
+  sAAABB = tAAABB-tAAAAA
+  sAABCC = tAABCC-tAAABB
+  sAABCD = tAABCD-tAABCC
+  sABCDE = 1-tAABCD
   alpha_1_unique = (1-d)*(sAABCC + 3*sAABCD + 5*sABCDE)
   alpha_2_unique = (1-d)*(sAAABB + 2*sAABCC + sAABCD)
   alpha_3_unique = (1-d)*(sAAABB)
@@ -935,23 +827,15 @@ predict5_5 = function(raaabb, raabcc, rabcdd, rabcde, k, d, kmercov, bias, x)
 {
   raaaaa = 1-raaabb-raabcc-rabcdd-rabcde
   if (raaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAA = raaaaa
-    sAAABB = raaabb
-    sAABCC = raabcc
-    sABCDD = rabcdd
-    sABCDE = rabcde
-  } else {
-    tAAAAA = raaaaa**k
-    tAAABB = (raaaaa+raaabb)**k
-    tAABCC = (raaaaa+raaabb+raabcc)**k
-    tABCDD = (raaaaa+raaabb+raabcc+rabcdd)**k
-    sAAAAA = tAAAAA
-    sAAABB = tAAABB-tAAAAA
-    sAABCC = tAABCC-tAAABB
-    sABCDD = tABCDD-tAABCC
-    sABCDE = 1-tABCDD
-  }
+  tAAAAA = raaaaa**k
+  tAAABB = (raaaaa+raaabb)**k
+  tAABCC = (raaaaa+raaabb+raabcc)**k
+  tABCDD = (raaaaa+raaabb+raabcc+rabcdd)**k
+  sAAAAA = tAAAAA
+  sAAABB = tAAABB-tAAAAA
+  sAABCC = tAABCC-tAAABB
+  sABCDD = tABCDD-tAABCC
+  sABCDE = 1-tABCDD
   alpha_1 = (1-d)*(sAABCC + 3*sABCDD + 5*sABCDE) + d*(2*sAAAAA*sAABCC + 2*sAAABB*sAABCC + 2*sAABCC**2 + 4*sAAAAA*sABCDD + 4*sAAABB*sABCDD + 6*sAABCC*sABCDD + 4*sABCDD**2 + 8*sAAAAA*sABCDE + 8*sAAABB*sABCDE + 10*sAABCC*sABCDE + 12*sABCDD*sABCDE + 8*sABCDE**2)
   alpha_2 = (1-d)*(sAAABB + 2*sAABCC + sABCDD) + d*(2*sAAAAA*sAAABB + 2*sAAABB**2 + 2*sAAAAA*sAABCC + 4*sAAABB*sAABCC + 2*sAABCC**2 + 2*sAAAAA*sABCDD + 4*sAAABB*sABCDD + 4*sAABCC*sABCDD + 3*sABCDD**2 + 2*sAAABB*sABCDE + 2*sAABCC*sABCDE + 4*sABCDD*sABCDE + sABCDE**2)
   alpha_3 = (1-d)*(sAAABB) + d*(2*sAABCC*sABCDD + 2*sAABCC*sABCDE)
@@ -988,23 +872,15 @@ predict5_5_unique = function(raaabb, raabcc, rabcdd, rabcde, k, d, kmercov, bias
 {
   raaaaa = 1-raaabb-raabcc-rabcdd-rabcde
   if (raaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAA = raaaaa
-    sAAABB = raaabb
-    sAABCC = raabcc
-    sABCDD = rabcdd
-    sABCDE = rabcde
-  } else {
-    tAAAAA = raaaaa**k
-    tAAABB = (raaaaa+raaabb)**k
-    tAABCC = (raaaaa+raaabb+raabcc)**k
-    tABCDD = (raaaaa+raaabb+raabcc+rabcdd)**k
-    sAAAAA = tAAAAA
-    sAAABB = tAAABB-tAAAAA
-    sAABCC = tAABCC-tAAABB
-    sABCDD = tABCDD-tAABCC
-    sABCDE = 1-tABCDD
-  }
+  tAAAAA = raaaaa**k
+  tAAABB = (raaaaa+raaabb)**k
+  tAABCC = (raaaaa+raaabb+raabcc)**k
+  tABCDD = (raaaaa+raaabb+raabcc+rabcdd)**k
+  sAAAAA = tAAAAA
+  sAAABB = tAAABB-tAAAAA
+  sAABCC = tAABCC-tAAABB
+  sABCDD = tABCDD-tAABCC
+  sABCDE = 1-tABCDD
   alpha_1_unique = (1-d)*(sAABCC + 3*sABCDD + 5*sABCDE)
   alpha_2_unique = (1-d)*(sAAABB + 2*sAABCC + sABCDD)
   alpha_3_unique = (1-d)*(sAAABB)
@@ -1141,26 +1017,17 @@ predict6_1 = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov
 {
   raaaaaa  = 1-raaaaab-raaaabc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAAABCD  = taaabcd-taaaabc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
+  taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
+  taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAAABC  = taaaabc-taaaaab
+  sAAABCD  = taaabcd-taaaabc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(sAAAAAB + 2*sAAAABC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 4*sAAAAAA*sAAAABC + 6*sAAAAAB*sAAAABC + 4*sAAAABC**2 + 6*sAAAAAA*sAAABCD + 8*sAAAAAB*sAAABCD + 10*sAAAABC*sAAABCD + 6*sAAABCD**2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 12*sAAAABC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 14*sAAAABC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAABCDE) + d*(sABCDEF**2)
   alpha_3  = (1-d)*(sAAABCD) + d*(2*sAABCDE*sABCDEF)
@@ -1201,26 +1068,17 @@ predict6_1_unique = function(raaaaab, raaaabc, raaabcd, raabcde, rabcdef, k, d, 
 {
   raaaaaa  = 1-raaaaab-raaaabc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAAABCD  = taaabcd-taaaabc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
-}
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
+  taaabcd  = (raaaaaa+raaaaab+raaaabc+raaabcd)**k
+  taabcde  = (raaaaaa+raaaaab+raaaabc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAAABC  = taaaabc-taaaaab
+  sAAABCD  = taaabcd-taaaabc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(sAAAAAB + 2*sAAAABC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAABCDE)
   alpha_3_unique  = (1-d)*(sAAABCD)
@@ -1249,26 +1107,17 @@ predict6_2 = function(raaaaab, raaaabc, raabbcd, raabcde, rabcdef, k, d, kmercov
 {
   raaaaaa  = 1-raaaaab-raaaabc-raabbcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
-    sAABBCD  = raabbcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taabbcd  = (raaaaaa+raaaaab+raaaabc+raabbcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raabbcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAABBCD  = taabbcd-taaaabc
-    sAABCDE  = taabcde-taabbcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
+  taabbcd  = (raaaaaa+raaaaab+raaaabc+raabbcd)**k
+  taabcde  = (raaaaaa+raaaaab+raaaabc+raabbcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAAABC  = taaaabc-taaaaab
+  sAABBCD  = taabbcd-taaaabc
+  sAABCDE  = taabcde-taabbcd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(sAAAAAB + 2*sAAAABC + 2*sAABBCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 4*sAAAAAA*sAAAABC + 6*sAAAAAB*sAAAABC + 4*sAAAABC**2 + 4*sAAAAAA*sAABBCD + 6*sAAAAAB*sAABBCD + 8*sAAAABC*sAABBCD + 4*sAABBCD**2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 12*sAAAABC*sAABCDE + 12*sAABBCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 14*sAAAABC*sABCDEF + 14*sAABBCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(2*sAABBCD + sAABCDE) + d*(2*sAAAAAA*sAABBCD + 2*sAAAAAB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAABBCD**2 + 2*sAABBCD*sAABCDE + 2*sAABBCD*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(0) + d*(2*sAABBCD*sABCDEF + 2*sAABCDE*sABCDEF)
@@ -1309,26 +1158,17 @@ predict6_2_unique = function(raaaaab, raaaabc, raabbcd, raabcde, rabcdef, k, d, 
 {
   raaaaaa  = 1-raaaaab-raaaabc-raabbcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAAABC  = raaaabc
-    sAABBCD  = raabbcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
-    taabbcd  = (raaaaaa+raaaaab+raaaabc+raabbcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaaabc+raabbcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAAABC  = taaaabc-taaaaab
-    sAABBCD  = taabbcd-taaaabc
-    sAABCDE  = taabcde-taabbcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaaabc  = (raaaaaa+raaaaab+raaaabc)**k
+  taabbcd  = (raaaaaa+raaaaab+raaaabc+raabbcd)**k
+  taabcde  = (raaaaaa+raaaaab+raaaabc+raabbcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAAABC  = taaaabc-taaaaab
+  sAABBCD  = taabbcd-taaaabc
+  sAABCDE  = taabcde-taabbcd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(sAAAAAB + 2*sAAAABC + 2*sAABBCD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(2*sAABBCD + sAABCDE)
   alpha_3_unique  = (1-d)*(0)
@@ -1357,26 +1197,17 @@ predict6_3 = function(raaaaab, raaabbc, raaabcd, raabcde, rabcdef, k, d, kmercov
 {
   raaaaaa  = 1-raaaaab-raaabbc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAABBC  = raaabbc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaabbc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaabbc+raaabcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAABBC  = taaabbc-taaaaab
-    sAAABCD  = taaabcd-taaabbc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
+  taaabcd  = (raaaaaa+raaaaab+raaabbc+raaabcd)**k
+  taabcde  = (raaaaaa+raaaaab+raaabbc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAABBC  = taaabbc-taaaaab
+  sAAABCD  = taaabcd-taaabbc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(sAAAAAB + sAAABBC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 6*sAAAAAA*sAAABCD + 8*sAAAAAB*sAAABCD + 8*sAAABBC*sAAABCD + 6*sAAABCD**2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 10*sAAABBC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 12*sAAABBC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAABBC + sAABCDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 2*sAAABBC*sAAABCD + 2*sAAABBC*sAABCDE + 2*sAAABBC*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABBC + sAAABCD) + d*(2*sAABCDE*sABCDEF)
@@ -1417,26 +1248,17 @@ predict6_3_unique = function(raaaaab, raaabbc, raaabcd, raabcde, rabcdef, k, d, 
 {
   raaaaaa  = 1-raaaaab-raaabbc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAABBC  = raaabbc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
-    taaabcd  = (raaaaaa+raaaaab+raaabbc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaaab+raaabbc+raaabcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAABBC  = taaabbc-taaaaab
-    sAAABCD  = taaabcd-taaabbc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
+  taaabcd  = (raaaaaa+raaaaab+raaabbc+raaabcd)**k
+  taabcde  = (raaaaaa+raaaaab+raaabbc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAABBC  = taaabbc-taaaaab
+  sAAABCD  = taaabcd-taaabbc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(sAAAAAB + sAAABBC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAABBC + sAABCDE)
   alpha_3_unique  = (1-d)*(sAAABBC + sAAABCD)
@@ -1465,26 +1287,17 @@ predict6_4 = function(raaaaab, raaabbc, raabccd, raabcde, rabcdef, k, d, kmercov
 {
   raaaaaa  = 1-raaaaab-raaabbc-raabccd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAABBC  = raaabbc
-    sAABCCD  = raabccd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
-    taabccd  = (raaaaaa+raaaaab+raaabbc+raabccd)**k
-    taabcde  = (raaaaaa+raaaaab+raaabbc+raabccd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAABBC  = taaabbc-taaaaab
-    sAABCCD  = taabccd-taaabbc
-    sAABCDE  = taabcde-taabccd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
+  taabccd  = (raaaaaa+raaaaab+raaabbc+raabccd)**k
+  taabcde  = (raaaaaa+raaaaab+raaabbc+raabccd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAABBC  = taaabbc-taaaaab
+  sAABCCD  = taabccd-taaabbc
+  sAABCDE  = taabcde-taabccd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(sAAAAAB + sAAABBC + 2*sAABCCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 4*sAAAAAA*sAABCCD + 6*sAAAAAB*sAABCCD + 6*sAAABBC*sAABCCD + 4*sAABCCD**2 + 8*sAAAAAA*sAABCDE + 10*sAAAAAB*sAABCDE + 10*sAAABBC*sAABCDE + 12*sAABCCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 12*sAAABBC*sABCDEF + 14*sAABCCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAABBC + 2*sAABCCD + sAABCDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAABCCD + 2*sAAAAAB*sAABCCD + 4*sAAABBC*sAABCCD + 2*sAABCCD**2 + 2*sAAABBC*sAABCDE + 2*sAABCCD*sAABCDE + 2*sAAABBC*sABCDEF + 2*sAABCCD*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABBC) + d*(2*sAABCCD*sABCDEF + 2*sAABCDE*sABCDEF)
@@ -1525,26 +1338,17 @@ predict6_4_unique = function(raaaaab, raaabbc, raabccd, raabcde, rabcdef, k, d, 
 {
   raaaaaa  = 1-raaaaab-raaabbc-raabccd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAABBC  = raaabbc
-    sAABCCD  = raabccd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
-    taabccd  = (raaaaaa+raaaaab+raaabbc+raabccd)**k
-    taabcde  = (raaaaaa+raaaaab+raaabbc+raabccd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAABBC  = taaabbc-taaaaab
-    sAABCCD  = taabccd-taaabbc
-    sAABCDE  = taabcde-taabccd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
+  taabccd  = (raaaaaa+raaaaab+raaabbc+raabccd)**k
+  taabcde  = (raaaaaa+raaaaab+raaabbc+raabccd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAABBC  = taaabbc-taaaaab
+  sAABCCD  = taabccd-taaabbc
+  sAABCDE  = taabcde-taabccd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(sAAAAAB + sAAABBC + 2*sAABCCD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAABBC + 2*sAABCCD + sAABCDE)
   alpha_3_unique  = (1-d)*(sAAABBC)
@@ -1573,26 +1377,17 @@ predict6_5 = function(raaaaab, raaabbc, raabccd, rabcdde, rabcdef, k, d, kmercov
 {
   raaaaaa  = 1-raaaaab-raaabbc-raabccd-rabcdde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAABBC  = raaabbc
-    sAABCCD  = raabccd
-    sABCDDE  = rabcdde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
-    taabccd  = (raaaaaa+raaaaab+raaabbc+raabccd)**k
-    tabcdde  = (raaaaaa+raaaaab+raaabbc+raabccd+rabcdde)**k
-    sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAABBC  = taaabbc-taaaaab
-    sAABCCD  = taabccd-taaabbc
-    sABCDDE  = tabcdde-taabccd
-    sABCDEF  = 1-tabcdde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
+  taabccd  = (raaaaaa+raaaaab+raaabbc+raabccd)**k
+  tabcdde  = (raaaaaa+raaaaab+raaabbc+raabccd+rabcdde)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAABBC  = taaabbc-taaaaab
+  sAABCCD  = taabccd-taaabbc
+  sABCDDE  = tabcdde-taabccd
+  sABCDEF  = 1-tabcdde
   alpha_1  = (1-d)*(sAAAAAB + sAAABBC + 2*sAABCCD + 4*sABCDDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAAAAB + 2*sAAAAAB**2 + 2*sAAAAAA*sAAABBC + 4*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 4*sAAAAAA*sAABCCD + 6*sAAAAAB*sAABCCD + 6*sAAABBC*sAABCCD + 4*sAABCCD**2 + 6*sAAAAAA*sABCDDE + 8*sAAAAAB*sABCDDE + 8*sAAABBC*sABCDDE + 10*sAABCCD*sABCDDE + 6*sABCDDE**2 + 10*sAAAAAA*sABCDEF + 12*sAAAAAB*sABCDEF + 12*sAAABBC*sABCDEF + 14*sAABCCD*sABCDEF + 16*sABCDDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAABBC + 2*sAABCCD + sABCDDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAAAAB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAABCCD + 2*sAAAAAB*sAABCCD + 4*sAAABBC*sAABCCD + 2*sAABCCD**2 + 2*sAAAAAA*sABCDDE + 2*sAAAAAB*sABCDDE + 4*sAAABBC*sABCDDE + 4*sAABCCD*sABCDDE + 3*sABCDDE**2 + 2*sAAABBC*sABCDEF + 2*sAABCCD*sABCDEF + 4*sABCDDE*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABBC) + d*(2*sAABCCD*sABCDDE + 2*sAABCCD*sABCDEF)
@@ -1633,26 +1428,17 @@ predict6_5_unique = function(raaaaab, raaabbc, raabccd, rabcdde, rabcdef, k, d, 
 {
   raaaaaa  = 1-raaaaab-raaabbc-raabccd-rabcdde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAAAB  = raaaaab
-    sAAABBC  = raaabbc
-    sAABCCD  = raabccd
-    sABCDDE  = rabcdde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaaab  = (raaaaaa+raaaaab)**k
-    taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
-    taabccd  = (raaaaaa+raaaaab+raaabbc+raabccd)**k
-    tabcdde  = (raaaaaa+raaaaab+raaabbc+raabccd+rabcdde)**k
-    sAAAAAA  = taaaaaa
-    sAAAAAB  = taaaaab-taaaaaa
-    sAAABBC  = taaabbc-taaaaab
-    sAABCCD  = taabccd-taaabbc
-    sABCDDE  = tabcdde-taabccd
-    sABCDEF  = 1-tabcdde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaaab  = (raaaaaa+raaaaab)**k
+  taaabbc  = (raaaaaa+raaaaab+raaabbc)**k
+  taabccd  = (raaaaaa+raaaaab+raaabbc+raabccd)**k
+  tabcdde  = (raaaaaa+raaaaab+raaabbc+raabccd+rabcdde)**k
+  sAAAAAA  = taaaaaa
+  sAAAAAB  = taaaaab-taaaaaa
+  sAAABBC  = taaabbc-taaaaab
+  sAABCCD  = taabccd-taaabbc
+  sABCDDE  = tabcdde-taabccd
+  sABCDEF  = 1-tabcdde
   alpha_1_unique  = (1-d)*(sAAAAAB + sAAABBC + 2*sAABCCD + 4*sABCDDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAABBC + 2*sAABCCD + sABCDDE)
   alpha_3_unique  = (1-d)*(sAAABBC)
@@ -1681,26 +1467,17 @@ predict6_6 = function(raaaabb, raaaabc, raaabcd, raabcde, rabcdef, k, d, kmercov
 {
   raaaaaa  = 1-raaaabb-raaaabc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAAAABC  = raaaabc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taaaabc  = (raaaaaa+raaaabb+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaabb+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaabb+raaaabc+raaabcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAAAABC  = taaaabc-taaaabb
-    sAAABCD  = taaabcd-taaaabc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaaabc  = (raaaaaa+raaaabb+raaaabc)**k
+  taaabcd  = (raaaaaa+raaaabb+raaaabc+raaabcd)**k
+  taabcde  = (raaaaaa+raaaabb+raaaabc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAAABC  = taaaabc-taaaabb
+  sAAABCD  = taaabcd-taaaabc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(2*sAAAABC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(4*sAAAAAA*sAAAABC + 4*sAAAABB*sAAAABC + 4*sAAAABC**2 + 6*sAAAAAA*sAAABCD + 6*sAAAABB*sAAABCD + 10*sAAAABC*sAAABCD + 6*sAAABCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 12*sAAAABC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 14*sAAAABC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAAABB + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 2*sAAAABB*sAAAABC + 2*sAAAABB*sAAABCD + 2*sAAAABB*sAABCDE + 2*sAAAABB*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABCD) + d*(2*sAABCDE*sABCDEF)
@@ -1741,26 +1518,17 @@ predict6_6_unique = function(raaaabb, raaaabc, raaabcd, raabcde, rabcdef, k, d, 
 {
   raaaaaa  = 1-raaaabb-raaaabc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAAAABC  = raaaabc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taaaabc  = (raaaaaa+raaaabb+raaaabc)**k
-    taaabcd  = (raaaaaa+raaaabb+raaaabc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaabb+raaaabc+raaabcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAAAABC  = taaaabc-taaaabb
-    sAAABCD  = taaabcd-taaaabc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaaabc  = (raaaaaa+raaaabb+raaaabc)**k
+  taaabcd  = (raaaaaa+raaaabb+raaaabc+raaabcd)**k
+  taabcde  = (raaaaaa+raaaabb+raaaabc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAAABC  = taaaabc-taaaabb
+  sAAABCD  = taaabcd-taaaabc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(2*sAAAABC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAAABB + sAABCDE)
   alpha_3_unique  = (1-d)*(sAAABCD)
@@ -1789,26 +1557,17 @@ predict6_7 = function(raaaabb, raaaabc, raabbcd, raabcde, rabcdef, k, d, kmercov
 {
   raaaaaa  = 1-raaaabb-raaaabc-raabbcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAAAABC  = raaaabc
-    sAABBCD  = raabbcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taaaabc  = (raaaaaa+raaaabb+raaaabc)**k
-    taabbcd  = (raaaaaa+raaaabb+raaaabc+raabbcd)**k
-    taabcde  = (raaaaaa+raaaabb+raaaabc+raabbcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAAAABC  = taaaabc-taaaabb
-    sAABBCD  = taabbcd-taaaabc
-    sAABCDE  = taabcde-taabbcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaaabc  = (raaaaaa+raaaabb+raaaabc)**k
+  taabbcd  = (raaaaaa+raaaabb+raaaabc+raabbcd)**k
+  taabcde  = (raaaaaa+raaaabb+raaaabc+raabbcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAAABC  = taaaabc-taaaabb
+  sAABBCD  = taabbcd-taaaabc
+  sAABCDE  = taabcde-taabbcd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(2*sAAAABC + 2*sAABBCD + 4*sAABCDE + 6*sABCDEF) + d*(4*sAAAAAA*sAAAABC + 4*sAAAABB*sAAAABC + 4*sAAAABC**2 + 4*sAAAAAA*sAABBCD + 4*sAAAABB*sAABBCD + 8*sAAAABC*sAABBCD + 4*sAABBCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 12*sAAAABC*sAABCDE + 12*sAABBCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 14*sAAAABC*sABCDEF + 14*sAABBCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAAABB + 2*sAABBCD + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 2*sAAAABB*sAAAABC + 2*sAAAAAA*sAABBCD + 4*sAAAABB*sAABBCD + 2*sAAAABC*sAABBCD + 2*sAABBCD**2 + 2*sAAAABB*sAABCDE + 2*sAABBCD*sAABCDE + 2*sAAAABB*sABCDEF + 2*sAABBCD*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(0) + d*(2*sAABBCD*sABCDEF + 2*sAABCDE*sABCDEF)
@@ -1849,26 +1608,17 @@ predict6_7_unique = function(raaaabb, raaaabc, raabbcd, raabcde, rabcdef, k, d, 
 {
   raaaaaa  = 1-raaaabb-raaaabc-raabbcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAAAABC  = raaaabc
-    sAABBCD  = raabbcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taaaabc  = (raaaaaa+raaaabb+raaaabc)**k
-    taabbcd  = (raaaaaa+raaaabb+raaaabc+raabbcd)**k
-    taabcde  = (raaaaaa+raaaabb+raaaabc+raabbcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAAAABC  = taaaabc-taaaabb
-    sAABBCD  = taabbcd-taaaabc
-    sAABCDE  = taabcde-taabbcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaaabc  = (raaaaaa+raaaabb+raaaabc)**k
+  taabbcd  = (raaaaaa+raaaabb+raaaabc+raabbcd)**k
+  taabcde  = (raaaaaa+raaaabb+raaaabc+raabbcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAAABC  = taaaabc-taaaabb
+  sAABBCD  = taabbcd-taaaabc
+  sAABCDE  = taabcde-taabbcd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(2*sAAAABC + 2*sAABBCD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAAABB + 2*sAABBCD + sAABCDE)
   alpha_3_unique  = (1-d)*(0)
@@ -1897,26 +1647,17 @@ predict6_8 = function(raaaabb, raaabcc, raaabcd, raabcde, rabcdef, k, d, kmercov
 {
   raaaaaa  = 1-raaaabb-raaabcc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAAABCC  = raaabcc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
-    taaabcd  = (raaaaaa+raaaabb+raaabcc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaabb+raaabcc+raaabcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAAABCC  = taaabcc-taaaabb
-    sAAABCD  = taaabcd-taaabcc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+  taaabcd  = (raaaaaa+raaaabb+raaabcc+raaabcd)**k
+  taabcde  = (raaaaaa+raaaabb+raaabcc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAABCC  = taaabcc-taaaabb
+  sAAABCD  = taaabcd-taaabcc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(sAAABCC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABCC + 2*sAAAABB*sAAABCC + 2*sAAABCC**2 + 6*sAAAAAA*sAAABCD + 6*sAAAABB*sAAABCD + 8*sAAABCC*sAAABCD + 6*sAAABCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 10*sAAABCC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 12*sAAABCC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAAABB + sAAABCC + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 2*sAAAAAA*sAAABCC + 4*sAAAABB*sAAABCC + 2*sAAABCC**2 + 2*sAAAABB*sAAABCD + 2*sAAABCC*sAAABCD + 2*sAAAABB*sAABCDE + 2*sAAABCC*sAABCDE + 2*sAAAABB*sABCDEF + 2*sAAABCC*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABCC + sAAABCD) + d*(2*sAABCDE*sABCDEF)
@@ -1957,26 +1698,17 @@ predict6_8_unique = function(raaaabb, raaabcc, raaabcd, raabcde, rabcdef, k, d, 
 {
   raaaaaa  = 1-raaaabb-raaabcc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAAABCC  = raaabcc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
-    taaabcd  = (raaaaaa+raaaabb+raaabcc+raaabcd)**k
-    taabcde  = (raaaaaa+raaaabb+raaabcc+raaabcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAAABCC  = taaabcc-taaaabb
-    sAAABCD  = taaabcd-taaabcc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+  taaabcd  = (raaaaaa+raaaabb+raaabcc+raaabcd)**k
+  taabcde  = (raaaaaa+raaaabb+raaabcc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAABCC  = taaabcc-taaaabb
+  sAAABCD  = taaabcd-taaabcc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(sAAABCC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAAABB + sAAABCC + sAABCDE)
   alpha_3_unique  = (1-d)*(sAAABCC + sAAABCD)
@@ -2005,26 +1737,17 @@ predict6_9 = function(raaaabb, raaabcc, raabcdd, raabcde, rabcdef, k, d, kmercov
 {
   raaaaaa  = 1-raaaabb-raaabcc-raabcdd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAAABCC  = raaabcc
-    sAABCDD  = raabcdd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
-    taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
-    taabcde  = (raaaaaa+raaaabb+raaabcc+raabcdd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAAABCC  = taaabcc-taaaabb
-    sAABCDD  = taabcdd-taaabcc
-    sAABCDE  = taabcde-taabcdd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+  taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
+  taabcde  = (raaaaaa+raaaabb+raaabcc+raabcdd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAABCC  = taaabcc-taaaabb
+  sAABCDD  = taabcdd-taaabcc
+  sAABCDE  = taabcde-taabcdd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(sAAABCC + 2*sAABCDD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABCC + 2*sAAAABB*sAAABCC + 2*sAAABCC**2 + 4*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 6*sAAABCC*sAABCDD + 4*sAABCDD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 10*sAAABCC*sAABCDE + 12*sAABCDD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 12*sAAABCC*sABCDEF + 14*sAABCDD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAAABB + sAAABCC + 2*sAABCDD + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 2*sAAAAAA*sAAABCC + 4*sAAAABB*sAAABCC + 2*sAAABCC**2 + 2*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 4*sAAABCC*sAABCDD + 2*sAABCDD**2 + 2*sAAAABB*sAABCDE + 2*sAAABCC*sAABCDE + 2*sAABCDD*sAABCDE + 2*sAAAABB*sABCDEF + 2*sAAABCC*sABCDEF + 2*sAABCDD*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABCC) + d*(2*sAABCDD*sABCDEF + 2*sAABCDE*sABCDEF)
@@ -2065,26 +1788,17 @@ predict6_9_unique = function(raaaabb, raaabcc, raabcdd, raabcde, rabcdef, k, d, 
 {
   raaaaaa  = 1-raaaabb-raaabcc-raabcdd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAAABCC  = raaabcc
-    sAABCDD  = raabcdd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
-    taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
-    taabcde  = (raaaaaa+raaaabb+raaabcc+raabcdd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAAABCC  = taaabcc-taaaabb
-    sAABCDD  = taabcdd-taaabcc
-    sAABCDE  = taabcde-taabcdd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+  taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
+  taabcde  = (raaaaaa+raaaabb+raaabcc+raabcdd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAABCC  = taaabcc-taaaabb
+  sAABCDD  = taabcdd-taaabcc
+  sAABCDE  = taabcde-taabcdd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(sAAABCC + 2*sAABCDD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAAABB + sAAABCC + 2*sAABCDD + sAABCDE)
   alpha_3_unique  = (1-d)*(sAAABCC)
@@ -2113,26 +1827,17 @@ predict6_10 = function(raaaabb, raaabcc, raabcdd, rabcdee, rabcdef, k, d, kmerco
 {
   raaaaaa  = 1-raaaabb-raaabcc-raabcdd-rabcdee-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAAABCC  = raaabcc
-    sAABCDD  = raabcdd
-    sABCDEE  = rabcdee
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
-    taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
-    tabcdee  = (raaaaaa+raaaabb+raaabcc+raabcdd+rabcdee)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAAABCC  = taaabcc-taaaabb
-    sAABCDD  = taabcdd-taaabcc
-    sABCDEE  = tabcdee-taabcdd
-    sABCDEF  = 1-tabcdee
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+  taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
+  tabcdee  = (raaaaaa+raaaabb+raaabcc+raabcdd+rabcdee)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAABCC  = taaabcc-taaaabb
+  sAABCDD  = taabcdd-taaabcc
+  sABCDEE  = tabcdee-taabcdd
+  sABCDEF  = 1-tabcdee
   alpha_1  = (1-d)*(sAAABCC + 2*sAABCDD + 4*sABCDEE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABCC + 2*sAAAABB*sAAABCC + 2*sAAABCC**2 + 4*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 6*sAAABCC*sAABCDD + 4*sAABCDD**2 + 6*sAAAAAA*sABCDEE + 6*sAAAABB*sABCDEE + 8*sAAABCC*sABCDEE + 10*sAABCDD*sABCDEE + 6*sABCDEE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 12*sAAABCC*sABCDEF + 14*sAABCDD*sABCDEF + 16*sABCDEE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAAABB + sAAABCC + 2*sAABCDD + sABCDEE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 2*sAAAAAA*sAAABCC + 4*sAAAABB*sAAABCC + 2*sAAABCC**2 + 2*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 4*sAAABCC*sAABCDD + 2*sAABCDD**2 + 2*sAAAAAA*sABCDEE + 4*sAAAABB*sABCDEE + 4*sAAABCC*sABCDEE + 4*sAABCDD*sABCDEE + 3*sABCDEE**2 + 2*sAAAABB*sABCDEF + 2*sAAABCC*sABCDEF + 2*sAABCDD*sABCDEF + 4*sABCDEE*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(sAAABCC) + d*(2*sAABCDD*sABCDEE + 2*sAABCDD*sABCDEF)
@@ -2173,26 +1878,17 @@ predict6_10_unique = function(raaaabb, raaabcc, raabcdd, rabcdee, rabcdef, k, d,
 {
   raaaaaa  = 1-raaaabb-raaabcc-raabcdd-rabcdee-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAAABCC  = raaabcc
-    sAABCDD  = raabcdd
-    sABCDEE  = rabcdee
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
-    taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
-    tabcdee  = (raaaaaa+raaaabb+raaabcc+raabcdd+rabcdee)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAAABCC  = taaabcc-taaaabb
-    sAABCDD  = taabcdd-taaabcc
-    sABCDEE  = tabcdee-taabcdd
-    sABCDEF  = 1-tabcdee
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taaabcc  = (raaaaaa+raaaabb+raaabcc)**k
+  taabcdd  = (raaaaaa+raaaabb+raaabcc+raabcdd)**k
+  tabcdee  = (raaaaaa+raaaabb+raaabcc+raabcdd+rabcdee)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAAABCC  = taaabcc-taaaabb
+  sAABCDD  = taabcdd-taaabcc
+  sABCDEE  = tabcdee-taabcdd
+  sABCDEF  = 1-tabcdee
   alpha_1_unique  = (1-d)*(sAAABCC + 2*sAABCDD + 4*sABCDEE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAAABB + sAAABCC + 2*sAABCDD + sABCDEE)
   alpha_3_unique  = (1-d)*(sAAABCC)
@@ -2221,26 +1917,17 @@ predict6_11 = function(raaaabb, raabbcc, raabbcd, raabcde, rabcdef, k, d, kmerco
 {
   raaaaaa  = 1-raaaabb-raabbcc-raabbcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAABBCC  = raabbcc
-    sAABBCD  = raabbcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
-    taabbcd  = (raaaaaa+raaaabb+raabbcc+raabbcd)**k
-    taabcde  = (raaaaaa+raaaabb+raabbcc+raabbcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAABBCC  = taabbcc-taaaabb
-    sAABBCD  = taabbcd-taabbcc
-    sAABCDE  = taabcde-taabbcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+  taabbcd  = (raaaaaa+raaaabb+raabbcc+raabbcd)**k
+  taabcde  = (raaaaaa+raaaabb+raabbcc+raabbcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAABBCC  = taabbcc-taaaabb
+  sAABBCD  = taabbcd-taabbcc
+  sAABCDE  = taabcde-taabbcd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(2*sAABBCD + 4*sAABCDE + 6*sABCDEF) + d*(4*sAAAAAA*sAABBCD + 4*sAAAABB*sAABBCD + 4*sAABBCC*sAABBCD + 4*sAABBCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 8*sAABBCC*sAABCDE + 12*sAABBCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 10*sAABBCC*sABCDEF + 14*sAABBCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAAABB + 3*sAABBCC + 2*sAABBCD + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 4*sAAAAAA*sAABBCC + 6*sAAAABB*sAABBCC + 4*sAABBCC**2 + 2*sAAAAAA*sAABBCD + 4*sAAAABB*sAABBCD + 6*sAABBCC*sAABBCD + 2*sAABBCD**2 + 2*sAAAABB*sAABCDE + 4*sAABBCC*sAABCDE + 2*sAABBCD*sAABCDE + 2*sAAAABB*sABCDEF + 4*sAABBCC*sABCDEF + 2*sAABBCD*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(0) + d*(2*sAABBCC*sABCDEF + 2*sAABBCD*sABCDEF + 2*sAABCDE*sABCDEF)
@@ -2281,26 +1968,17 @@ predict6_11_unique = function(raaaabb, raabbcc, raabbcd, raabcde, rabcdef, k, d,
 {
   raaaaaa  = 1-raaaabb-raabbcc-raabbcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAABBCC  = raabbcc
-    sAABBCD  = raabbcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
-    taabbcd  = (raaaaaa+raaaabb+raabbcc+raabbcd)**k
-    taabcde  = (raaaaaa+raaaabb+raabbcc+raabbcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAABBCC  = taabbcc-taaaabb
-    sAABBCD  = taabbcd-taabbcc
-    sAABCDE  = taabcde-taabbcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+  taabbcd  = (raaaaaa+raaaabb+raabbcc+raabbcd)**k
+  taabcde  = (raaaaaa+raaaabb+raabbcc+raabbcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAABBCC  = taabbcc-taaaabb
+  sAABBCD  = taabbcd-taabbcc
+  sAABCDE  = taabcde-taabbcd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(2*sAABBCD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAAABB + 3*sAABBCC + 2*sAABBCD + sAABCDE)
   alpha_3_unique  = (1-d)*(0)
@@ -2329,26 +2007,17 @@ predict6_12 = function(raaaabb, raabbcc, raabcdd, raabcde, rabcdef, k, d, kmerco
 {
   raaaaaa  = 1-raaaabb-raabbcc-raabcdd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAABBCC  = raabbcc
-    sAABCDD  = raabcdd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
-    taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
-    taabcde  = (raaaaaa+raaaabb+raabbcc+raabcdd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAABBCC  = taabbcc-taaaabb
-    sAABCDD  = taabcdd-taabbcc
-    sAABCDE  = taabcde-taabcdd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+  taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
+  taabcde  = (raaaaaa+raaaabb+raabbcc+raabcdd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAABBCC  = taabbcc-taaaabb
+  sAABCDD  = taabcdd-taabbcc
+  sAABCDE  = taabcde-taabcdd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(2*sAABCDD + 4*sAABCDE + 6*sABCDEF) + d*(4*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 4*sAABBCC*sAABCDD + 4*sAABCDD**2 + 8*sAAAAAA*sAABCDE + 8*sAAAABB*sAABCDE + 8*sAABBCC*sAABCDE + 12*sAABCDD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 10*sAABBCC*sABCDEF + 14*sAABCDD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAAABB + 3*sAABBCC + 2*sAABCDD + sAABCDE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 4*sAAAAAA*sAABBCC + 6*sAAAABB*sAABBCC + 4*sAABBCC**2 + 2*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 6*sAABBCC*sAABCDD + 2*sAABCDD**2 + 2*sAAAABB*sAABCDE + 4*sAABBCC*sAABCDE + 2*sAABCDD*sAABCDE + 2*sAAAABB*sABCDEF + 4*sAABBCC*sABCDEF + 2*sAABCDD*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(0) + d*(2*sAABBCC*sABCDEF + 2*sAABCDD*sABCDEF + 2*sAABCDE*sABCDEF)
@@ -2389,26 +2058,17 @@ predict6_12_unique = function(raaaabb, raabbcc, raabcdd, raabcde, rabcdef, k, d,
 {
   raaaaaa  = 1-raaaabb-raabbcc-raabcdd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAABBCC  = raabbcc
-    sAABCDD  = raabcdd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
-    taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
-    taabcde  = (raaaaaa+raaaabb+raabbcc+raabcdd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAABBCC  = taabbcc-taaaabb
-    sAABCDD  = taabcdd-taabbcc
-    sAABCDE  = taabcde-taabcdd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+  taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
+  taabcde  = (raaaaaa+raaaabb+raabbcc+raabcdd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAABBCC  = taabbcc-taaaabb
+  sAABCDD  = taabcdd-taabbcc
+  sAABCDE  = taabcde-taabcdd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(2*sAABCDD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAAABB + 3*sAABBCC + 2*sAABCDD + sAABCDE)
   alpha_3_unique  = (1-d)*(0)
@@ -2437,26 +2097,17 @@ predict6_13 = function(raaaabb, raabbcc, raabcdd, rabcdee, rabcdef, k, d, kmerco
 {
   raaaaaa  = 1-raaaabb-raabbcc-raabcdd-rabcdee-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAABBCC  = raabbcc
-    sAABCDD  = raabcdd
-    sABCDEE  = rabcdee
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
-    taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
-    tabcdee  = (raaaaaa+raaaabb+raabbcc+raabcdd+rabcdee)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAABBCC  = taabbcc-taaaabb
-    sAABCDD  = taabcdd-taabbcc
-    sABCDEE  = tabcdee-taabcdd
-    sABCDEF  = 1-tabcdee
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+  taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
+  tabcdee  = (raaaaaa+raaaabb+raabbcc+raabcdd+rabcdee)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAABBCC  = taabbcc-taaaabb
+  sAABCDD  = taabcdd-taabbcc
+  sABCDEE  = tabcdee-taabcdd
+  sABCDEF  = 1-tabcdee
   alpha_1  = (1-d)*(2*sAABCDD + 4*sABCDEE + 6*sABCDEF) + d*(4*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 4*sAABBCC*sAABCDD + 4*sAABCDD**2 + 6*sAAAAAA*sABCDEE + 6*sAAAABB*sABCDEE + 6*sAABBCC*sABCDEE + 10*sAABCDD*sABCDEE + 6*sABCDEE**2 + 10*sAAAAAA*sABCDEF + 10*sAAAABB*sABCDEF + 10*sAABBCC*sABCDEF + 14*sAABCDD*sABCDEF + 16*sABCDEE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAAABB + 3*sAABBCC + 2*sAABCDD + sABCDEE) + d*(2*sAAAAAA*sAAAABB + 2*sAAAABB**2 + 4*sAAAAAA*sAABBCC + 6*sAAAABB*sAABBCC + 4*sAABBCC**2 + 2*sAAAAAA*sAABCDD + 4*sAAAABB*sAABCDD + 6*sAABBCC*sAABCDD + 2*sAABCDD**2 + 2*sAAAAAA*sABCDEE + 4*sAAAABB*sABCDEE + 6*sAABBCC*sABCDEE + 4*sAABCDD*sABCDEE + 3*sABCDEE**2 + 2*sAAAABB*sABCDEF + 4*sAABBCC*sABCDEF + 2*sAABCDD*sABCDEF + 4*sABCDEE*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(0) + d*(2*sAABBCC*sABCDEE + 2*sAABCDD*sABCDEE + 2*sAABBCC*sABCDEF + 2*sAABCDD*sABCDEF)
@@ -2497,26 +2148,17 @@ predict6_13_unique = function(raaaabb, raabbcc, raabcdd, rabcdee, rabcdef, k, d,
 {
   raaaaaa  = 1-raaaabb-raabbcc-raabcdd-rabcdee-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAAABB  = raaaabb
-    sAABBCC  = raabbcc
-    sAABCDD  = raabcdd
-    sABCDEE  = rabcdee
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaaabb  = (raaaaaa+raaaabb)**k
-    taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
-    taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
-    tabcdee  = (raaaaaa+raaaabb+raabbcc+raabcdd+rabcdee)**k
-    sAAAAAA  = taaaaaa
-    sAAAABB  = taaaabb-taaaaaa
-    sAABBCC  = taabbcc-taaaabb
-    sAABCDD  = taabcdd-taabbcc
-    sABCDEE  = tabcdee-taabcdd
-    sABCDEF  = 1-tabcdee
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaaabb  = (raaaaaa+raaaabb)**k
+  taabbcc  = (raaaaaa+raaaabb+raabbcc)**k
+  taabcdd  = (raaaaaa+raaaabb+raabbcc+raabcdd)**k
+  tabcdee  = (raaaaaa+raaaabb+raabbcc+raabcdd+rabcdee)**k
+  sAAAAAA  = taaaaaa
+  sAAAABB  = taaaabb-taaaaaa
+  sAABBCC  = taabbcc-taaaabb
+  sAABCDD  = taabcdd-taabbcc
+  sABCDEE  = tabcdee-taabcdd
+  sABCDEF  = 1-tabcdee
   alpha_1_unique  = (1-d)*(2*sAABCDD + 4*sABCDEE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAAABB + 3*sAABBCC + 2*sAABCDD + sABCDEE)
   alpha_3_unique  = (1-d)*(0)
@@ -2545,26 +2187,17 @@ predict6_14 = function(raaabbb, raaabbc, raaabcd, raabcde, rabcdef, k, d, kmerco
 {
   raaaaaa  = 1-raaabbb-raaabbc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAABBB  = raaabbb
-    sAAABBC  = raaabbc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaabbb  = (raaaaaa+raaabbb)**k
-    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
-    taaabcd  = (raaaaaa+raaabbb+raaabbc+raaabcd)**k
-    taabcde  = (raaaaaa+raaabbb+raaabbc+raaabcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAABBB  = taaabbb-taaaaaa
-    sAAABBC  = taaabbc-taaabbb
-    sAAABCD  = taaabcd-taaabbc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaabbb  = (raaaaaa+raaabbb)**k
+  taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+  taaabcd  = (raaaaaa+raaabbb+raaabbc+raaabcd)**k
+  taabcde  = (raaaaaa+raaabbb+raaabbc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAABBB  = taaabbb-taaaaaa
+  sAAABBC  = taaabbc-taaabbb
+  sAAABCD  = taaabcd-taaabbc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(sAAABBC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 6*sAAAAAA*sAAABCD + 6*sAAABBB*sAAABCD + 8*sAAABBC*sAAABCD + 6*sAAABCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAABBB*sAABCDE + 10*sAAABBC*sAABCDE + 14*sAAABCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAABBB*sABCDEF + 12*sAAABBC*sABCDEF + 16*sAAABCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAABBC + sAABCDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 2*sAAABBC*sAAABCD + 2*sAAABBC*sAABCDE + 2*sAAABBC*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(2*sAAABBB + sAAABBC + sAAABCD) + d*(2*sAAAAAA*sAAABBB + 2*sAAABBB**2 + 2*sAAABBB*sAAABBC + 2*sAAABBB*sAAABCD + 2*sAAABBB*sAABCDE + 2*sAAABBB*sABCDEF + 2*sAABCDE*sABCDEF)
@@ -2605,26 +2238,17 @@ predict6_14_unique = function(raaabbb, raaabbc, raaabcd, raabcde, rabcdef, k, d,
 {
   raaaaaa  = 1-raaabbb-raaabbc-raaabcd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAABBB  = raaabbb
-    sAAABBC  = raaabbc
-    sAAABCD  = raaabcd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaabbb  = (raaaaaa+raaabbb)**k
-    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
-    taaabcd  = (raaaaaa+raaabbb+raaabbc+raaabcd)**k
-    taabcde  = (raaaaaa+raaabbb+raaabbc+raaabcd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAABBB  = taaabbb-taaaaaa
-    sAAABBC  = taaabbc-taaabbb
-    sAAABCD  = taaabcd-taaabbc
-    sAABCDE  = taabcde-taaabcd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaabbb  = (raaaaaa+raaabbb)**k
+  taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+  taaabcd  = (raaaaaa+raaabbb+raaabbc+raaabcd)**k
+  taabcde  = (raaaaaa+raaabbb+raaabbc+raaabcd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAABBB  = taaabbb-taaaaaa
+  sAAABBC  = taaabbc-taaabbb
+  sAAABCD  = taaabcd-taaabbc
+  sAABCDE  = taabcde-taaabcd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(sAAABBC + 3*sAAABCD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAABBC + sAABCDE)
   alpha_3_unique  = (1-d)*(2*sAAABBB + sAAABBC + sAAABCD)
@@ -2653,26 +2277,17 @@ predict6_15 = function(raaabbb, raaabbc, raabccd, raabcde, rabcdef, k, d, kmerco
 {
   raaaaaa  = 1-raaabbb-raaabbc-raabccd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAABBB  = raaabbb
-    sAAABBC  = raaabbc
-    sAABCCD  = raabccd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaabbb  = (raaaaaa+raaabbb)**k
-    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
-    taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
-    taabcde  = (raaaaaa+raaabbb+raaabbc+raabccd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAABBB  = taaabbb-taaaaaa
-    sAAABBC  = taaabbc-taaabbb
-    sAABCCD  = taabccd-taaabbc
-    sAABCDE  = taabcde-taabccd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaabbb  = (raaaaaa+raaabbb)**k
+  taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+  taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
+  taabcde  = (raaaaaa+raaabbb+raaabbc+raabccd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAABBB  = taaabbb-taaaaaa
+  sAAABBC  = taaabbc-taaabbb
+  sAABCCD  = taabccd-taaabbc
+  sAABCDE  = taabcde-taabccd
+  sABCDEF  = 1-taabcde
   alpha_1  = (1-d)*(sAAABBC + 2*sAABCCD + 4*sAABCDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 4*sAAAAAA*sAABCCD + 4*sAAABBB*sAABCCD + 6*sAAABBC*sAABCCD + 4*sAABCCD**2 + 8*sAAAAAA*sAABCDE + 8*sAAABBB*sAABCDE + 10*sAAABBC*sAABCDE + 12*sAABCCD*sAABCDE + 8*sAABCDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAABBB*sABCDEF + 12*sAAABBC*sABCDEF + 14*sAABCCD*sABCDEF + 18*sAABCDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAABBC + 2*sAABCCD + sAABCDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAABCCD + 2*sAAABBB*sAABCCD + 4*sAAABBC*sAABCCD + 2*sAABCCD**2 + 2*sAAABBC*sAABCDE + 2*sAABCCD*sAABCDE + 2*sAAABBC*sABCDEF + 2*sAABCCD*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(2*sAAABBB + sAAABBC) + d*(2*sAAAAAA*sAAABBB + 2*sAAABBB**2 + 2*sAAABBB*sAAABBC + 2*sAAABBB*sAABCCD + 2*sAAABBB*sAABCDE + 2*sAAABBB*sABCDEF + 2*sAABCCD*sABCDEF + 2*sAABCDE*sABCDEF)
@@ -2713,26 +2328,17 @@ predict6_15_unique = function(raaabbb, raaabbc, raabccd, raabcde, rabcdef, k, d,
 {
   raaaaaa  = 1-raaabbb-raaabbc-raabccd-raabcde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAABBB  = raaabbb
-    sAAABBC  = raaabbc
-    sAABCCD  = raabccd
-    sAABCDE  = raabcde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaabbb  = (raaaaaa+raaabbb)**k
-    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
-    taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
-    taabcde  = (raaaaaa+raaabbb+raaabbc+raabccd+raabcde)**k
-    sAAAAAA  = taaaaaa
-    sAAABBB  = taaabbb-taaaaaa
-    sAAABBC  = taaabbc-taaabbb
-    sAABCCD  = taabccd-taaabbc
-    sAABCDE  = taabcde-taabccd
-    sABCDEF  = 1-taabcde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaabbb  = (raaaaaa+raaabbb)**k
+  taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+  taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
+  taabcde  = (raaaaaa+raaabbb+raaabbc+raabccd+raabcde)**k
+  sAAAAAA  = taaaaaa
+  sAAABBB  = taaabbb-taaaaaa
+  sAAABBC  = taaabbc-taaabbb
+  sAABCCD  = taabccd-taaabbc
+  sAABCDE  = taabcde-taabccd
+  sABCDEF  = 1-taabcde
   alpha_1_unique  = (1-d)*(sAAABBC + 2*sAABCCD + 4*sAABCDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAABBC + 2*sAABCCD + sAABCDE)
   alpha_3_unique  = (1-d)*(2*sAAABBB + sAAABBC)
@@ -2761,26 +2367,17 @@ predict6_16 = function(raaabbb, raaabbc, raabccd, rabcdde, rabcdef, k, d, kmerco
 {
   raaaaaa  = 1-raaabbb-raaabbc-raabccd-rabcdde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAABBB  = raaabbb
-    sAAABBC  = raaabbc
-    sAABCCD  = raabccd
-    sABCDDE  = rabcdde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaabbb  = (raaaaaa+raaabbb)**k
-    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
-    taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
-    tabcdde  = (raaaaaa+raaabbb+raaabbc+raabccd+rabcdde)**k
-    sAAAAAA  = taaaaaa
-    sAAABBB  = taaabbb-taaaaaa
-    sAAABBC  = taaabbc-taaabbb
-    sAABCCD  = taabccd-taaabbc
-    sABCDDE  = tabcdde-taabccd
-    sABCDEF  = 1-tabcdde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaabbb  = (raaaaaa+raaabbb)**k
+  taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+  taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
+  tabcdde  = (raaaaaa+raaabbb+raaabbc+raabccd+rabcdde)**k
+  sAAAAAA  = taaaaaa
+  sAAABBB  = taaabbb-taaaaaa
+  sAAABBC  = taaabbc-taaabbb
+  sAABCCD  = taabccd-taaabbc
+  sABCDDE  = tabcdde-taabccd
+  sABCDEF  = 1-tabcdde
   alpha_1  = (1-d)*(sAAABBC + 2*sAABCCD + 4*sABCDDE + 6*sABCDEF) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 4*sAAAAAA*sAABCCD + 4*sAAABBB*sAABCCD + 6*sAAABBC*sAABCCD + 4*sAABCCD**2 + 6*sAAAAAA*sABCDDE + 6*sAAABBB*sABCDDE + 8*sAAABBC*sABCDDE + 10*sAABCCD*sABCDDE + 6*sABCDDE**2 + 10*sAAAAAA*sABCDEF + 10*sAAABBB*sABCDEF + 12*sAAABBC*sABCDEF + 14*sAABCCD*sABCDEF + 16*sABCDDE*sABCDEF + 10*sABCDEF**2)
   alpha_2  = (1-d)*(sAAABBC + 2*sAABCCD + sABCDDE) + d*(2*sAAAAAA*sAAABBC + 2*sAAABBB*sAAABBC + 2*sAAABBC**2 + 2*sAAAAAA*sAABCCD + 2*sAAABBB*sAABCCD + 4*sAAABBC*sAABCCD + 2*sAABCCD**2 + 2*sAAAAAA*sABCDDE + 2*sAAABBB*sABCDDE + 4*sAAABBC*sABCDDE + 4*sAABCCD*sABCDDE + 3*sABCDDE**2 + 2*sAAABBC*sABCDEF + 2*sAABCCD*sABCDEF + 4*sABCDDE*sABCDEF + sABCDEF**2)
   alpha_3  = (1-d)*(2*sAAABBB + sAAABBC) + d*(2*sAAAAAA*sAAABBB + 2*sAAABBB**2 + 2*sAAABBB*sAAABBC + 2*sAAABBB*sAABCCD + 2*sAAABBB*sABCDDE + 2*sAABCCD*sABCDDE + 2*sAAABBB*sABCDEF + 2*sAABCCD*sABCDEF)
@@ -2821,26 +2418,17 @@ predict6_16_unique = function(raaabbb, raaabbc, raabccd, rabcdde, rabcdef, k, d,
 {
   raaaaaa  = 1-raaabbb-raaabbc-raabccd-rabcdde-rabcdef
   if (raaaaaa < 0 || d > 1) {return(0)}
-  if (KMER_RATES) {
-    sAAAAAA  = raaaaaa
-    sAAABBB  = raaabbb
-    sAAABBC  = raaabbc
-    sAABCCD  = raabccd
-    sABCDDE  = rabcdde
-    sABCDEF  = rabcdef
-  } else {
-    taaaaaa  = (raaaaaa)**k
-    taaabbb  = (raaaaaa+raaabbb)**k
-    taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
-    taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
-    tabcdde  = (raaaaaa+raaabbb+raaabbc+raabccd+rabcdde)**k
-    sAAAAAA  = taaaaaa
-    sAAABBB  = taaabbb-taaaaaa
-    sAAABBC  = taaabbc-taaabbb
-    sAABCCD  = taabccd-taaabbc
-    sABCDDE  = tabcdde-taabccd
-    sABCDEF  = 1-tabcdde
-  }
+  taaaaaa  = (raaaaaa)**k
+  taaabbb  = (raaaaaa+raaabbb)**k
+  taaabbc  = (raaaaaa+raaabbb+raaabbc)**k
+  taabccd  = (raaaaaa+raaabbb+raaabbc+raabccd)**k
+  tabcdde  = (raaaaaa+raaabbb+raaabbc+raabccd+rabcdde)**k
+  sAAAAAA  = taaaaaa
+  sAAABBB  = taaabbb-taaaaaa
+  sAAABBC  = taaabbc-taaabbb
+  sAABCCD  = taabccd-taaabbc
+  sABCDDE  = tabcdde-taabccd
+  sABCDEF  = 1-tabcdde
   alpha_1_unique  = (1-d)*(sAAABBC + 2*sAABCCD + 4*sABCDDE + 6*sABCDEF)
   alpha_2_unique  = (1-d)*(sAAABBC + 2*sAABCCD + sABCDDE)
   alpha_3_unique  = (1-d)*(2*sAAABBB + sAAABBC)

@@ -22,36 +22,12 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   }
   d_max = 1
   r_min = 0.00001
-  r_initial = 0.001
   if (top==0) {
     p_to_num_r = c(0, 1, 2, 4, 6, 10)
   } else {
     p_to_num_r = c(0, 1, 2, 3, 4, 5)
   }
   num_r = p_to_num_r[p]
-  if (r_inits!=-1) {
-    r_initials = unlist(lapply(strsplit(r_inits,","),as.numeric))
-    if (length(r_initials)!=num_r) {
-      stop("Incorrect number of initial rates supplied.")
-    }
-  } else {
-    if (ALPHA_RATES) {
-      r_initials = c(12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1) #This doesn't work yet.
-    } else if (KMER_RATES) {
-      r_initials = c(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05)
-    } else {
-      r_initials = rep(r_initial, num_r)
-      #r_initials = c(0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.010, 0.011, 0.012, 0.013, 0.014, 0.015)
-      #r_initials = c(0.010, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004, 0.003, 0.002, 0.001)
-    }
-  }
-  r_start = vector("list", num_r)
-  if (p > 1) {
-    names(r_start) = paste("r", 1:(num_r), sep="")
-    for (i in 1:(num_r)) {
-      r_start[[paste("r",i,sep="")]] = r_initials[i]
-    }
-  }
   r_max = 1
   kmercov_min = 0
   kmercov_initial = estKmercov
@@ -70,8 +46,6 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
     r_text = paste(paste(lapply(1:(num_r), function(x) paste("r", as.character(x), sep="")), collapse=", "), ", ")
   }
   if (TRANSFORM) {
-    #x = head(x,100)
-    #y_transform = head(x,100)*head(y,100)
     y_transform = as.numeric(x)**transform_exp*as.numeric(y)
     formula = as.formula(paste("y_transform ~ as.numeric(x)**transform_exp*length*predict",p,"_",top,"(",r_text, "k, d, kmercov, bias, x)",sep=""))
   } else {
@@ -80,7 +54,17 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
 
   if (VERBOSE) {cat("trying nlsLM algorithm (Levenberg-Marquardt)\n")}
 
-  for (r_initials in list(rep(0.001, num_r), 0.001*(1:num_r), 0.001*(num_r:1), rep(0.01, num_r), 0.01*(1:num_r), 0.01*(num_r:1))) {
+  if (r_inits!=-1) {
+    r_initials = unlist(lapply(strsplit(r_inits,","),as.numeric))
+    if (length(r_initials)!=num_r) {
+      stop("Incorrect number of initial rates supplied.")
+    }
+    r_initials_list = list(r_initials)
+  } else {
+    r_initials_list = list(rep(0.001, num_r), 0.001*(1:num_r), 0.001*(num_r:1), rep(0.01, num_r), 0.01*(1:num_r), 0.01*(num_r:1))
+  }
+
+  for (r_initials in r_initials_list) {
 
     model1 = NULL
     r_start = vector("list", num_r)

@@ -101,14 +101,20 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   ## Plot the distribution, and hopefully with the model fit
   if (TRANSFORM) {
     kmer_hist_plot = kmer_hist_transform
+    if (transform_exp == 1) {
+      ylabel = "Coverage*Frequency"
+    } else {
+      ylabel = paste("Coverage^", transform_exp, "*Frequency", sep="")
+    }
   } else {
     kmer_hist_plot = kmer_hist_orig
+    ylabel = "Frequency"
   }
   png(paste(foldername, "/", arguments$name_prefix, "_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,5.1,2.1))
   plot(kmer_hist_plot, type="n", main="GenomeScope Profile\n\n\n",
-  xlab="Coverage", ylab="Frequency", ylim=c(0,y_limit), xlim=c(0,x_limit),
+  xlab="Coverage", ylab=ylabel, ylim=c(0,y_limit), xlim=c(0,x_limit),
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   #rect(0, 0, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
   rect(0, 0, x_limit*1.1 , y_limit*1.1, col=COLOR_BGCOLOR)
@@ -123,7 +129,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,5.1,2.1))
   plot(kmer_hist_plot, type="n", main="GenomeScope Profile\n\n\n",
-  xlab="Coverage", ylab="Frequency", log="xy",
+  xlab="Coverage", ylab=ylabel, log="xy",
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   rect(1e-10, 1e-10, max(kmer_hist_orig[,1])*10 , max(kmer_hist_orig[,2])*10, col=COLOR_BGCOLOR)
   points(kmer_hist_plot, type="h", col=COLOR_HIST, lwd=2)
@@ -252,7 +258,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
         unique_hist = eval(parse(text = paste("amlen*predict5_", top, "_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], k, amd, akcov, adups, x)", sep="")))
       }
     }
-    if (p==6) #need to change
+    if (p==6)
     {
       if (top==0) {
         unique_hist = amlen*predict6_0_unique(ahets[[1]], ahets[[2]], ahets[[3]], ahets[[4]], ahets[[5]], ahets[[6]], ahets[[7]], ahets[[8]], ahets[[9]], ahets[[10]], k, amd, akcov, adups, x)
@@ -316,13 +322,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       if (top==0) {
         hetline = paste0("aaaaa:", format(100*ahomo,      digits=3), "% ",
                          "aaaab:", format(100*ahets[[1]], digits=3), "% ",
-                         "aaabb:", format(100*ahets[[2]], digits=3), "% ",'\n',
-                         "aaabc:", format(100*ahets[[3]], digits=3), "% ",
+                         "aaabb:", format(100*ahets[[2]], digits=3), "% ",
+                         "aaabc:", format(100*ahets[[3]], digits=3), "% ",'\n',
                          "aabbc:", format(100*ahets[[4]], digits=3), "% ",
-                         "aabcc:", format(100*ahets[[5]], digits=3), "% ",'\n',
-                         "aabcd:", format(100*ahets[[6]], digits=3), "% ")
-                         #"abcdd:", format(100*ahets[[7]], digits=3), "% ",
-                         #"abcde:", format(100*ahets[[8]], digits=3), "%")
+                         "aabcd:", format(100*ahets[[5]], digits=3), "% ",
+                         "abcde:", format(100*ahets[[6]], digits=3), "%")
       } else {
         hetline = paste0("aaaaa:",                                                      format(100*ahomo,      digits=3), "% ",
                          switch(top, "aaaab:", "aaaab:", "aaabb:", "aaabb:", "aaabb:"), format(100*ahets[[1]], digits=3), "% ",
@@ -339,16 +343,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
                          "aaabbb:", format(100*ahets[[3]], digits=3), "% ",
                          "aaaabc:", format(100*ahets[[4]], digits=3), "% ",
                          "aaabbc:", format(100*ahets[[5]], digits=3), "% ",'\n',
-                         "aaabcc:", format(100*ahets[[6]], digits=3), "% ",
-                         "aabbcc:", format(100*ahets[[7]], digits=3), "% ",
-                         "aaabcd:", format(100*ahets[[8]], digits=3), "% ",
-                         "aabbcd:", format(100*ahets[[9]], digits=3), "% ",
-                         "aabccd:", format(100*ahets[[10]], digits=3), "% ")#,'\n',
-                         #"aabcdd:", format(100*ahets[[11]], digits=3), "% ",
-                         #"aabcde:", format(100*ahets[[12]], digits=3), "% ",
-                         #"abcdde:", format(100*ahets[[13]], digits=3), "% ",
-                         #"abcdee:", format(100*ahets[[14]], digits=3), "% ",
-                         #"abcdef:", format(100*ahets[[15]], digits=3), "%")
+                         "aabbcc:", format(100*ahets[[6]], digits=3), "% ",
+                         "aaabcd:", format(100*ahets[[7]], digits=3), "% ",
+                         "aabbcd:", format(100*ahets[[8]], digits=3), "% ",
+                         "aabcde:", format(100*ahets[[9]], digits=3), "% ",
+                         "abcdef:", format(100*ahets[[10]], digits=3), "%")
       } else {
         hetline = paste0("aaaaaa:", format(100*ahomo, digits=3), "% ",
                          switch(top, "aaaaab:", "aaaaab:", "aaaaab:", "aaaaab:", "aaaaab:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaaabb:", "aaabbb:", "aaabbb:", "aaabbb:"), format(100*ahets[[1]], digits=3), "% ",
@@ -536,11 +535,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   cat(paste("GenomeScope version 2.0", sep=""), file=summaryFile, sep="\n")
   cat(paste("input file = ", arguments$input, sep=""), file=summaryFile, sep="\n", append=TRUE)
   cat(paste("output directory = ", arguments$output, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  cat(paste("p = ", p,sep=""), file=summaryFile, sep="\n", append=TRUE)
+  cat(paste("k = ", k,sep=""), file=summaryFile, sep="\n", append=TRUE)
   if (arguments$name_prefix!="OUTPUT") {
     cat(paste("name prefix = ", arguments$name_prefix, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  cat(paste("k = ", k,sep=""), file=summaryFile, sep="\n", append=TRUE)
-  cat(paste("p = ", p,sep=""), file=summaryFile, sep="\n", append=TRUE)
   if (arguments$lambda!=-1) {
     cat(paste("initial kmercov estimate = ", arguments$lambda, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
@@ -550,11 +549,17 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (VERBOSE) {
     cat(paste("VERBOSE set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (topology!=-1) {
+  if (NO_UNIQUE_SEQUENCE) {
+    cat(paste("NO_UNIQUE_SEQUENCE set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (topology!=0) {
     cat(paste("topology = ", topology, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (TESTING) {
-    cat(paste("TESTING set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  if (d_init!=-1) {
+    cat(paste("initial repetitiveness = ", d_init, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
+  if (r_inits!=-1) {
+    cat(paste("initial heterozygosities = ", r_inits, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (TRANSFORM) {
     cat(paste("TRANSFORM set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
@@ -562,17 +567,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (transform_exp != 1) {
     cat(paste("TRANSFORM_EXP = ", transform_exp, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (KMER_RATES) {
-    cat(paste("KMER_RATES set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  if (TESTING) {
+    cat(paste("TESTING set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (ALPHA_RATES) {
-    cat(paste("ALPHA_RATES set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
+  if (TRUE_PARAMS != -1) {
+    cat(paste("TRUE_PARAMS = ", TRUE_PARAMS, sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
-  if (r_inits!=-1) {
-    cat(paste("initial rates = ", r_inits, sep=""), file=summaryFile, sep="\n", append=TRUE)
-  }
-  if (d_init!=-1) {
-    cat(paste("initial repetitiveness = ", d_init, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  if (TRACE_FLAG) {
+    cat(paste("TRACE_FLAG set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   cat(paste("\n",sprintf(format_column_1,"property"),               sprintf(format_column_2,"min"),                              sprintf(format_column_3,"max"), sep=""),                                     file=summaryFile, sep="\n", append=TRUE)
   if (p==1)
@@ -611,10 +613,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     cat(paste(sprintf(format_column_1, switch(top+1,"aaabc", "aabcd", "aabcd", "aabcd", "aabcd", "abcdd")),                     sprintf(format_column_2,percentage_format(hets[[3]][1])),         sprintf(format_column_3,percentage_format(hets[[3]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1, switch(top+1,"aabbc", "abcde", "abcde", "abcde", "abcde", "abcde")),                     sprintf(format_column_2,percentage_format(hets[[4]][1])),         sprintf(format_column_3,percentage_format(hets[[4]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     if (top == 0) {
-      cat(paste(sprintf(format_column_1,"aabcc"),                     sprintf(format_column_2,percentage_format(hets[[5]][1])),         sprintf(format_column_3,percentage_format(hets[[5]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-      cat(paste(sprintf(format_column_1,"aabcd"),                     sprintf(format_column_2,percentage_format(hets[[6]][1])),         sprintf(format_column_3,percentage_format(hets[[6]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-      #cat(paste(sprintf(format_column_1,"abcdd"),                     sprintf(format_column_2,percentage_format(hets[[7]][1])),         sprintf(format_column_3,percentage_format(hets[[7]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-      #cat(paste(sprintf(format_column_1,"abcde"),                     sprintf(format_column_2,percentage_format(hets[[8]][1])),         sprintf(format_column_3,percentage_format(hets[[8]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+      cat(paste(sprintf(format_column_1,"aabcd"),                     sprintf(format_column_2,percentage_format(hets[[5]][1])),         sprintf(format_column_3,percentage_format(hets[[5]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+      cat(paste(sprintf(format_column_1,"abcde"),                     sprintf(format_column_2,percentage_format(hets[[6]][1])),         sprintf(format_column_3,percentage_format(hets[[6]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     }
   }
   if (p==6)
@@ -627,16 +627,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     cat(paste(sprintf(format_column_1, switch(top+1, "aaaabc", "aabcde:", "aabcde:", "aabcde:", "aabcde:", "abcdde:", "aabcde:", "aabcde:", "aabcde:", "aabcde:", "abcdee:", "aabcde:", "aabcde:", "abcdee:", "aabcde:", "aabcde:", "abcdde:")),                    sprintf(format_column_2,percentage_format(hets[[4]][1])),         sprintf(format_column_3,percentage_format(hets[[4]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     cat(paste(sprintf(format_column_1, switch(top+1, "aaabbc", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:", "abcdef:")),                    sprintf(format_column_2,percentage_format(hets[[5]][1])),         sprintf(format_column_3,percentage_format(hets[[5]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
     if (top==0) {
-      cat(paste(sprintf(format_column_1,"aaabcc"),                    sprintf(format_column_2,percentage_format(hets[[6]][1])),         sprintf(format_column_3,percentage_format(hets[[6]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-      cat(paste(sprintf(format_column_1,"aabbcc"),                    sprintf(format_column_2,percentage_format(hets[[7]][1])),         sprintf(format_column_3,percentage_format(hets[[7]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-      cat(paste(sprintf(format_column_1,"aaabcd"),                    sprintf(format_column_2,percentage_format(hets[[8]][1])),         sprintf(format_column_3,percentage_format(hets[[8]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-      cat(paste(sprintf(format_column_1,"aabbcd"),                    sprintf(format_column_2,percentage_format(hets[[9]][1])),         sprintf(format_column_3,percentage_format(hets[[9]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
-      cat(paste(sprintf(format_column_1,"aabccd"),                    sprintf(format_column_2,percentage_format(hets[[10]][1])),        sprintf(format_column_3,percentage_format(hets[[10]][2])), sep=""),               file=summaryFile, sep="\n", append=TRUE)
-      #cat(paste(sprintf(format_column_1,"aabcdd"),                    sprintf(format_column_2,percentage_format(hets[[11]][1])),        sprintf(format_column_3,percentage_format(hets[[11]][2])), sep=""),               file=summaryFile, sep="\n", append=TRUE)
-      #cat(paste(sprintf(format_column_1,"aabcde"),                    sprintf(format_column_2,percentage_format(hets[[12]][1])),        sprintf(format_column_3,percentage_format(hets[[12]][2])), sep=""),               file=summaryFile, sep="\n", append=TRUE)
-      #cat(paste(sprintf(format_column_1,"abcdde"),                    sprintf(format_column_2,percentage_format(hets[[13]][1])),        sprintf(format_column_3,percentage_format(hets[[13]][2])), sep=""),               file=summaryFile, sep="\n", append=TRUE)
-      #cat(paste(sprintf(format_column_1,"abcdee"),                    sprintf(format_column_2,percentage_format(hets[[14]][1])),        sprintf(format_column_3,percentage_format(hets[[14]][2])), sep=""),               file=summaryFile, sep="\n", append=TRUE)
-      #cat(paste(sprintf(format_column_1,"abcdef"),                    sprintf(format_column_2,percentage_format(hets[[15]][1])),        sprintf(format_column_3,percentage_format(hets[[15]][2])), sep=""),               file=summaryFile, sep="\n", append=TRUE)
+      cat(paste(sprintf(format_column_1,"aabbcc"),                    sprintf(format_column_2,percentage_format(hets[[6]][1])),         sprintf(format_column_3,percentage_format(hets[[6]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+      cat(paste(sprintf(format_column_1,"aaabcd"),                    sprintf(format_column_2,percentage_format(hets[[7]][1])),         sprintf(format_column_3,percentage_format(hets[[7]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+      cat(paste(sprintf(format_column_1,"aabbcd"),                    sprintf(format_column_2,percentage_format(hets[[8]][1])),         sprintf(format_column_3,percentage_format(hets[[8]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+      cat(paste(sprintf(format_column_1,"aabcde"),                    sprintf(format_column_2,percentage_format(hets[[9]][1])),         sprintf(format_column_3,percentage_format(hets[[9]][2])), sep=""),                file=summaryFile, sep="\n", append=TRUE)
+      cat(paste(sprintf(format_column_1,"abcdef"),                    sprintf(format_column_2,percentage_format(hets[[10]][1])),        sprintf(format_column_3,percentage_format(hets[[10]][2])), sep=""),               file=summaryFile, sep="\n", append=TRUE)
     }
   }
   cat(paste(sprintf(format_column_1,"Genome Haploid Length"), sprintf(format_column_2,bp_format(total_len[2])),                  sprintf(format_column_3,bp_format(total_len[1])), sep=""),                   file=summaryFile, sep="\n", append=TRUE)

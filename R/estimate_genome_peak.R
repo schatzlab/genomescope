@@ -45,8 +45,6 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov
   }
   estLength1 = numofKmers/estKmercov1
 
-  #if (VERBOSE) {cat(paste("trying with kmercov: ", estKmercov1, "\n"))}
-
   nls00 = NULL
   peak_indices = 1:num_peak_indices
   for (i in peak_indices) {
@@ -62,45 +60,12 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov
       if (VERBOSE) {cat(paste("trying with topology: ", top, "\n"))}
       top_count = top_count + 1
       nls1 = nls_peak(x, y, k, p, top, estKmercov2, estLength2, MAX_ITERATIONS)
-      #if (VERBOSE) {print(summary(nls1))}
       nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
     }
     if (i < num_peak_indices) { #if this is not the last evaluation
       nls00 = eval_model(kmer_hist_orig, nls00, nls0, p, round, foldername, arguments)[[1]]
     }
   }
-#  for (top in topologies) {
-#    top_count = top_count + 1
-#    nls1 = nls_peak(x, y, k, p, top, estKmercov1, estLength1, MAX_ITERATIONS)
-#    if (top_count < num_topologies || (estKmercov==-1 && p>=2)) { #if this is not the last evaluation
-#      nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
-#    }
 
-#    if (VERBOSE) {print(summary(nls0))}
-
-#    if (estKmercov==-1 && p>=2) {
-#      ploidies = 2:p
-#      for (i in ploidies) {
-#        ## Next we see what happens when we set the estimated kmer coverage to be 1/i times the x-coordinate where the max peak occurs (2 <= i <= p)
-#        estKmercov2  = estKmercov1 / i
-#        estLength2 = numofKmers/estKmercov2
-
-#        if (VERBOSE) {cat(paste("trying with kmercov: ", estKmercov2, "\n"))}
-
-#        nls1 = nls_peak(x, y, k, p, top, estKmercov2, estLength2, MAX_ITERATIONS)
-
-#        if (VERBOSE) {print(summary(nls1))}
-
-#        if (i<p || top_count < num_topologies) { #if this is not the last evaluation
-#          nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
-#        }
-#      }
-#      #nls0 = eval_model(kmer_hist_orig, nls0, nls1, p, round, foldername, arguments)[[1]]
-#    }
-##    else {
-##      return(eval_model(kmer_hist_orig, nls0, nls0, p, round, foldername, arguments))
-##    }
-##    
-#  }
   return(eval_model(kmer_hist_orig, nls00, nls0, p, round, foldername, arguments))
 }
