@@ -112,7 +112,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   }
   png(paste(foldername, "/", arguments$name_prefix, "_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
-  par(mar = c(5.1,4.1,5.1,2.1))
+  par(mar = c(5.1,4.1,6.1,2.1))
   plot(kmer_hist_plot, type="n", main="GenomeScope Profile\n\n\n",
   xlab="Coverage", ylab=ylabel, ylim=c(0,y_limit), xlim=c(0,x_limit),
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
@@ -127,7 +127,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   ## Make a second plot in log space over entire range
   png(paste(foldername, "/", arguments$name_prefix, "_plot.log.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
-  par(mar = c(5.1,4.1,5.1,2.1))
+  par(mar = c(5.1,4.1,6.1,2.1))
   plot(kmer_hist_plot, type="n", main="GenomeScope Profile\n\n\n",
   xlab="Coverage", ylab=ylabel, log="xy",
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
