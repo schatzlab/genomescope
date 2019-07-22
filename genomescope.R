@@ -70,8 +70,7 @@ parser$add_argument("--no_unique_sequence", action="store_true", default=FALSE, 
 parser$add_argument("-t", "--topology", type = "integer", default = 0, help = "ADVANCED: flag for topology for model to use")
 parser$add_argument("--initial_repetitiveness", type="character", default = -1, help = "ADVANCED: flag to set initial value for repetitiveness")
 parser$add_argument("--initial_heterozygosities", type="character", default = -1, help = "ADVANCED: flag to set initial values for nucleotide heterozygosity rates")
-parser$add_argument("--transform", action="store_true", default=FALSE, help = "ADVANCED: flag to fit to transformed (x**transform_exp*y vs. x) kmer histogram")
-parser$add_argument("--transform_exp", type="integer", default=1, help = "ADVANCED: parameter for the exponent when fitting a transformed histogram [default 1]")
+parser$add_argument("--transform_exp", type="integer", default=1, help = "ADVANCED: parameter for the exponent when fitting a transformed (x**transform_exp*y vs. x) kmer histogram [default 1]")
 parser$add_argument("--testing", action="store_true", default=FALSE, help = "ADVANCED: flag to create testing.tsv file with model parameters")
 parser$add_argument("--true_params", type="character", default = -1, help = "ADVANCED: flag to state true simulated parameters for testing mode")
 parser$add_argument("--trace_flag", action="store_true", default=FALSE, help = "ADVANCED: flag to turn on printing of iteration progress of nlsLM function")
@@ -87,7 +86,7 @@ if (arguments$version) {
 if (is.null(arguments$input) | is.null(arguments$output)) {
   cat("USAGE: genomescope.R -i input_histogram_file -o output_dir -p ploidy -k kmer_length\n")
   cat("OPTIONAL PARAMETERS: -n 'name_prefix' -l lambda -m max_kmercov --verbose --no_unique_sequence\n")
-  cat("ADVANCED PARAMETERS: -t topology --initial_repetitiveness init_d --initial_heterozygosities init_r1,init_r2,...,init_rx --transform --transform_exp t_exp --testing --true_params --trace_flag\n")
+  cat("ADVANCED PARAMETERS: -t topology --initial_repetitiveness init_d --initial_heterozygosities init_r1,init_r2,...,init_rx --transform_exp t_exp --testing --true_params --trace_flag\n")
   cat("HELP: genomescope.R --help\n")
 } else {
 
@@ -103,7 +102,6 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   topology    <- arguments$topology
   d_init      <- arguments$initial_repetitiveness
   r_inits     <- arguments$initial_heterozygosities
-  TRANSFORM   <- arguments$transform
   transform_exp <- arguments$transform_exp
   TESTING     <- arguments$testing
   TRUE_PARAMS <- arguments$true_params
@@ -129,10 +127,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   cat("starting", file=progressFilename, sep="\n")
 
   ## try to find the local minimum between errors and the first (heterozygous) peak
-  start <- tail(which(kmer_prof[1:TYPICAL_ERROR,2]==min(kmer_prof[1:TYPICAL_ERROR,2])),n=1)
-  if (TRANSFORM) {
-    start <- tail(which(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1])**transform_exp==min(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1]**transform_exp))),n=1)
-  }
+  start <- tail(which(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1])**transform_exp==min(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1]**transform_exp))),n=1)
 
   maxCovIndex = -1
 

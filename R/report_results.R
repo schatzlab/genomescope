@@ -22,25 +22,30 @@ X_format<-function(num) {paste(signif(num,4),"X",sep="")}
 report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, arguments, IN_VERBOSE) {
   
   x=kmer_hist_orig[[1]]
-  y=kmer_hist_orig[[2]]
-  if (TRANSFORM) {
-    y = as.numeric(x)**transform_exp*as.numeric(y)
-    kmer_hist_transform = kmer_hist_orig
-    kmer_hist_transform$V2 = as.numeric(kmer_hist_transform$V1)**transform_exp * as.numeric(kmer_hist_transform$V2)
-  }
+  y_orig=kmer_hist_orig[[2]]
+  y = as.numeric(x)**transform_exp*as.numeric(y_orig)
+  kmer_hist_transform = kmer_hist_orig
+  kmer_hist_transform$V2 = as.numeric(kmer_hist_transform$V1)**transform_exp * as.numeric(kmer_hist_transform$V2)
   model = container[[1]]
 
   #automatically zoom into the relevant regions of the plot, ignore first 15 positions
   xmax=length(x)
+  start_orig=which(y_orig == min(y_orig[1:TYPICAL_ERROR]))
   start=which(y == min(y[1:TYPICAL_ERROR]))
   zoomx=x[start:(xmax-1)]
+  zoomy_orig=y_orig[start_orig:(xmax-1)]
   zoomy=y[start:(xmax-1)]
 
   ## allow for a little space above max value past the noise
+  y_limit_orig = max(zoomy_orig[start_orig:length(zoomy_orig)])*1.1
   y_limit = max(zoomy[start:length(zoomy)])*1.1
 
+  x_limit_orig = which(y_orig == max(y_orig[start_orig:length(zoomx)])) * 3
   x_limit = which(y == max(y[start:length(zoomx)])) * 3
 
+  if (min(zoomy_orig) > zoomy_orig[1]){
+    x_limit_orig=max(which(zoomy_orig<zoomy_orig[1])[2],600)
+  }
   if (min(zoomy) > zoomy[1]){
     x_limit=max(which(zoomy<zoomy[1])[2],600)
   }
@@ -49,6 +54,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   {
     model_sum=summary(model)
     kcov = min_max(model_sum$coefficients['kmercov',])[1]
+    x_limit_orig = max(kcov*(2*p+1.1), x_limit_orig)
     x_limit = max(kcov*(2*p+1.1), x_limit)
     if (model$top==0) {
       p_to_num_r = c(0, 1, 2, 4, 6, 10)
@@ -99,41 +105,63 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   resolution=300
 
   ## Plot the distribution, and hopefully with the model fit
-  if (TRANSFORM) {
-    kmer_hist_plot = kmer_hist_transform
-    if (transform_exp == 1) {
-      ylabel = "Coverage*Frequency"
-    } else {
-      ylabel = paste("Coverage^", transform_exp, "*Frequency", sep="")
-    }
+  ylabel_orig = "Frequency"
+  if (transform_exp == 1) {
+    ylabel_transform = "Coverage*Frequency"
   } else {
-    kmer_hist_plot = kmer_hist_orig
-    ylabel = "Frequency"
+    ylabel_transform = paste("Coverage^", transform_exp, "*Frequency", sep="")
   }
-  png(paste(foldername, "/", arguments$name_prefix, "_plot.png", sep=""),
+  png(paste(foldername, "/", arguments$name_prefix, "_linear_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,6.1,2.1))
-  plot(kmer_hist_plot, type="n", main="GenomeScope Profile\n\n\n",
-  xlab="Coverage", ylab=ylabel, ylim=c(0,y_limit), xlim=c(0,x_limit),
+  plot(kmer_hist_orig, type="n", main="GenomeScope Profile\n\n\n",
+  xlab="Coverage", ylab=ylabel_orig, ylim=c(0,y_limit_orig), xlim=c(0,x_limit_orig),
+  cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
+  #rect(0, 0, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
+  rect(0, 0, x_limit_orig*1.1 , y_limit_orig*1.1, col=COLOR_BGCOLOR)
+  points(kmer_hist_orig, type="h", col=COLOR_HIST, lwd=2)
+#  if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
+#    abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
+#  }
+  box(col="black")
+
+  png(paste(foldername, "/", arguments$name_prefix, "_transformed_linear_plot.png", sep=""),
+  width=plot_size, height=plot_size, res=resolution)
+  par(mar = c(5.1,4.1,6.1,2.1))
+  plot(kmer_hist_transform, type="n", main="GenomeScope Profile\n\n\n",
+  xlab="Coverage", ylab=ylabel_transform, ylim=c(0,y_limit), xlim=c(0,x_limit),
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   #rect(0, 0, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
   rect(0, 0, x_limit*1.1 , y_limit*1.1, col=COLOR_BGCOLOR)
-  points(kmer_hist_plot, type="h", col=COLOR_HIST, lwd=2)
+  points(kmer_hist_transform, type="h", col=COLOR_HIST, lwd=2)
 #  if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
 #    abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
 #  }
   box(col="black")
 
   ## Make a second plot in log space over entire range
-  png(paste(foldername, "/", arguments$name_prefix, "_plot.log.png", sep=""),
+  png(paste(foldername, "/", arguments$name_prefix, "_log_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,6.1,2.1))
-  plot(kmer_hist_plot, type="n", main="GenomeScope Profile\n\n\n",
-  xlab="Coverage", ylab=ylabel, log="xy",
+  plot(kmer_hist_orig, type="n", main="GenomeScope Profile\n\n\n",
+  xlab="Coverage", ylab=ylabel_orig, log="xy",
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   rect(1e-10, 1e-10, max(kmer_hist_orig[,1])*10 , max(kmer_hist_orig[,2])*10, col=COLOR_BGCOLOR)
-  points(kmer_hist_plot, type="h", col=COLOR_HIST, lwd=2)
+  points(kmer_hist_orig, type="h", col=COLOR_HIST, lwd=2)
   if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
+    abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
+  }
+  box(col="black")
+
+  png(paste(foldername, "/", arguments$name_prefix, "_transformed_log_plot.png", sep=""),
+  width=plot_size, height=plot_size, res=resolution)
+  par(mar = c(5.1,4.1,6.1,2.1))
+  plot(kmer_hist_transform, type="n", main="GenomeScope Profile\n\n\n",
+  xlab="Coverage", ylab=ylabel_transform, log="xy",
+  cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
+  rect(1e-10, 1e-10, max(kmer_hist_transform[,1])*10 , max(kmer_hist_transform[,2])*10, col=COLOR_BGCOLOR)
+  points(kmer_hist_transform, type="h", col=COLOR_HIST, lwd=2)
+  if(length(kmer_hist[,1])!=length(kmer_hist_transform[,1])){
     abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
   }
   box(col="black")
@@ -143,9 +171,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   {
     x=kmer_hist[[1]]
     y=kmer_hist[[2]]
-    if (TRANSFORM) {
-      y_transform = as.numeric(x)**transform_exp*as.numeric(y)
-    }
+    y_transform = as.numeric(x)**transform_exp*as.numeric(y)
 
     ## The model converged!
     pred=predict(model, newdata=data.frame(x))
@@ -182,11 +208,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     error_xcutoff_ind = tail(which(x<=error_xcutoff),n=1)
     if (length(error_xcutoff_ind)==0) {error_xcutoff_ind=1}
 
-    if (TRANSFORM) {
-      error_kmers = x[1:error_xcutoff_ind]**(1-transform_exp)*(y_transform[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind])
-    } else {
-      error_kmers = y[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind]
-    }
+    error_kmers = x[1:error_xcutoff_ind]**(-transform_exp)*(y_transform[1:error_xcutoff_ind] - pred[1:error_xcutoff_ind])
 
     first_zero = -1
 
@@ -215,11 +237,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     ## Rather than "0", set to be some very small number so log-log plot looks okay
     error_kmers = pmax(error_kmers, 1e-10)
 
-    if (TRANSFORM) {
-      total_error_kmers = sum(error_kmers)
-    } else {
-      total_error_kmers = sum(as.numeric(error_kmers) * as.numeric(x[1:error_xcutoff_ind]))
-    }
+    total_error_kmers = sum(as.numeric(error_kmers) * as.numeric(x[1:error_xcutoff_ind]))
 
     total_kmers = sum(as.numeric(x)*as.numeric(y))
 
@@ -267,9 +285,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       }
     }
 
-    if (TRANSFORM) {
-      unique_hist_transform = x**transform_exp*unique_hist
-    }
+    unique_hist_transform = x**transform_exp*unique_hist
 
     unique_kmers = sum(as.numeric(x)*as.numeric(unique_hist))
     repeat_kmers = total_kmers - unique_kmers - total_error_kmers
@@ -287,10 +303,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     model_fit_full   = score$full
     model_fit_unique = score$unique
 
-    residual = y - pred
-    if (TRANSFORM) {
-      residual_transform = y_transform - pred
-    }
+    residual_transform = y_transform - pred
+    residual = x**(-transform_exp)*residual_transform
 
     if (p==1) {
       hetline = paste0("a:", format(100*ahomo, digits=3), "%")
@@ -360,6 +374,107 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     if (!IN_VERBOSE) {
       print(hetline)
     }
+
+    dev.set(dev.next())
+
+    ## Finish Linear Plot
+    title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
+    "bp",
+    " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
+    "% ", "\n",
+    hetline, "\n",
+    " kcov:", format(akcov, digits=3),
+    " err:",   format(100*error_rate[1], digits=3),
+    "% ",
+    " dup:",  format(adups, digits=3),
+    " ",
+    " k:",   format(k, digits=3),
+    " p:",   format(p, digits=3),
+    sep=""),
+    cex.main=.85)
+
+    ## Mark the modes of the peaks
+    abline(v=akcov * (1:(2*p)), col=COLOR_KMERPEAK, lty=2)
+
+    ## Draw just the unique portion of the model
+    if (!NO_UNIQUE_SEQUENCE) {
+      lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
+    }
+    lines(x, x**(-transform_exp)*pred, col=COLOR_2pPEAK, lwd=3)
+    lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+
+    if (VERBOSE) {
+      lines(x, residual, col=COLOR_RESIDUAL, lwd=3)
+    }
+
+    ## Add legend
+    if (NO_UNIQUE_SEQUENCE) {
+      legend(.62 * x_limit_orig, 1.0 * y_limit_orig,
+      legend=c("observed", "full model", "errors", "kmer-peaks"),
+      lty=c("solid", "solid", "solid", "dashed"),
+      lwd=c(3,3,3,2),
+      col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+      bg="white")
+    } else {
+      legend(.62 * x_limit_orig, 1.0 * y_limit_orig,
+      legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
+      lty=c("solid", "solid", "solid", "solid", "dashed"),
+      lwd=c(3,3,3,3,2),
+      col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+      bg="white")
+    }
+
+    dev.set(dev.next())
+
+    ## Finish Linear Plot
+    title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
+    "bp",
+    " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
+    "% ", "\n",
+    hetline, "\n",
+    " kcov:", format(akcov, digits=3),
+    " err:",   format(100*error_rate[1], digits=3),
+    "% ",
+    " dup:",  format(adups, digits=3),
+    " ",
+    " k:",   format(k, digits=3),
+    " p:",   format(p, digits=3),
+    sep=""),
+    cex.main=.85)
+
+    ## Mark the modes of the peaks
+    abline(v=akcov * (1:(2*p)), col=COLOR_KMERPEAK, lty=2)
+
+    ## Draw just the unique portion of the model
+    if (!NO_UNIQUE_SEQUENCE) {
+      lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
+    }
+    lines(x, pred, col=COLOR_2pPEAK, lwd=3)
+    lines(x[1:error_xcutoff_ind], (x[1:error_xcutoff_ind]**transform_exp)*error_kmers, lwd=3, col=COLOR_ERRORS)
+
+    if (VERBOSE) {
+      lines(x, residual_transform, col=COLOR_RESIDUAL, lwd=3)
+    }
+
+    ## Add legend
+    if (NO_UNIQUE_SEQUENCE) {
+      legend(.62 * x_limit, 1.0 * y_limit,
+      legend=c("observed", "full model", "errors", "kmer-peaks"),
+      lty=c("solid", "solid", "solid", "dashed"),
+      lwd=c(3,3,3,2),
+      col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+      bg="white")
+    } else {
+      legend(.62 * x_limit, 1.0 * y_limit,
+      legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
+      lty=c("solid", "solid", "solid", "solid", "dashed"),
+      lwd=c(3,3,3,3,2),
+      col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+      bg="white")
+    }
+
+    dev.set(dev.next())
+
     ## Finish Log plot
     title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
     "bp",
@@ -380,26 +495,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     abline(v=akcov * (1:(2*p)), col=COLOR_KMERPEAK, lty=2)
 
     ## Draw just the unique portion of the model
-    if (TRANSFORM) {
-      if (!NO_UNIQUE_SEQUENCE) {
-        lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
-      }
-      lines(x, pred, col=COLOR_2pPEAK, lwd=3)
-      lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
-    } else {
-      if (!NO_UNIQUE_SEQUENCE) {
-        lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
-      }
-      lines(x, pred, col=COLOR_2pPEAK, lwd=3)
-      lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+    if (!NO_UNIQUE_SEQUENCE) {
+      lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
     }
+    lines(x, x**(-transform_exp)*pred, col=COLOR_2pPEAK, lwd=3)
+    lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
 
     if (VERBOSE) {
-      if (TRANSFORM) {
-        lines(x, residual_transform, col=COLOR_RESIDUAL, lwd=3)
-      } else {
-        lines(x, residual, col=COLOR_RESIDUAL, lwd=3)
-      }
+      lines(x, residual, col=COLOR_RESIDUAL, lwd=3)
     }
 
     ## Add legend
@@ -444,7 +547,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     dev.set(dev.next())
 
-    ## Finish Linear Plot
+    ## Finish Log plot
     title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
     "bp",
     " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
@@ -464,43 +567,54 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     abline(v=akcov * (1:(2*p)), col=COLOR_KMERPEAK, lty=2)
 
     ## Draw just the unique portion of the model
-    if (TRANSFORM) {
-      if (!NO_UNIQUE_SEQUENCE) {
-        lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
-      }
-      lines(x, pred, col=COLOR_2pPEAK, lwd=3)
-      lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
-    } else {
-      if (!NO_UNIQUE_SEQUENCE) {
-        lines(x, unique_hist, col=COLOR_pPEAK, lty=1, lwd=3)
-      }
-      lines(x, pred, col=COLOR_2pPEAK, lwd=3)
-      lines(x[1:error_xcutoff_ind], error_kmers, lwd=3, col=COLOR_ERRORS)
+    if (!NO_UNIQUE_SEQUENCE) {
+      lines(x, unique_hist_transform, col=COLOR_pPEAK, lty=1, lwd=3)
     }
+    lines(x, pred, col=COLOR_2pPEAK, lwd=3)
+    lines(x[1:error_xcutoff_ind], (x[1:error_xcutoff_ind]**transform_exp)*error_kmers, lwd=3, col=COLOR_ERRORS)
 
     if (VERBOSE) {
-      if (TRANSFORM) {
-        lines(x, residual_transform, col=COLOR_RESIDUAL, lwd=3)
-      } else {
-        lines(x, residual, col=COLOR_RESIDUAL, lwd=3)
-      }
+      lines(x, residual_transform, col=COLOR_RESIDUAL, lwd=3)
     }
 
     ## Add legend
-    if (NO_UNIQUE_SEQUENCE) {
-      legend(.62 * x_limit, 1.0 * y_limit,
-      legend=c("observed", "full model", "errors", "kmer-peaks"),
-      lty=c("solid", "solid", "solid", "dashed"),
-      lwd=c(3,3,3,2),
-      col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
-      bg="white")
-    } else {
-      legend(.62 * x_limit, 1.0 * y_limit,
-      legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
-      lty=c("solid", "solid", "solid", "solid", "dashed"),
-      lwd=c(3,3,3,3,2),
-      col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
-      bg="white")
+    if(length(kmer_hist[,1])==length(kmer_hist_orig[,1]))
+    {
+      if (NO_UNIQUE_SEQUENCE) {
+        legend(exp(.62 * log(max(x))), 1.0 * max(y),
+        legend=c("observed", "full model", "errors", "kmer-peaks"),
+        lty=c("solid", "solid", "solid", "dashed"),
+        lwd=c(3,3,3,3),
+        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+        bg="white")
+      } else {
+        legend(exp(.62 * log(max(x))), 1.0 * max(y),
+        legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
+        lty=c("solid", "solid", "solid", "solid", "dashed"),
+        lwd=c(3,3,3,3,3),
+        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
+        bg="white")
+      }
+    }
+    else
+    {
+      if (NO_UNIQUE_SEQUENCE) {
+        legend("topright",
+        ##legend(exp(.62 * log(max(x))), 1.0 * max(y),
+        legend=c("observed", "full model", "errors", "kmer-peaks","cov-threshold"),
+        lty=c("solid", "solid", "solid", "dashed", "dashed"),
+        lwd=c(3,3,3,2,3),
+        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK, COLOR_COVTHRES),
+        bg="white")
+      } else {
+        legend("topright",
+        ##legend(exp(.62 * log(max(x))), 1.0 * max(y),
+        legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks","cov-threshold"),
+        lty=c("solid", "solid", "solid", "solid", "dashed", "dashed"),
+        lwd=c(3,3,3,3,2,3),
+        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK, COLOR_COVTHRES),
+        bg="white")
+      }
     }
 
     model_status="done"
@@ -522,6 +636,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     cat("Failed to converge.\n")
   }
 
+  dev.off()
+  dev.off()
   dev.off()
   dev.off()
 
@@ -560,9 +676,6 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   }
   if (r_inits!=-1) {
     cat(paste("initial heterozygosities = ", r_inits, sep=""), file=summaryFile, sep="\n", append=TRUE)
-  }
-  if (TRANSFORM) {
-    cat(paste("TRANSFORM set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (transform_exp != 1) {
     cat(paste("TRANSFORM_EXP = ", transform_exp, sep=""), file=summaryFile, sep="\n", append=TRUE)

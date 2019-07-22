@@ -30,12 +30,8 @@ estimate_Genome_peakp<-function(kmer_hist_orig, x, y, k, p, topology, estKmercov
     #Thus, when setting the estimated kmer coverage, we will need to iterate through these possibilities.
     #num_peak_indices indicates how many possibilities we need to iterate through.
     num_peak_indices = p
-    if (TRANSFORM) {
-      y_transform = as.numeric(x)**transform_exp*as.numeric(y)
-      estKmercov1 = x[which(y_transform==max(y_transform))][1]
-    } else {
-      estKmercov1  = x[which(y==max(y))][1]
-    }
+    y_transform = as.numeric(x)**transform_exp*as.numeric(y)
+    estKmercov1 = x[which(y_transform==max(y_transform))][1]
   }
   else {
     # When the user sets the estimated kmer coverage, we only need to iterate through one possibility
