@@ -122,6 +122,7 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
   }
 
   print(model)
+  #print(model$m$deviance())
 
   return(model)
 }

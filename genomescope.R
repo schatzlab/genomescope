@@ -127,7 +127,9 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   cat("starting", file=progressFilename, sep="\n")
 
   ## try to find the local minimum between errors and the first (heterozygous) peak
-  start <- tail(which(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1])**transform_exp==min(as.numeric(kmer_prof[1:TYPICAL_ERROR,2])*as.numeric(kmer_prof[1:TYPICAL_ERROR,1]**transform_exp))),n=1)
+  kmer_trans = as.numeric(kmer_prof[,1])**transform_exp*as.numeric(kmer_prof[,2])
+  start <- tail(which(kmer_trans[1:TYPICAL_ERROR]==min(kmer_trans[1:TYPICAL_ERROR])),n=1)
+  start_max <- start + which(kmer_trans[start:length(kmer_trans)]==max(kmer_trans[start:length(kmer_trans)])) - 1
 
   maxCovIndex = -1
 
@@ -179,7 +181,9 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
         best_container = model_peaks
       }
       else {
-        pdiff = abs(model_peaks[[2]]$all[[1]] - best_container[[2]]$all[[1]]) / max(model_peaks[[2]]$all[[1]], best_container[[2]]$all[[1]])
+        best_container_score = best_container[[1]]$m$deviance()
+        model_peaks_score = model_peaks[[1]]$m$deviance()
+        pdiff = abs(model_peaks_score - best_container_score) / max(model_peaks_score, best_container_score)
 
         if (pdiff < SCORE_CLOSE) {
           hetm = model_peaks[[1]]$ahet
@@ -194,12 +198,12 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
             if (VERBOSE) {cat("previous best has significantly higher heterozygosity and similar score, keeping\n")}
             best_container = model_peaks
           }
-          else if (model_peaks[[2]]$all[[1]] < best_container[[2]]$all[[1]]) {
+          else if (model_peaks_score < best_container_score) {
             if (VERBOSE) {cat("score is marginally better but het rate is not extremely different, updating\n")}
             best_container = model_peaks
           }
         }
-        else if (model_peaks[[2]]$all[[1]] < best_container[[2]]$all[[1]]) {
+        else if (model_peaks_score < best_container_score) {
           if (VERBOSE) {cat("score is significantly better, updating\n")}
           best_container = model_peaks
         }

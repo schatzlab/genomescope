@@ -54,12 +54,12 @@ score_model<-function(kmer_hist_orig, nls, round, foldername) {
   ## The fit is residual sum of square error, excluding sequencing errors
   model_fit_all    = c(sum(as.numeric(y_fit[first_zero:length(y_fit)]                          - pred[first_zero:length(y_fit)])                           ** 2), first_zero, x[length(y_fit)])
   model_fit_full   = c(sum(as.numeric(y_fit[first_zero:(min(length(y_fit),(2*p+1)*kcovfloor))] - pred[first_zero:(min(length(y_fit), (2*p+1)*kcovfloor))]) ** 2), first_zero, (min(length(y_fit), (2*p+1)*kcovfloor)))
-  model_fit_unique = c(sum(as.numeric(y_fit[first_zero:((p+1)*kcovfloor)]                  - pred[first_zero:((p+1)*kcovfloor)])                   ** 2), first_zero, ((p+1)*kcovfloor))
+  model_fit_unique = c(sum(as.numeric(y_fit[first_zero:((p+1)*kcovfloor)]                      - pred[first_zero:((p+1)*kcovfloor)])                       ** 2), first_zero, ((p+1)*kcovfloor))
 
   ## The score is the percentage of kmers correctly modeled, excluding sequencing errors
   model_fit_allscore    = c(1-sum(abs(as.numeric(y_fit[first_zero:length(y_fit)]                           - pred[first_zero:length(y_fit)])))                           / sum(as.numeric(y_fit[first_zero:length(y_fit)])),                           first_zero, x[length(y_fit)])
   model_fit_fullscore   = c(1-sum(abs(as.numeric(y_fit[first_zero:(min(length(y_fit), (2*p+1)*kcovfloor))] - pred[first_zero:(min(length(y_fit), (2*p+1)*kcovfloor))]))) / sum(as.numeric(y_fit[first_zero:(min(length(y_fit), (2*p+1)*kcovfloor))])), first_zero, (min(length(y_fit), (2*p+1)*kcovfloor)))
-  model_fit_uniquescore = c(1-sum(abs(as.numeric(y_fit[first_zero:((p+1)*kcovfloor)]                   - pred[first_zero:((p+1)*kcovfloor)])))                   / sum(as.numeric(y_fit[first_zero:((p+1)*kcovfloor)])),                   first_zero, ((p+1)*kcovfloor))
+  model_fit_uniquescore = c(1-sum(abs(as.numeric(y_fit[first_zero:((p+1)*kcovfloor)]                       - pred[first_zero:((p+1)*kcovfloor)])))                       / sum(as.numeric(y_fit[first_zero:((p+1)*kcovfloor)])),                       first_zero, ((p+1)*kcovfloor))
 
   fit = data.frame(all  = model_fit_all,      allscore  = model_fit_allscore,
                    full = model_fit_full,     fullscore = model_fit_fullscore,
