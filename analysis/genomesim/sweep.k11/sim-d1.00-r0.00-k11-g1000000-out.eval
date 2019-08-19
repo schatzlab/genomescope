@@ -1,5 +1,0 @@
-model:	0	0	0	1000000
-obs:	0	6	0	620123
-diff:	0	-6	0	379877
-diffp:	0.00	-100.00	0.00	61.26
-#sweep.k11//sim-d1.00-r0.00-k11-g1000000-out	sumkmer	620129	sumdiff:	379871	score:	38.743

@@ -1,5 +1,0 @@
-model:	0	99999	0	900000
-obs:	0	100020	0	899980
-diff:	0	-21	0	20
-diffp:	0.00	-0.02	0.00	0.00
-#sweep.k21//sim-d0.90-r0.00-k21-g1000000-out	sumkmer	1000000	sumdiff:	-1	score:	100.000
