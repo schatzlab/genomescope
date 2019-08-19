@@ -5,6 +5,7 @@
 #' @param y A numeric vector of the y-coordinates of the histogram (after filtering out low coverage errors and high coverage kmers).
 #' @param k An integer corresponding to the kmer length.
 #' @param p An integer corresponding to the ploidy.
+#' @param topology An integer corresponding to the topology to use.
 #' @param estKmercov An integer corresponding to the estimated kmer coverage of the polyploid genome.
 #' Set to -1 if not specified by user.
 #' @param round An integer corresponding to the iteration number (0, 1, 2, 3) for the fitting process.

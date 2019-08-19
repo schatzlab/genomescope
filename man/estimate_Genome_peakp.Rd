@@ -18,6 +18,8 @@ estimate_Genome_peakp(kmer_hist_orig, x, y, k, p, topology, estKmercov,
 
 \item{p}{An integer corresponding to the ploidy.}
 
+\item{topology}{An integer corresponding to the topology to use.}
+
 \item{estKmercov}{An integer corresponding to the estimated kmer coverage of the polyploid genome.
 Set to -1 if not specified by user.}
 

@@ -32,7 +32,7 @@
                                           </p>
                                           <p>
                                             <div class="input-group input-group-lg">
-                                              <span class="input-group-addon">Kmer length</span>
+                                              <span class="input-group-addon">K-mer length</span>
                                                <input type="number" step="1" name="kmer_length" class="form-control" value = "21">
                                             </div>
                                           </p>
@@ -44,7 +44,7 @@
                                           </p>
                                           <p>
                                             <div class="input-group input-group-lg">
-                                              <span class="input-group-addon">Max kmer coverage</span>
+                                              <span class="input-group-addon">Max k-mer coverage</span>
                                                <input type="number" step="1" name="max_kmer_cov" class="form-control" min="-1" value = "-1">
                                             </div>
                                           </p>
@@ -66,12 +66,12 @@
                     <div class="panel-heading"> <h3 class="panel-title">Instructions</h3></div>
                     <div class="panel-body"><p>Upload results from running Jellyfish or KMC. Example: <a href="tests/inputk21.hist" target="_blank">inputk21.hist</a> </p><p>Instructions for running Jellyfish: <ol><li>Download and install jellyfish from:
                         <a href="http://www.genome.umd.edu/jellyfish.html#Release" target="_blank">http://www.genome.umd.edu/jellyfish.html#Release</a></li>
-                        <li>Count kmers using jellyfish:
+                        <li>Count k-mers using jellyfish:
                         <p><pre>$ jellyfish count -C -m 21 -s 1000000000 -t 10 *.fastq -o reads.jf</pre></p>
                         <p>
-                        Note you should adjust the memory (-s) and threads (-t) parameter according to your server. This example will use 10 threads and 1GB of RAM. The kmer length (-m) may need to be scaled if you have low coverage or a high error rate. You should always use "canonical kmers" (-C)
+                        Note you should adjust the memory (-s) and threads (-t) parameters according to your server. This example will use 10 threads and 1GB of RAM. The k-mer length (-m) may need to be scaled if you have low coverage or a high error rate. You should always use "canonical k-mers" (-C).
                         </p></li>
-                        <li>Export the kmer count histogram
+                        <li>Export the k-mer count histogram
                         <p><pre>$ jellyfish histo -t 10 reads.jf > reads.histo</pre></p>
                         <p>Again the thread count (-t) should be scaled according to your server.</p></li>
                         <li>Upload reads.histo to GenomeScope</li>
@@ -79,20 +79,20 @@
 
                         Instructions for running KMC: <ol><li>Download and install KMC from:
                         <a href="http://sun.aei.polsl.pl/REFRESH/index.php?page=projects&project=kmc&subpage=download" target="_blank">http://sun.aei.polsl.pl/REFRESH/index.php?page=projects&project=kmc&subpage=download</a></li>
-                        <li>Count kmers using KMC:
+                        <li>Count k-mers using KMC:
                         <p><pre>$ mkdir tmp</pre></p>
                         <p><pre>$ ls *.fastq > FILES</pre></p>
                         <p><pre>$ kmc -k21 -t10 -m64 -ci1 -cs10000 @FILES reads tmp/</pre></p>
                         <p>
-                        Note you should adjust the memory (-m) and threads (-t) parameter according to your server. This example will use 10 threads and 64GB of RAM. The kmer length (-k) may need to be scaled if you have low coverage or a high error rate. The lower (-ci) and upper (-cs) bounds exclude kmers with counts outside these boundaries. FILES is a filename with a list of input files. 
+                        Note you should adjust the memory (-m) and threads (-t) parameters according to your server. This example will use 10 threads and 64GB of RAM. The k-mer length (-k) may need to be scaled if you have low coverage or a high error rate. The lower (-ci) and upper (-cs) bounds exclude k-mers with counts outside these boundaries. FILES is a file with a list of input files. 
                         </p></li>
-                        <li>Export the kmer count histogram
+                        <li>Export the k-mer count histogram
                         <p><pre>$ kmc_tools transform reads histogram reads.histo -cx10000</pre></p>
                         <p>The upper bound (-cx) gives the cutoff for the histogram.</p></li>
                         <li>Upload reads.histo to GenomeScope</li>
                         </ol>
 
-                        Note: High copy-number DNA such as chloroplasts can confuse the model. Set a max kmer coverage to avoid this. Default is -1 meaning no filter. 
+                        Note: High copy-number DNA such as chloroplasts can confuse the model. Set a max k-mer coverage to avoid this. Default is -1 meaning no filter. 
                         </p>
                     </div>
               </div>
