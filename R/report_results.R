@@ -111,7 +111,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   } else {
     ylabel_transform = paste("Coverage^", transform_exp, "*Frequency", sep="")
   }
-  png(paste(foldername, "/", arguments$name_prefix, "_linear_plot.png", sep=""),
+  png(paste(foldername, "/", arguments$name_prefix, "linear_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,6.1,2.1))
   plot(kmer_hist_orig, type="n", main="GenomeScope Profile\n\n\n",
@@ -125,7 +125,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 #  }
   box(col="black")
 
-  png(paste(foldername, "/", arguments$name_prefix, "_transformed_linear_plot.png", sep=""),
+  png(paste(foldername, "/", arguments$name_prefix, "transformed_linear_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,6.1,2.1))
   plot(kmer_hist_transform, type="n", main="GenomeScope Profile\n\n\n",
@@ -140,7 +140,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   box(col="black")
 
   ## Make a second plot in log space over entire range
-  png(paste(foldername, "/", arguments$name_prefix, "_log_plot.png", sep=""),
+  png(paste(foldername, "/", arguments$name_prefix, "log_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,6.1,2.1))
   plot(kmer_hist_orig, type="n", main="GenomeScope Profile\n\n\n",
@@ -153,7 +153,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   }
   box(col="black")
 
-  png(paste(foldername, "/", arguments$name_prefix, "_transformed_log_plot.png", sep=""),
+  png(paste(foldername, "/", arguments$name_prefix, "transformed_log_plot.png", sep=""),
   width=plot_size, height=plot_size, res=resolution)
   par(mar = c(5.1,4.1,6.1,2.1))
   plot(kmer_hist_transform, type="n", main="GenomeScope Profile\n\n\n",
@@ -181,7 +181,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     print(model_sum)
 
     ## save the model to a file
-    capture.output(model_sum, file=paste(foldername,"/", arguments$name_prefix, "_model.txt", sep=""))
+    capture.output(model_sum, file=paste(foldername,"/", arguments$name_prefix, "model.txt", sep=""))
 
     ## Identify key values
     top   = model$top
@@ -643,7 +643,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     title("\nFailed to converge")
     dev.set(dev.next())
     title("\nFailed to converge")
-    cat("Failed to converge.", file=paste(foldername,"/", arguments$name_prefix, "_model.txt", sep=""))
+    cat("Failed to converge.", file=paste(foldername,"/", arguments$name_prefix, "model.txt", sep=""))
     cat("Failed to converge.\n")
   }
 
@@ -653,7 +653,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   dev.off()
 
   ## Write key values to summary file
-  summaryFile <- paste(foldername,"/", arguments$name_prefix, "_summary.txt",sep="")
+  summaryFile <- paste(foldername,"/", arguments$name_prefix, "summary.txt",sep="")
 
   format_column_1 = "%-30s"
   format_column_2 = "%-18s"
@@ -664,8 +664,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   cat(paste("output directory = ", arguments$output, sep=""), file=summaryFile, sep="\n", append=TRUE)
   cat(paste("p = ", p,sep=""), file=summaryFile, sep="\n", append=TRUE)
   cat(paste("k = ", k,sep=""), file=summaryFile, sep="\n", append=TRUE)
-  if (arguments$name_prefix!="OUTPUT") {
-    cat(paste("name prefix = ", arguments$name_prefix, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  if (arguments$name_prefix!="") {
+    cat(paste("name prefix = ", substring(arguments$name_prefix,1,nchar(arguments$name_prefix)-1), sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
   if (arguments$lambda!=-1) {
     cat(paste("initial kmercov estimate = ", arguments$lambda, sep=""), file=summaryFile, sep="\n", append=TRUE)
@@ -774,12 +774,12 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     cat(paste("Model RSSE (Unique Model) = ", model_fit_unique[1], " [", model_fit_unique[2], ", ", model_fit_unique[3], "]", sep=""), file=summaryFile, sep="\n", append=TRUE)	
   }
   ## Finalize the progress
-  progressFilename=paste(foldername, "/", arguments$name_prefix, "_progress.txt",sep="")
+  progressFilename=paste(foldername, "/", arguments$name_prefix, "progress.txt",sep="")
   cat(model_status, file=progressFilename, sep="\n", append=TRUE)
 
   if (TESTING) {
     if (TRUE_PARAMS!=-1) {
-      testingFile <- paste(foldername, "/", arguments$name_prefix, "_SIMULATED_testing.tsv",sep="")
+      testingFile <- paste(foldername, "/", arguments$name_prefix, "SIMULATED_testing.tsv",sep="")
     } else {
       testingFile <- paste(foldername,"/SIMULATED_testing.tsv",sep="")
     }

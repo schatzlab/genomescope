@@ -8,14 +8,14 @@
     mkdir("user_data/$code");
 
     if( !isset($_POST['kmer_length']) ) { echo shell_exec("echo ERROR: No kmer_length passed to run_now.php >> user_data/$code/input_validation.log");}
-    if( !isset($_POST['read_length']) ) { echo shell_exec("echo ERROR: No read_length passed to run_now.php >> user_data/$code/input_validation.log");}
+    if( !isset($_POST['ploidy']) ) { echo shell_exec("echo ERROR: No ploidy passed to run_now.php >> user_data/$code/input_validation.log");}
     if( !isset($_POST['max_kmer_cov']) ) { echo shell_exec("echo ERROR: No max_kmer_cov passed to run_now.php >> user_data/$code/input_validation.log");}
     if( !isset($_POST['description']) ) { echo shell_exec("echo ERROR: No description passed to run_now.php >> user_data/$code/input_validation.log");}
 
     echo shell_exec("echo user_data/$code/input_validation.log >> user_data/$code/input_validation.log");
 
     $kmer_length = escapeshellarg($_POST["kmer_length"]);
-    $read_length = escapeshellarg($_POST["read_length"]);
+    $ploidy = escapeshellarg($_POST["ploidy"]);
     $max_kmer_cov = escapeshellarg($_POST["max_kmer_cov"]);
     $description = escapeshellarg($_POST["description"]);
 
@@ -31,7 +31,11 @@
     
     // For new version:
     // genomescope.R histogram_file k-mer_length read_length output_dir
-    echo shell_exec("Rscript genomescope.R $filename $kmer_length $read_length user_data/$code $max_kmer_cov &> user_data/$code/run.log &"); 
+    // echo shell_exec("Rscript genomescope.R $filename $kmer_length $read_length user_data/$code $max_kmer_cov &> user_data/$code/run.log &"); 
+
+    // For 2.0:
+    // genomescope.R -i histogram_file -k k-mer_length -p ploidy -o output_dir
+    echo shell_exec("genomescope.R -i $filename -k $kmer_length -p $ploidy -o user_data/$code %> user_data/$code/run.log %");
 
     $new_dataset = array( "date"=>time(), "codename"=>$code, "description"=> $description );
 

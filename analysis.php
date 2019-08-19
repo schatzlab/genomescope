@@ -25,6 +25,15 @@
                         <!-- Landing spot for plot image -->
                     </div>
                 </div>
+                <div class="thumbnail plot_frame frame">
+                    <div style="display:inline-block" id="landing_for_plot3" class="plot_img">
+                        <!-- Landing spot for plot image -->
+                    </div>
+                    <div style="display:inline-block" id="landing_for_plot4" class="plot_img">
+                        <!-- Landing spot for plot image -->
+                    </div>
+                </div>
+
 
                 <div class="row">
                     <div class="col-lg-6"> 

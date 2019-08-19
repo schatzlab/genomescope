@@ -62,7 +62,7 @@ parser$add_argument("-i", "--input", help = "input histogram file")
 parser$add_argument("-o", "--output", help = "output directory name")
 parser$add_argument("-p", "--ploidy", type = "integer", default = 2, help = "ploidy (1, 2, 3, 4, 5, or 6) for model to use [default 2]")
 parser$add_argument("-k", "--kmer_length", type = "integer", default = 21, help = "kmer length used to calculate kmer spectra [default 21]")
-parser$add_argument("-n", "--name_prefix", default = "OUTPUT", help = "optional name_prefix for output files [default OUTPUT]")
+parser$add_argument("-n", "--name_prefix", default = "", help = "optional name_prefix for output files")
 parser$add_argument("-l", "--lambda", "--kcov", "--kmercov", type = "integer", default=-1, help = "optional initial kmercov estimate for model to use")
 parser$add_argument("-m", "--max_kmercov", type = "integer", default=-1, help = "optional maximum kmer coverage threshold (kmers with coverage greater than max_kmercov are ignored by the model)")
 parser$add_argument("--verbose", action="store_true", default=FALSE, help = "optional flag to print messages during execution")
@@ -95,6 +95,9 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   foldername  <- arguments$output
   p           <- arguments$ploidy
   k           <- arguments$kmer_length
+  if (arguments$name_prefix != "") {
+    arguments$name_prefix = paste0(arguments$name_prefix,"_")
+  }
   estKmercov  <- arguments$lambda
   max_kmercov <- arguments$max_kmercov
   VERBOSE     <- arguments$verbose
@@ -123,7 +126,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   kmer_prof_orig <- kmer_prof
 
   ## Initialize the status
-  progressFilename <- paste(foldername,"/", arguments$name_prefix, "_progress.txt",sep="")
+  progressFilename <- paste(foldername,"/", arguments$name_prefix, "progress.txt",sep="")
   cat("starting", file=progressFilename, sep="\n")
 
   ## try to find the local minimum between errors and the first (heterozygous) peak

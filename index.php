@@ -38,14 +38,14 @@
                                           </p>
                                           <p>
                                             <div class="input-group input-group-lg">
-                                              <span class="input-group-addon">Read length</span>
-                                               <input type="number" step="1" name="read_length" class="form-control" value = "100">
+                                              <span class="input-group-addon">Ploidy</span>
+                                               <input type="number" step="1" name="ploidy" class="form-control" min="1" max="6" value = "2">
                                             </div>
                                           </p>
                                           <p>
                                             <div class="input-group input-group-lg">
                                               <span class="input-group-addon">Max kmer coverage</span>
-                                               <input type="number" step="1" name="max_kmer_cov" class="form-control" min="-1" value = "1000">
+                                               <input type="number" step="1" name="max_kmer_cov" class="form-control" min="-1" value = "-1">
                                             </div>
                                           </p>
                                           <p id="analysis_form">
@@ -64,7 +64,7 @@
           <div class="col-lg-7"> 
               <div class="panel panel-default">
                     <div class="panel-heading"> <h3 class="panel-title">Instructions</h3></div>
-                    <div class="panel-body"><p>Upload results from running Jellyfish. Example: <a href="tests/inputk21.hist" target="_blank">inputk21.hist</a> </p><p>Instructions for running Jellyfish: <ol><li>Download and install jellyfish from:
+                    <div class="panel-body"><p>Upload results from running Jellyfish or KMC. Example: <a href="tests/inputk21.hist" target="_blank">inputk21.hist</a> </p><p>Instructions for running Jellyfish: <ol><li>Download and install jellyfish from:
                         <a href="http://www.genome.umd.edu/jellyfish.html#Release" target="_blank">http://www.genome.umd.edu/jellyfish.html#Release</a></li>
                         <li>Count kmers using jellyfish:
                         <p><pre>$ jellyfish count -C -m 21 -s 1000000000 -t 10 *.fastq -o reads.jf</pre></p>
@@ -74,6 +74,21 @@
                         <li>Export the kmer count histogram
                         <p><pre>$ jellyfish histo -t 10 reads.jf > reads.histo</pre></p>
                         <p>Again the thread count (-t) should be scaled according to your server.</p></li>
+                        <li>Upload reads.histo to GenomeScope</li>
+                        </ol>
+
+                        Instructions for running KMC: <ol><li>Download and install KMC from:
+                        <a href="http://sun.aei.polsl.pl/REFRESH/index.php?page=projects&project=kmc&subpage=download" target="_blank">http://sun.aei.polsl.pl/REFRESH/index.php?page=projects&project=kmc&subpage=download</a></li>
+                        <li>Count kmers using KMC:
+                        <p><pre>$ mkdir tmp</pre></p>
+                        <p><pre>$ ls *.fastq > FILES</pre></p>
+                        <p><pre>$ kmc -k21 -t10 -m64 -ci1 -cs10000 @FILES reads tmp/</pre></p>
+                        <p>
+                        Note you should adjust the memory (-m) and threads (-t) parameter according to your server. This example will use 10 threads and 64GB of RAM. The kmer length (-k) may need to be scaled if you have low coverage or a high error rate. The lower (-ci) and upper (-cs) bounds exclude kmers with counts outside these boundaries. FILES is a filename with a list of input files. 
+                        </p></li>
+                        <li>Export the kmer count histogram
+                        <p><pre>$ kmc_tools transform reads histogram reads.histo -cx10000</pre></p>
+                        <p>The upper bound (-cx) gives the cutoff for the histogram.</p></li>
                         <li>Upload reads.histo to GenomeScope</li>
                         </ol>
 
