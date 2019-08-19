@@ -47,6 +47,12 @@
                                               <span class="input-group-addon">Max k-mer coverage</span>
                                                <input type="number" step="1" name="max_kmer_cov" class="form-control" min="-1" value = "-1">
                                             </div>
+					  </p>
+                                          <p>
+                                            <div class="input-group input-group-lg">
+                                              <span class="input-group-addon">Average k-mer coverage for polyploid genome</span>
+                                               <input type="number" step="1" name="lambda" class="form-control" min="-1" value = "-1">
+                                            </div>
                                           </p>
                                           <p id="analysis_form">
                                         <!--  submit button set from within kmers.js --> 

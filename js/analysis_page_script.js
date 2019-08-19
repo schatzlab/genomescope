@@ -120,7 +120,7 @@ function check_plot_exists(counter,bool_succeeded) {
                 document.getElementById("landing_for_plot4").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "transformed_log_plot.png" + ' "/>'; 
 
                 if (bool_succeeded) {
-                    document.getElementById("landing_for_text1").innerHTML='<iframe width="' + 600 + ' " height="200" src="' + file_url_prefix + "summary.txt" + '" frameborder="0"></iframe>';
+                    document.getElementById("landing_for_text1").innerHTML='<iframe width="' + 600 + ' " height="400" src="' + file_url_prefix + "summary.txt" + '" frameborder="0"></iframe>';
                     document.getElementById("landing_for_text2").innerHTML='<iframe width="' + 600 + ' " height="400" src="' + file_url_prefix + "model.txt" + '" frameborder="0"></iframe>';
                 } else {
                     document.getElementById("landing_for_text1").innerHTML='Model did not converge';

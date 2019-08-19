@@ -15,11 +15,13 @@
     if( !isset($_POST['description']) ) { echo shell_exec('echo ERROR: No description passed to input_validation.php >> user_data/$code/input_validation.log');}
 
     if( !isset($_POST['max_kmer_cov']) ) { echo shell_exec('echo ERROR: No max_kmer_cov passed to input_validation.php >> user_data/$code/input_validation.log');}
+    if( !isset($_POST['lambda']) ) { echo shell_exec("echo ERROR: No lambda passed to run_now.php >> user_data/$code/input_validation.log");}
 
     $description = $_POST["description"];
     $kmer_length = $_POST["kmer_length"];
     $ploidy = $_POST["ploidy"];
     $max_kmer_cov = $_POST["max_kmer_cov"];
+    $lambda = $_POST["lambda"];
 
 
     $url="analysis.php?code=$code";
@@ -29,7 +31,7 @@
     $back_button= "<form action=\"./\" method=GET><button type=\"submit\" class=\"center btn btn-danger\">Back</button></form>";
     //$continue_button= "<form action=\"$url\"><input type=\"hidden\" name = \"code\" value=\"$code\"><button type=\"submit\" class=\"center btn btn-success\">Continue</button></form>";
     
-    $continue_button= "<form action=\"$run_url\" method=\"post\"><input type=\"hidden\" name = \"code\" value=\"$code\">   <input type=\"hidden\" name=\"kmer_length\" value=\"$kmer_length\"> <input type=\"hidden\" name=\"description\" value=\"$description\"> <input type=\"hidden\" name=\"max_kmer_cov\" value=\"$max_kmer_cov\">  <input type=\"hidden\" name=\"ploidy\" value=\"$ploidy\">   <button type=\"submit\" class=\"center btn btn-success\">Continue</button></form>";
+    $continue_button= "<form action=\"$run_url\" method=\"post\"><input type=\"hidden\" name = \"code\" value=\"$code\">   <input type=\"hidden\" name=\"kmer_length\" value=\"$kmer_length\"> <input type=\"hidden\" name=\"description\" value=\"$description\"> <input type=\"hidden\" name=\"max_kmer_cov\" value=\"$max_kmer_cov\">  <input type=\"hidden\" name=\"ploidy\" value=\"$ploidy\"> <input type=\"hidden\" name=\"lambda\" value=\"$lambda\">  <button type=\"submit\" class=\"center btn btn-success\">Continue</button></form>";
     
     
     if (!file_exists ($filename)) {
@@ -47,7 +49,7 @@
     while(!feof($myfile)) {
         $bin_counter=0;
         $line=fgets($myfile);
-        // $line =trim(preg_replace( '/\s+/', ' ', $line ));
+        $line =trim(preg_replace( '/\s+/', ' ', $line ));
         if ($line=="" or $line==" ") {
             continue;
         }
