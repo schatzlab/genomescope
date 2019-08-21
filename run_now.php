@@ -1,11 +1,11 @@
 <html>
-    <body>
-        
+    <body> 
 <?php
-
     if( !isset($_POST['code']) ) { echo shell_exec('echo ERROR: No code passed to run.php >> user_data/ERRORS/input_validation.log');}
     $code=$_POST["code"];
-    mkdir("user_data/$code");
+    if (!file_exists("user_data/$code")) {
+        mkdir("user_data/$code");
+    }
 
     if( !isset($_POST['kmer_length']) ) { echo shell_exec("echo ERROR: No kmer_length passed to run_now.php >> user_data/$code/input_validation.log");}
     if( !isset($_POST['ploidy']) ) { echo shell_exec("echo ERROR: No ploidy passed to run_now.php >> user_data/$code/input_validation.log");}
@@ -37,7 +37,7 @@
 
     // For 2.0:
     // genomescope.R -i histogram_file -k k-mer_length -p ploidy -o output_dir
-    echo shell_exec("./genomescope.R -i $filename -k $kmer_length -p $ploidy -l $lambda -o user_data/$code &> user_data/$code/run.log &");
+    echo shell_exec("./genomescope.R -i $filename -k $kmer_length -p $ploidy -l $lambda -m $max_kmer_cov -o user_data/$code &> user_data/$code/run.log &");
 
     $new_dataset = array( "date"=>time(), "codename"=>$code, "description"=> $description );
 
@@ -49,12 +49,9 @@
       // echo "cookie not set, creating new one";
     }
     array_push($my_datasets, $new_dataset);
-    setcookie("results", json_encode($my_datasets));
-
-
     header('Location: '.$url);
+    setcookie("results", json_encode($my_datasets));
 ?>
     </body>
 </html>
-
 <!-- <form name="input_code_form" action="run.php" id="analysis_form" method="post"> -->
