@@ -37,7 +37,7 @@
 
     // For 2.0:
     // genomescope.R -i histogram_file -k k-mer_length -p ploidy -o output_dir
-    echo shell_exec("./genomescope.R -i $filename -k $kmer_length -p $ploidy -l $lambda -m $max_kmer_cov -o user_data/$code &> user_data/$code/run.log &");
+    echo shell_exec("./genomescope.R -i $filename -k $kmer_length -p $ploidy -l $lambda -m $max_kmer_cov -o user_data/$code >user_data/$code/run.log 2>&1 &");
 
     $new_dataset = array( "date"=>time(), "codename"=>$code, "description"=> $description );
 

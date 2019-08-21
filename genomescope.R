@@ -114,6 +114,10 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
 
   dir.create(foldername, showWarnings=FALSE)
 
+  ## Initialize the status
+  progressFilename <- paste(foldername,"/", arguments$name_prefix, "progress.txt",sep="")
+  cat("starting", file=progressFilename, sep="\n")
+
   kmer_prof <- read.csv(file=histfile,sep="", header=FALSE,colClasses=c("numeric","numeric"))
 
   minkmerx = 1;
@@ -124,10 +128,6 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
 
   kmer_prof <- kmer_prof[c(minkmerx:(length(kmer_prof[,2])-1)),] #get rid of the last position
   kmer_prof_orig <- kmer_prof
-
-  ## Initialize the status
-  progressFilename <- paste(foldername,"/", arguments$name_prefix, "progress.txt",sep="")
-  cat("starting", file=progressFilename, sep="\n")
 
   ## try to find the local minimum between errors and the first (heterozygous) peak
   kmer_trans = as.numeric(kmer_prof[,1])**transform_exp*as.numeric(kmer_prof[,2])

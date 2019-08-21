@@ -123,7 +123,7 @@ nls_peak<-function(x, y, k, p, top, estKmercov, estLength, max_iterations) {
     model$amd   = model_sum$coefficients['d',][[1]]
   }
 
-  print(model)
+  #print(model)
   #print(model$m$deviance())
 
   return(model)

@@ -8,7 +8,7 @@
         echo json_encode($progress_stats);
     }
     else {
-        $progress_stats = "file " + $filename + " doesn't exist";
+        $progress_stats = array("File " . $filename . " doesn't exist.");
         echo json_encode($progress_stats);
     }
 

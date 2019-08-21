@@ -178,7 +178,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
     ## Compute the genome characteristics
     model_sum=summary(model)
-    print(model_sum)
+    #print(model_sum)
 
     ## save the model to a file
     capture.output(model_sum, file=paste(foldername,"/", arguments$name_prefix, "model.txt", sep=""))
@@ -383,7 +383,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     }
 
     if (!IN_VERBOSE) {
-      print(hetline)
+      cat(paste0(hetline,"\n"))
     }
 
     dev.set(dev.next())
