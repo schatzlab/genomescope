@@ -42,7 +42,7 @@ After you have the histogram file, you can run GenomeScope within the online web
 ### Running GenomeScope Online
 
 Users may prefer to use the online version, which offers all of the same functionality within an easy to use web interface:
-http://genomescope.org/
+http://genomescope.org/genomescope2.0
 
 ### Running GenomeScope on the Command Line
 
