@@ -118,4 +118,5 @@ VCF files of the variants identified in the larger genomes are available here:
 http://labshare.cshl.edu/shares/schatzlab/www-data/genomescope/vcf/
 
 ## References:
+T. Rhyker Ranallo-Benavidez, Kamil S. Jaron, Michael C. Schatz (2019) doi: https://www.biorxiv.org/content/10.1101/747568v1
 Vurture, GW, Sedlazeck, FJ, Nattestad, M, Underwood, CJ, Fang, H, Gurtowski, J, Schatz, MC (2017) *Bioinformatics* doi: https://doi.org/10.1093/bioinformatics/btx153
