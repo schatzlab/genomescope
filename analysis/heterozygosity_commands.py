@@ -33,6 +33,7 @@ for p in [2, 3, 4, 5, 6]:
       lines.append("genomescope.R -i " + readfilenameprefix + ".histo -k" + str(k) + " -p" + str(p) + " -l10 -t 0 --transform_exp 3" + " -o HETEROZYGOSITY_OUTPUT_p" + str(p) + "_transform_exp3 -n " + "het" + '_'.join(['%.6f' % x for x in r]) + "_err" + '%.3f' % err + "_d" + '%.3f' % d + "_top" + str(t) + " --testing --true_params=" + '%.3f' % d + "," + ",".join(['%.6f' % x for x in r]) + "," + str(t) + "\n")
       for i in range(7):
         files[i].write(lines[i])
+      lines = []
 
   for i in range(7):
     files[i].close()
