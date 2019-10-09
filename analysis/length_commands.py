@@ -12,10 +12,10 @@ d = 0.10
 
 COMMANDS_file = open("LENGTH_COMMANDS", 'w')
 for i in range(1,8):
-  for p in [3,4,5,6]:
+  for p in [1,2,3,4,5,6]:
     COMMANDS_file.write("parallel -j 4 < LENGTH_COMMANDS"+str(i)+"_p"+str(p)+"\n")
 
-for p in [3, 4, 5, 6]:
+for p in [1, 2, 3, 4, 5, 6]:
   files = [open("LENGTH_COMMANDS" + str(i) + "_p" + str(p),'w') for i in range(1, 8)]
   lines = []
   for genome_filename in ["random_genome_001Mbp.fa", "random_genome_010Mbp.fa", "random_genome_100Mbp.fa", "random_genome_001Gbp.fa"]:

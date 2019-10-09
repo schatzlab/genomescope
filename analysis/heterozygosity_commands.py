@@ -12,12 +12,12 @@ model = "Partition"
 
 COMMANDS_file = open("HETEROZYGOSITY_COMMANDS", 'w')
 for i in range(1,8):
-  for p in [3,4,5,6]:
+  for p in [1,2,3,4,5,6]:
     COMMANDS_file.write("parallel -j 17 < HETEROZYGOSITY_COMMANDS"+str(i)+"_p"+str(p)+"\n")
 
 COMMANDS_file.close()
 
-for p in [3, 4, 5, 6]:
+for p in [1, 2, 3, 4, 5, 6]:
   files = [open("HETEROZYGOSITY_COMMANDS" + str(i) + "_p" + str(p),'w') for i in range(1, 8)]
   lines = []
   for d in [0.1]: #10% repetitiveness

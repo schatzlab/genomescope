@@ -12,12 +12,12 @@ model = "Partition"
 
 COMMANDS_file = open("REPETITIVENESS_COMMANDS", 'w')
 for i in range(1,8):
-  for p in [3,4,5,6]:
+  for p in [1,2,3,4,5,6]:
     COMMANDS_file.write("parallel -j 17 < REPETITIVENESS_COMMANDS"+str(i)+"_p"+str(p)+"\n")
 
 COMMANDS_file.close()
 
-for p in [3, 4, 5, 6]:
+for p in [1, 2, 3, 4, 5, 6]:
   files = [open("REPETITIVENESS_COMMANDS" + str(i) + "_p" + str(p),'w') for i in range(1, 8)]
   lines = []
   for d in [0.01*x for x in range(51)]: #repetitiveness from 0% to 50% in 1.0% increments

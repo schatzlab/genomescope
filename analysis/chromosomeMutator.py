@@ -1,9 +1,11 @@
-def chromosomeMutator(chromosome,heterozygosities,p, topology_model, top): #"Partition", p=2 to p=6
+def chromosomeMutator(chromosome,heterozygosities,p, topology_model, top): #"Partition", p=1 to p=6
   import random
   mutate = {"A": "ACGTAC", "C": "CGTACG", "G": "GTACGT", "T": "TACGTA"}
   mutatedchromosomes = {}
   length = len(chromosome)
   if topology_model == "Partition":
+    if p == 1:
+      mutatedchromosomes[1] = chromosome
     if p == 2:
       mutatedchromosomes[1] = list(chromosome)
       mutatedchromosomes[2] = list(chromosome)
@@ -177,7 +179,7 @@ def chromosomeMutator(chromosome,heterozygosities,p, topology_model, top): #"Par
             if top in [3, 4, 5, 14, 15, 16]:
               nums = [0, 0, 0, 1, 1, 2]
             if top in [8, 9, 10]:
-	      nums = [0, 0, 0, 1, 2, 2]
+              nums = [0, 0, 0, 1, 2, 2]
             if top in [11, 12, 13]:
               nums = [0, 0, 1, 1, 2, 2]
           elif chance <= sum(r[:4]):

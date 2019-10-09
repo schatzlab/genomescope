@@ -5,7 +5,7 @@ head -n 10000000 random_genome_001Gbp.fa > random_genome_010Mbp.fa
 head -n 1000000 random_genome_001Gbp.fa > random_genome_001Mbp.fa
 python heterozygosity_commands.py
 bash HETEROZYGOSITY_COMMANDS
-python repetitiveness_comands.py
+python repetitiveness_commands.py
 bash REPETITIVENESS_COMMANDS
 python length_commands.py
 bash LENGTH_COMMANDS
