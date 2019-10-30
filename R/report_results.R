@@ -700,6 +700,9 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   if (TRACE_FLAG) {
     cat(paste("TRACE_FLAG set to TRUE", sep=""), file=summaryFile, sep="\n", append=TRUE)
   }
+  if (NUM_ROUNDS != 4) {
+    cat(paste("NUM_ROUNDS = ", NUM_ROUNDS, sep=""), file=summaryFile, sep="\n", append=TRUE)
+  }
   cat(paste("\n",sprintf(format_column_1,"property"),               sprintf(format_column_2,"min"),                              sprintf(format_column_3,"max"), sep=""),                                     file=summaryFile, sep="\n", append=TRUE)
   if (p==1)
   {
