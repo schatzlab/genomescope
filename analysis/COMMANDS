@@ -9,3 +9,7 @@ python repetitiveness_commands.py
 bash REPETITIVENESS_COMMANDS
 python length_commands.py
 bash LENGTH_COMMANDS
+python heterozygosity_smudgeplot_commands.py
+bash HETEROZYGOSITY_smudgeplot_COMMANDS
+python repetitiveness_smudgeplot_commands.py
+bash REPETITIVENESS_smudgeplot_COMMANDS
