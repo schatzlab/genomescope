@@ -12,7 +12,7 @@ model = "Partition"
 
 COMMANDS_file = open("REPETITIVENESS_smudgeplot_COMMANDS", 'w')
 for i in range(1,7):
-  for p in [1,2,3,4,5,6]:
+  for p in [2,3,4,5,6]:
     if i in [1, 5]:
       COMMANDS_file.write("parallel -j 17 < REPETITIVENESS_smudgeplot_COMMANDS"+str(i)+"_p"+str(p)+"\n")
     else:
@@ -22,7 +22,7 @@ COMMANDS_file.close()
 
 p_to_rs = {1:[[]], 2:[[0.02]], 3:[[0.019, 0.001]], 4:[[0, 0.018, 0.001, 0.001], [0.018, 0, 0.001, 0.001]], 5:[[0.017, 0, 0.001, 0, 0.001, 0.001]], 6:[[0.016, 0, 0, 0.001, 0, 0, 0.001, 0, 0.001, 0.001]]}
 
-for p in [1, 2, 3, 4, 5, 6]:
+for p in [2, 3, 4, 5, 6]:
   files = [open("REPETITIVENESS_smudgeplot_COMMANDS" + str(i) + "_p" + str(p),'w') for i in range(1, 7)]
   lines = []
   for d in [0.01*x for x in range(51)]: #repetitiveness from 0% to 50% in 1.0% increments
