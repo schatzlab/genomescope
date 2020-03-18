@@ -118,5 +118,5 @@ VCF files of the variants identified in the larger genomes are available here:
 http://labshare.cshl.edu/shares/schatzlab/www-data/genomescope/vcf/
 
 ## References:
-T. Rhyker Ranallo-Benavidez, Kamil S. Jaron, Michael C. Schatz (2019) doi: https://www.biorxiv.org/content/10.1101/747568v1
+Ranallo-Benavidez, T.R., Jaron, K.S. & Schatz, M.C. GenomeScope 2.0 and Smudgeplot for reference-free profiling of polyploid genomes. *Nature Communications* **11**, 1432 (2020). https://doi.org/10.1038/s41467-020-14998-3
 Vurture, GW, Sedlazeck, FJ, Nattestad, M, Underwood, CJ, Fang, H, Gurtowski, J, Schatz, MC (2017) *Bioinformatics* doi: https://doi.org/10.1093/bioinformatics/btx153
