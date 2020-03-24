@@ -46,6 +46,9 @@
     $num_columns=0;
     $bin_history=array();
     $consistent=true;
+    $dobreak = "";
+
+    //echo "scanning file... ";
     while(!feof($myfile)) {
         $bin_counter=0;
         $line=fgets($myfile);
@@ -56,8 +59,8 @@
         $array=array_map("trim",explode(' ',$line));
         //var_dump($array);
         $bin_counter=count($array);
-        //echo $bin_counter . "<br>";
-        //echo $num_columns. "<br>";
+        // echo "<br>" . $bin_counter . "<br>";
+        // echo $num_columns. "<br>";
         
         if ($num_columns != 0 and $num_columns != $bin_counter) {
             $consistent=false;
@@ -67,12 +70,19 @@
         $num_columns=$bin_counter;
         $line_counter=$line_counter+1;
         $bin_history[]=$bin_counter;
+        if ($line_counter > 100000) {
+            $dobreak=">";
+            break;
+        }
     }
     fclose($myfile);
+
+    //echo "<br>";
+    //echo "finished checking file<br>";
     
     if ($consistent) {
         if ($line_counter >= 50 and $num_columns == 2) {
-            echo "<div class=\"alert center alert-success\" role=\"alert\">Great! File was uploaded and has acceptable dimensions: $line_counter rows by $num_columns columns</div>";
+            echo "<div class=\"alert center alert-success\" role=\"alert\">Great! File was uploaded and has acceptable dimensions: $dobreak$line_counter rows by $num_columns columns</div>";
             echo "<div style=\"margin-left:1%;\"><div class=\"col-sm-1\">";
             echo "$back_button";
             echo "</div><div class=\"col-sm-1\">";
