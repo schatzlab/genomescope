@@ -74,6 +74,7 @@ parser$add_argument("--transform_exp", type="integer", default=1, help = "ADVANC
 parser$add_argument("--testing", action="store_true", default=FALSE, help = "ADVANCED: flag to create testing.tsv file with model parameters")
 parser$add_argument("--true_params", type="character", default = -1, help = "ADVANCED: flag to state true simulated parameters for testing mode")
 parser$add_argument("--trace_flag", action="store_true", default=FALSE, help = "ADVANCED: flag to turn on printing of iteration progress of nlsLM function")
+parser$add_argument("--num_rounds", type = "integer", default = 4, help = "ADVANCED: parameter for the number of optimization rounds")
 
 arguments <- parser$parse_args()
 version_message <- "GenomeScope 2.0\n"
@@ -86,7 +87,7 @@ if (arguments$version) {
 if (is.null(arguments$input) | is.null(arguments$output)) {
   cat("USAGE: genomescope.R -i input_histogram_file -o output_dir -p ploidy -k kmer_length\n")
   cat("OPTIONAL PARAMETERS: -n 'name_prefix' -l lambda -m max_kmercov --verbose --no_unique_sequence\n")
-  cat("ADVANCED PARAMETERS: -t topology --initial_repetitiveness init_d --initial_heterozygosities init_r1,init_r2,...,init_rx --transform_exp t_exp --testing --true_params --trace_flag\n")
+  cat("ADVANCED PARAMETERS: -t topology --initial_repetitiveness init_d --initial_heterozygosities init_r1,init_r2,...,init_rx --transform_exp t_exp --testing --true_params --trace_flag --num_rounds\n")
   cat("HELP: genomescope.R --help\n")
 } else {
 
@@ -109,6 +110,7 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   TESTING     <- arguments$testing
   TRUE_PARAMS <- arguments$true_params
   TRACE_FLAG <- arguments$trace_flag
+  NUM_ROUNDS <- arguments$num_rounds
 
   cat(paste("GenomeScope analyzing ", histfile, " p=", p, " k=", k, " outdir=", foldername, "\n", sep=""))
 

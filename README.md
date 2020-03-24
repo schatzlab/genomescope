@@ -42,11 +42,34 @@ After you have the histogram file, you can run GenomeScope within the online web
 ### Running GenomeScope Online
 
 Users may prefer to use the online version, which offers all of the same functionality within an easy to use web interface:
-http://genomescope.org/
+http://genomescope.org/genomescope2.0
 
 ### Running GenomeScope on the Command Line
 
-Command line users can run the modeling with the R script genomescope.R, making sure that Rscript is in your PATH (alternatively, edit the shebang line to point to the Rscript location).
+First we need to download GenomeScope 2.0 and enter its directory:
+
+    $ git clone https://github.com/tbenavi1/genomescope2.0.git
+    $ cd genomescope2.0/
+    
+Then we need to install GenomeScope 2.0.
+
+If you already have write access to a specific path for R libraries that your R installation is set up to use, please set the local_lib_path variable in the install.R file equal to this path. Then we can run:
+
+    $ Rscript install.R
+    
+For most users, it is instead easiest to install GenomeScope 2.0 in a local directory. In this example we create an "R_libs" folder located in the home directory to use for local R libraries:
+
+    $ mkdir ~/R_libs
+
+In order for R to load libraries from this location, we have to create and/or edit the .Renviron file in the home directory:
+
+    $ echo "R_LIBS=~/R_libs/" >> ~/.Renviron
+    
+Now we can install GenomeScope 2.0:
+
+    $ Rscript install.R
+
+After installation, command line users can run the modeling with the R script genomescope.R, making sure that genomescope.R is in your PATH.
 
     $ genomescope.R -i histogram_file -o output_dir -k k-mer_length
 
@@ -95,4 +118,6 @@ VCF files of the variants identified in the larger genomes are available here:
 http://labshare.cshl.edu/shares/schatzlab/www-data/genomescope/vcf/
 
 ## References:
+Ranallo-Benavidez, T.R., Jaron, K.S. & Schatz, M.C. GenomeScope 2.0 and Smudgeplot for reference-free profiling of polyploid genomes. *Nature Communications* **11**, 1432 (2020). https://doi.org/10.1038/s41467-020-14998-3
+
 Vurture, GW, Sedlazeck, FJ, Nattestad, M, Underwood, CJ, Fang, H, Gurtowski, J, Schatz, MC (2017) *Bioinformatics* doi: https://doi.org/10.1093/bioinformatics/btx153

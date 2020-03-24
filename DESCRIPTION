@@ -1,11 +1,12 @@
 Package: genomescope
-Title: What The Package Does (one line, title case required)
+Title: Reference-free profiling of genomes
 Version: 2.0
 Authors@R: person("Timothy", "Ranallo-Benavidez", email = "tbenavi1@jhu.edu",
                   role = c("aut", "cre"))
-Description: What the package does (one paragraph)
+Description: GenomeScope analyzes the k-mer histogram to output estimates for genome size, heterozygosity, and repetitiveness, without requiring a reference genome. GenomeScope employs a polyploid-aware mixture model that, within seconds, accurately infers genome properties from unassembled sequencing data. GenomeScope produces a report and several informative plots describing the genome properties.
 Depends: R (>= 3.1.0)
-License: What license is it under?
+Imports: argparse, minpack.lm
+License: file LICENSE
 LazyData: true
 RoxygenNote: 6.1.1
 Encoding: UTF-8
