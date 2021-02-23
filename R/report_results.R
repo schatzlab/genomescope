@@ -285,6 +285,19 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       }
     }
 
+    r0 = 1-ahet #aa
+    t0 = r0**k #AA
+    s0 = t0 #AA
+    s1 = 1-t0 #AB
+    alpha_1 = (1-amd)*(2*s1) + amd*(2*s0*s1 + 2*s1**2)
+    alpha_2 = (1-amd)*(s0) + amd*(s1**2)
+    alpha_3 = amd*(2*s0*s1)
+    alpha_4 = amd*(s0**2)
+    one_hist = alpha_1 * dnbinom(x, size = akcov*1 / adups, mu = akcov*1)
+    two_hist = alpha_2 * dnbinom(x, size = akcov*2 / adups, mu = akcov*2)
+    thr_hist = alpha_3 * dnbinom(x, size = akcov*3 / adups, mu = akcov*3)
+    fou_hist = alpha_4 * dnbinom(x, size = akcov*4 / adups, mu = akcov*4)
+
     unique_hist_transform = x**transform_exp*unique_hist
 
     unique_kmers = sum(as.numeric(x)*as.numeric(unique_hist))
@@ -779,6 +792,117 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   ## Finalize the progress
   progressFilename=paste(foldername, "/", arguments$name_prefix, "progress.txt",sep="")
   cat(model_status, file=progressFilename, sep="\n", append=TRUE)
+  
+  ## 0 if NA
+  ###############################################################################
+
+  na.zero <- function (x) {
+	x[is.na(x)] <- 0
+      return(x)
+	}
+  
+  ## Merfin probabilities
+
+  colors <- c("black","red","green","purple","blue")
+
+  if (p<=2 & FITTED_HIST){
+
+	  if (!(p==1)){
+
+		fitted_hist=data.frame(cbind(one_hist,two_hist,thr_hist,fou_hist))
+	
+	  } else {
+  
+		fitted_hist=data.frame(cbind(two_hist,fou_hist))
+  
+	  }
+
+	  ## Fitted histogram  
+
+	  png(paste(foldername, "/fitted_hist.png", sep=""), height = plot_size, width = plot_size, res=resolution)
+	  layout(matrix(c(1,2), nrow=2, byrow = TRUE),heights=lcm(c(11,5.5)))
+	  par(mar=c(0,5,1,1))
+  
+	  plot(kmer_hist_orig, type="n", xlab=NULL, ylab=ylabel_orig, ylim=c(0,y_limit_orig), xlim=c(0,akcov*5),
+			cex.main=font_size, cex.sub=font_size, cex.axis=font_size, cex.lab=font_size,
+		   xaxt='n', yaxt='n')
+	  myTicks = axTicks(4)
+	  myTicks[1]<-0
+	  axis(2, at=myTicks, labels=myTicks, cex.axis=font_size,
+		   cex.lab=font_size)
+  
+	  peaks<-akcov * 1:6
+
+	  points(kmer_hist, type="h", col=COLOR_HIST, lwd=2)
+	  lines(error_kmers, col="black", lwd=1.5)
+  
+	  abline(v=peaks, col="black", lty=2, lwd=0.3)
+  
+	  for (i in 1:ncol(fitted_hist)) {
+		lines(fitted_hist[,i]*amlen, type="l", lwd=1.5, col=colors[i+1])
+	  }
+
+	  lines(rowSums(fitted_hist*amlen), col="darkgray", lwd=2, lty=2)
+  
+	  legend_names=c("0-copy", "1-copy", "2-copy", "3-copy", "4-copy")
+	  legend_lty=c("solid", "solid", "solid", "solid", "solid")
+	  legend_lwd=c(3,3,3,3,3)
+  
+	  legend("topright",
+			 ##legend(exp(.65 * log(max(x))), 1.0 * max(y),
+			 legend=c("Observed",legend_names[1:(ncol(fitted_hist)+1)],"Full model"),
+			 lty=c("solid",legend_lty[1:(ncol(fitted_hist)+1)], "dashed"),
+			 lwd=c(2, legend_lwd[1:(ncol(fitted_hist)+1)], 3),
+			 col=c(COLOR_HIST,colors[1:(ncol(fitted_hist)+1)], "darkgray"),
+			 bg="white")
+
+	  ## Generate lookup_table
+  
+	  lookup_table <- NULL
+	  plot_table <- NULL
+  
+	  fitted_hist[(akcov*5):length(one_hist),1:ncol(fitted_hist)] <- 0
+  
+	  fitted_hist <- na.zero(fitted_hist)
+  
+	  for (i in 1:(akcov*5-1)){
+	
+		totalP<-sum(na.zero(error_kmers[i]), rowSums(fitted_hist[i,]*amlen))
+ 
+		prob<-c(na.zero(error_kmers[i]/totalP),as.numeric(fitted_hist[i,]*amlen)/totalP)
+	
+		plot_table<-rbind(plot_table,prob)
+	  
+		max.p<-max(prob)  
+		readK<-which.max(prob)-1
+	
+		lookup_table<-rbind(lookup_table,c(readK,max.p))
+	
+	  }
+  
+	  lookup_table<-data.frame(lookup_table)
+	  rownames(plot_table) <- make.names(plot_table[,1], unique = TRUE)
+  
+	  write.table(lookup_table, paste(foldername, "/lookup_table.txt", sep=""), sep=",", row.names = FALSE, col.names = FALSE)
+
+	  ## Plot lookup values
+  
+	  par(mar=c(5,5,0,1))
+  
+	  plot_table<-data.frame(plot_table)
+	  plot(plot_table$X1,type="n", xlab="Coverage", ylab="Probability",xlim=c(0,akcov*5), ylim=c(0,1), cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size, yaxt='n')
+
+	  abline(v=peaks, col="black", lty=2, lwd=0.3)
+	
+	  for (i in 1:(ncol(fitted_hist)+1)) {
+		lines(plot_table[,i], type="l", lwd=1.5, col=colors[i])
+	  }
+	  axis(2, at=c(0,0.5,1), labels=c(0,0.5,1), cex.axis=font_size,
+		   cex.lab=font_size)
+  
+	  dev.off()
+	  
+   }
 
   if (TESTING) {
     if (TRUE_PARAMS!=-1) {
