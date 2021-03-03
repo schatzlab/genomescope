@@ -1,0 +1,18 @@
+GenomeScope version 2.0
+p = 4
+k = 21
+initial kmercov estimate = 79
+NO_UNIQUE_SEQUENCE set to TRUE
+
+property                      min               max               
+Homozygous (aaaa)             88.2864%          88.5444%          
+Heterozygous (not aaaa)       11.4556%          11.7136%          
+aaab                          0%                0.05526%          
+aabb                          5.40059%          5.44174%          
+aabc                          0.603173%         0.73443%          
+abcd                          5.45188%          5.48219%          
+Genome Haploid Length         572,729,399 bp    572,773,156 bp    
+Genome Repeat Length          434,169,479 bp    434,202,649 bp    
+Genome Unique Length          138,559,920 bp    138,570,507 bp    
+Model Fit                     54.6064%          90.0372%          
+Read Error Rate               0.196664%         0.196664%         

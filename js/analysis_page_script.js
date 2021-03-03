@@ -86,14 +86,24 @@ function getUrlVars() {
 //
 var content_width = $( window ).width();
 
-
+function doesFileExist(urlToFile) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('HEAD', urlToFile, false);
+    xhr.send();
+     
+    if (xhr.status == "404") {
+        return false;
+    } else {
+        return true;
+    }
+}
 
 
 function check_plot_exists(counter,bool_succeeded) {
     
     var run_id_code=getUrlVars()["code"];
     var file_url_prefix="user_data/"+run_id_code + "/";
-    var file_to_check_for=file_url_prefix + "plot.png";
+    var file_to_check_for=file_url_prefix + "summary.txt";
     
     if (counter>100) {
         alert("Taking too long to find "+ file_to_check_for + " counter: " + counter);
@@ -110,12 +120,19 @@ function check_plot_exists(counter,bool_succeeded) {
                 // alert("inside success");
                 // document.getElementById("landing_for_plot1").innerHTML='<img class="fluidimage" src="' + "./user_data/"+ run_id_code + "/plot.png"  + ' "/>'; // width="750" height="500" // style="max-height:100%; max-width:100%;" 
                 // document.getElementById("landing_for_plot1_details").innerHTML='<iframe  width="600" height="300" src="' + "./user_data/"+ run_id_code + "/summary.html" + '" frameborder="0"></iframe>';
-
-                document.getElementById("landing_for_plot1").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "plot.png" + ' "/>'; 
-                document.getElementById("landing_for_plot2").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "plot.log.png" + ' "/>'; 
+		var result = doesFileExist(file_url_prefix + "plot.png");
+	        if (result == true) {
+                    document.getElementById("landing_for_plot1").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "plot.png" + ' "/>';
+                    document.getElementById("landing_for_plot2").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "plot.log.png" + ' "/>';
+	        } else {
+		    document.getElementById("landing_for_plot1").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "linear_plot.png" + ' "/>'; 
+                    document.getElementById("landing_for_plot2").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "log_plot.png" + ' "/>'; 
+                    document.getElementById("landing_for_plot3").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "transformed_linear_plot.png" + ' "/>'; 
+                    document.getElementById("landing_for_plot4").innerHTML='<img class="fluidimage" onerror="imgError(this);" src="' + file_url_prefix  + "transformed_log_plot.png" + ' "/>'; 
+		}
 
                 if (bool_succeeded) {
-                    document.getElementById("landing_for_text1").innerHTML='<iframe width="' + 600 + ' " height="200" src="' + file_url_prefix + "summary.txt" + '" frameborder="0"></iframe>';
+                    document.getElementById("landing_for_text1").innerHTML='<iframe width="' + 600 + ' " height="400" src="' + file_url_prefix + "summary.txt" + '" frameborder="0"></iframe>';
                     document.getElementById("landing_for_text2").innerHTML='<iframe width="' + 600 + ' " height="400" src="' + file_url_prefix + "model.txt" + '" frameborder="0"></iframe>';
                 } else {
                     document.getElementById("landing_for_text1").innerHTML='Model did not converge';

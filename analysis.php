@@ -25,6 +25,15 @@
                         <!-- Landing spot for plot image -->
                     </div>
                 </div>
+                <div class="thumbnail plot_frame frame">
+                    <div style="display:inline-block" id="landing_for_plot3" class="plot_img">
+                        <!-- Landing spot for plot image -->
+                    </div>
+                    <div style="display:inline-block" id="landing_for_plot4" class="plot_img">
+                        <!-- Landing spot for plot image -->
+                    </div>
+                </div>
+
 
                 <div class="row">
                     <div class="col-lg-6"> 
@@ -59,7 +68,7 @@
           <div id="code" class="panel-body">
             <?php
                 $code=$_GET["code"];
-                $url="http://genomescope.org/analysis.php?code=$code";
+                $url="http://genomescope.org/genomescope2.0/analysis.php?code=$code";
     
                 echo "Return to view your results at any time: <input type=\"text\" class=\"form-control\" value=\"$url\"></input>";
             ?>

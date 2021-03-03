@@ -12,14 +12,15 @@
 	<h3 class="panel-title">Information</h3>
       </div>
       <div class="panel-body">
-        <p>The code is open source on Github: <a href="https://github.com/schatzlab/genomescope" target="_blank">github.com/schatzlab/genomescope</a></p>
+        <p>The code is open source on Github: <a href="https://github.com/tbenavi1/genomescope2.0" target="_blank">github.com/tbenavi1/genomescope2.0</a></p>
         <br>
-        <p>Statistical work by Gregory Vurture and <a href="http://schatzlab.cshl.edu/people/fsedlaze/" target="_blank">Fritz Sedlazeck</a><p>
+        <p>Statistical work by Gregory Vurture and <a href="https://www.hgsc.bcm.edu/people/sedlazeck-f" target="_blank">Fritz Sedlazeck</a><p>
+        <p>Polyploid 2.0 model by <a href="http://schatz-lab.org/" target="_blank">T. Rhyker Ranallo-Benavidez</a></p>
         <p>Web application by <a href="http://marianattestad.com" target="_blank">Maria Nattestad</a></p>
-        <p>Principal investigator / The Boss: <a href="http://schatzlab.cshl.edu" target="_blank">Mike Schatz</a></p>
+        <p>Principal investigator / The Boss: <a href="http://schatz-lab.org/" target="_blank">Mike Schatz</a></p>
         <br>
-        <p>For questions about the science, email: <a href="mailto:mschatz@cshl.edu?Subject=Question%20About%20GenomeScope" target="_top">Mike Schatz at mschatz@cshl.edu</a></p>
-        <p>For questions about the web application, email: <a href="mailto:mnattest@cshl.edu?Subject=Question%20About%20GenomeScope" target="_top">Maria Nattestad at mnattest@cshl.edu</a></p>
+        <p>For questions about the science, email: <a href="mailto:mschatz@cs.jhu.edu?Subject=Question%20About%20GenomeScope" target="_top">Mike Schatz at mschatz@cs.jhu.edu</a></p>
+        <p>For questions about the web application, email: <a href="mailto:tbenavi1@jhu.edu?Subject=Question%20About%20GenomeScope" target="_top">T. Rhyker Ranallo-Benavidez at tbenavi1@jhu.edu</a></p>
       </div>
     </div>
 </div>
