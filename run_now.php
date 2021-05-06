@@ -2,7 +2,7 @@
     <body> 
 <?php
     if( !isset($_POST['code']) ) { echo shell_exec('echo ERROR: No code passed to run.php >> user_data/ERRORS/input_validation.log');}
-    $code=$_POST["code"];
+    $code=escapeshellarg($_POST["code"]);
     if (!file_exists("user_data/$code")) {
         mkdir("user_data/$code");
     }
