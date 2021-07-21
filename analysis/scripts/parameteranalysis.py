@@ -1,6 +1,6 @@
+#!/usr/bin/python2
 #Given a reference sequence, introduce a  given rate of heterozygosity and create Illumina reads based on the wanted coverage level, readlength, and read duplication level.
 
-#!/usr/bin/python
 import os
 import os.path
 import gzip
