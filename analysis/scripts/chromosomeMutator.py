@@ -1,3 +1,5 @@
+#!/usr/bin/python2
+
 def chromosomeMutator(chromosome,heterozygosity):
 	import random
 	A="CGT"
