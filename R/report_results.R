@@ -293,10 +293,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     alpha_2 = (1-amd)*(s0) + amd*(s1**2)
     alpha_3 = amd*(2*s0*s1)
     alpha_4 = amd*(s0**2)
+    
     one_hist = alpha_1 * dnbinom(x, size = akcov*1 / adups, mu = akcov*1)
-    two_hist = alpha_2 * dnbinom(x, size = akcov*2 / adups, mu = akcov*2)
+    two_hist = alpha_2 * dnbinom(x, size = akcov*p / adups, mu = akcov*p)
     thr_hist = alpha_3 * dnbinom(x, size = akcov*3 / adups, mu = akcov*3)
-    fou_hist = alpha_4 * dnbinom(x, size = akcov*4 / adups, mu = akcov*4)
+    fou_hist = alpha_4 * dnbinom(x, size = akcov*2*p / adups, mu = akcov*2*p)
 
     unique_hist_transform = x**transform_exp*unique_hist
 
@@ -812,7 +813,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 		fitted_hist=data.frame(cbind(one_hist,two_hist,thr_hist,fou_hist))
 	
 	  } else {
-  
+
 		fitted_hist=data.frame(cbind(two_hist,fou_hist))
   
 	  }
