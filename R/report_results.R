@@ -293,10 +293,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     alpha_2 = (1-amd)*(s0) + amd*(s1**2)
     alpha_3 = amd*(2*s0*s1)
     alpha_4 = amd*(s0**2)
+    
     one_hist = alpha_1 * dnbinom(x, size = akcov*1 / adups, mu = akcov*1)
-    two_hist = alpha_2 * dnbinom(x, size = akcov*2 / adups, mu = akcov*2)
+    two_hist = alpha_2 * dnbinom(x, size = akcov*p / adups, mu = akcov*p)
     thr_hist = alpha_3 * dnbinom(x, size = akcov*3 / adups, mu = akcov*3)
-    fou_hist = alpha_4 * dnbinom(x, size = akcov*4 / adups, mu = akcov*4)
+    fou_hist = alpha_4 * dnbinom(x, size = akcov*2*p / adups, mu = akcov*2*p)
 
     unique_hist_transform = x**transform_exp*unique_hist
 
@@ -812,7 +813,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 		fitted_hist=data.frame(cbind(one_hist,two_hist,thr_hist,fou_hist))
 	
 	  } else {
-  
+
 		fitted_hist=data.frame(cbind(two_hist,fou_hist))
   
 	  }
@@ -823,7 +824,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 	  layout(matrix(c(1,2), nrow=2, byrow = TRUE),heights=lcm(c(11,5.5)))
 	  par(mar=c(0,5,1,1))
   
-	  plot(kmer_hist_orig, type="n", xlab=NULL, ylab=ylabel_orig, ylim=c(0,y_limit_orig), xlim=c(0,akcov*5),
+	  plot(kmer_hist_orig, type="n", xlab=NULL, ylab=ylabel_orig, ylim=c(0,y_limit_orig), xlim=c(0,akcov*(p*2.5)),
 			cex.main=font_size, cex.sub=font_size, cex.axis=font_size, cex.lab=font_size,
 		   xaxt='n', yaxt='n')
 	  myTicks = axTicks(4)
@@ -861,11 +862,11 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 	  lookup_table <- NULL
 	  plot_table <- NULL
   
-	  fitted_hist[(akcov*5):length(one_hist),1:ncol(fitted_hist)] <- 0
+	  fitted_hist[(akcov*(p*2.5)):length(one_hist),1:ncol(fitted_hist)] <- 0
   
 	  fitted_hist <- na.zero(fitted_hist)
   
-	  for (i in 1:(akcov*5-1)){
+	  for (i in 1:(akcov*(p*2.5)-1)){
 	
 		totalP<-sum(na.zero(error_kmers[i]), rowSums(fitted_hist[i,]*amlen))
  
@@ -890,7 +891,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 	  par(mar=c(5,5,0,1))
   
 	  plot_table<-data.frame(plot_table)
-	  plot(plot_table$X1,type="n", xlab="Coverage", ylab="Probability",xlim=c(0,akcov*5), ylim=c(0,1), cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size, yaxt='n')
+	  plot(plot_table$X1,type="n", xlab="Coverage", ylab="Probability",xlim=c(0,akcov*(p*2.5)), ylim=c(0,1), cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size, yaxt='n')
 
 	  abline(v=peaks, col="black", lty=2, lwd=0.3)
 	
