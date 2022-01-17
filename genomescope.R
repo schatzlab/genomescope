@@ -76,6 +76,9 @@ parser$add_argument("--true_params", type="character", default = -1, help = "ADV
 parser$add_argument("--trace_flag", action="store_true", default=FALSE, help = "ADVANCED: flag to turn on printing of iteration progress of nlsLM function")
 parser$add_argument("--num_rounds", type = "integer", default = 4, help = "ADVANCED: parameter for the number of optimization rounds")
 parser$add_argument("--fitted_hist", action="store_true", default=FALSE, help = "ADVANCED: generates a fitted histogram for kmer multiplicity 0-4 and a lookup table of probabilities")
+parser$add_argument("--start_shift", type = "integer", default=START_SHIFT, help = "ADVANCED: coverage shifts to exclude between fitting rounds")
+parser$add_argument("--typical_error", type = "integer", default=TYPICAL_ERROR, help = "ADVANCED: typical level of sequencing error")
+
 
 arguments <- parser$parse_args()
 version_message <- "GenomeScope 2.0\n"
@@ -113,6 +116,8 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
   TRACE_FLAG <- arguments$trace_flag
   NUM_ROUNDS <- arguments$num_rounds
   FITTED_HIST <- arguments$fitted_hist
+  START_SHIFT <- arguments$start_shift
+  TYPICAL_ERROR <- arguments$typical_error
 
   cat(paste("GenomeScope analyzing ", histfile, " p=", p, " k=", k, " outdir=", foldername, "\n", sep=""))
 
