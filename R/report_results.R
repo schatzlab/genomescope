@@ -27,6 +27,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   kmer_hist_transform = kmer_hist_orig
   kmer_hist_transform$V2 = as.numeric(kmer_hist_transform$V1)**transform_exp * as.numeric(kmer_hist_transform$V2)
   model = container[[1]]
+  ISCROPPED = abs(nrow(kmer_hist) - nrow(kmer_hist_orig)) > 1 # the current version has difference one even when cutoff was not used (the last position is excluded for the fit but restored for the genome size est)
 
   #automatically zoom into the relevant regions of the plot, ignore first 15 positions
   xmax=length(x)
@@ -120,7 +121,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   #rect(0, 0, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
   rect(0, 0, x_limit_orig*1.1 , y_limit_orig*1.1, col=COLOR_BGCOLOR)
   points(kmer_hist_orig, type="h", col=COLOR_HIST, lwd=2)
-#  if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
+#  if( ISCROPPED ){
 #    abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
 #  }
   box(col="black")
@@ -134,7 +135,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   #rect(0, 0, max(kmer_hist_orig[[1]])*1.1 , max(kmer_hist_orig[[2]])*1.1, col=COLOR_BGCOLOR)
   rect(0, 0, x_limit*1.1 , y_limit*1.1, col=COLOR_BGCOLOR)
   points(kmer_hist_transform, type="h", col=COLOR_HIST, lwd=2)
-#  if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
+#  if( ISCROPPED ){
 #    abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
 #  }
   box(col="black")
@@ -148,7 +149,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   rect(1e-10, 1e-10, max(kmer_hist_orig[,1])*10 , max(kmer_hist_orig[,2])*10, col=COLOR_BGCOLOR)
   points(kmer_hist_orig, type="h", col=COLOR_HIST, lwd=2)
-  if(length(kmer_hist[,1])!=length(kmer_hist_orig[,1])){
+  if( ISCROPPED ){
     abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
   }
   box(col="black")
@@ -161,7 +162,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   cex.lab=font_size, cex.axis=font_size, cex.main=font_size, cex.sub=font_size)
   rect(1e-10, 1e-10, max(kmer_hist_transform[,1])*10 , max(kmer_hist_transform[,2])*10, col=COLOR_BGCOLOR)
   points(kmer_hist_transform, type="h", col=COLOR_HIST, lwd=2)
-  if(length(kmer_hist[,1])!=length(kmer_hist_transform[,1])){
+  if( ISCROPPED ){
     abline(v=length(kmer_hist[,1]),col=COLOR_COVTHRES,lty="dashed", lwd=3)
   }
   box(col="black")
@@ -169,8 +170,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
 
   if(!is.null(model))
   {
-    x=kmer_hist[[1]]
-    y=kmer_hist[[2]]
+    x=kmer_hist_orig[[1]]
+    y=kmer_hist_orig[[2]]
     y_transform = as.numeric(x)**transform_exp*as.numeric(y)
 
     ## The model converged!
@@ -244,8 +245,12 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     error_rate = 1-(1-(total_error_kmers/total_kmers))**(1/k)
     error_rate = c(error_rate, error_rate)
 
+    # print(paste("Total:", total_kmers, "Total err: ", total_error_kmers, "kcov:", kcov)) # sanity testing lines :-)
+
     total_len = (total_kmers-total_error_kmers)/(p*kcov)
     atotal_len = (total_kmers-total_error_kmers)/(p*akcov)
+
+    # print(paste("Total:", total_len, "Atotal: ", atotal_len)) # sanity testing  lines :-)
 
     ## find kmers that fit the p peak model (no repeats)
     if (p==1)
@@ -403,7 +408,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     dev.set(dev.next())
 
     ## Finish Linear Plot
-    title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
+    title(paste("\n\nlen:",  prettyNum(atotal_len, big.mark=","),
     "bp",
     " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
     "% ", "\n",
@@ -452,7 +457,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     dev.set(dev.next())
 
     ## Finish Linear Plot
-    title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
+    title(paste("\n\nlen:",  prettyNum(atotal_len, big.mark=","),
     "bp",
     " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
     "% ", "\n",
@@ -501,7 +506,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     dev.set(dev.next())
 
     ## Finish Log plot
-    title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
+    title(paste("\n\nlen:",  prettyNum(atotal_len, big.mark=","),
     "bp",
     " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
     "% ", "\n",
@@ -531,20 +536,20 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     }
 
     ## Add legend
-    if(length(kmer_hist[,1])==length(kmer_hist_orig[,1]))
+    if( !ISCROPPED )
     {
       if (NO_UNIQUE_SEQUENCE) {
         legend(exp(.62 * log(max(x))), 1.0 * max(y),
         legend=c("observed", "full model", "errors", "kmer-peaks"),
         lty=c("solid", "solid", "solid", "dashed"),
-        lwd=c(3,3,3,3),
+        lwd=c(3,3,3,2),
         col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
         bg="white")
       } else {
         legend(exp(.62 * log(max(x))), 1.0 * max(y),
         legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
         lty=c("solid", "solid", "solid", "solid", "dashed"),
-        lwd=c(3,3,3,3,3),
+        lwd=c(3,3,3,3,2),
         col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
         bg="white")
       }
@@ -573,7 +578,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     dev.set(dev.next())
 
     ## Finish Log plot
-    title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
+    title(paste("\n\nlen:",  prettyNum(atotal_len, big.mark=","),
     "bp",
     " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
     "% ", "\n",
@@ -603,7 +608,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     }
 
     ## Add legend
-    if(length(kmer_hist[,1])==length(kmer_hist_orig[,1]))
+    if( ISCROPPED )
     {
       if (NO_UNIQUE_SEQUENCE) {
         legend(exp(.62 * log(max(x))), 1.0 * max(y),
@@ -626,18 +631,18 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       if (NO_UNIQUE_SEQUENCE) {
         legend("topright",
         ##legend(exp(.62 * log(max(x))), 1.0 * max(y),
-        legend=c("observed", "full model", "errors", "kmer-peaks","cov-threshold"),
-        lty=c("solid", "solid", "solid", "dashed", "dashed"),
-        lwd=c(3,3,3,2,3),
-        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK, COLOR_COVTHRES),
+        legend=c("observed", "full model", "errors", "kmer-peaks"),
+        lty=c("solid", "solid", "solid", "dashed"),
+        lwd=c(3,3,3,2),
+        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
         bg="white")
       } else {
         legend("topright",
         ##legend(exp(.62 * log(max(x))), 1.0 * max(y),
-        legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks","cov-threshold"),
-        lty=c("solid", "solid", "solid", "solid", "dashed", "dashed"),
-        lwd=c(3,3,3,3,2,3),
-        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK, COLOR_COVTHRES),
+        legend=c("observed", "full model", "unique sequence", "errors", "kmer-peaks"),
+        lty=c("solid", "solid", "solid", "solid", "dashed"),
+        lwd=c(3,3,3,3,2),
+        col=c(COLOR_HIST, COLOR_2pPEAK, COLOR_pPEAK, COLOR_ERRORS, COLOR_KMERPEAK),
         bg="white")
       }
     }
@@ -649,7 +654,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       " kcov:", format(akcov, digits=3),
       " err:", format(error_rate[1], digits=3),
       " model fit:", format(adups, digits=3),
-      " len:", round(total_len[1]), "\n", sep=""))
+      " len:", round(atotal_len), "\n", sep=""))
     }
   }
   else
