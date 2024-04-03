@@ -17,10 +17,11 @@
         <p>Statistical work by Gregory Vurture and <a href="https://www.hgsc.bcm.edu/people/sedlazeck-f" target="_blank">Fritz Sedlazeck</a><p>
         <p>Polyploid 2.0 model by <a href="http://schatz-lab.org/" target="_blank">T. Rhyker Ranallo-Benavidez</a></p>
         <p>Web application by <a href="http://marianattestad.com" target="_blank">Maria Nattestad</a></p>
-        <p>Principal investigator / The Boss: <a href="http://schatz-lab.org/" target="_blank">Mike Schatz</a></p>
+        <p>Principal investigator: <a href="http://schatz-lab.org/" target="_blank">Mike Schatz</a></p>
         <br>
         <p>For questions about the science, email: <a href="mailto:mschatz@cs.jhu.edu?Subject=Question%20About%20GenomeScope" target="_top">Mike Schatz at mschatz@cs.jhu.edu</a></p>
-        <p>For questions about the web application, email: <a href="mailto:tbenavi1@jhu.edu?Subject=Question%20About%20GenomeScope" target="_top">T. Rhyker Ranallo-Benavidez at tbenavi1@jhu.edu</a></p>
+        <br>
+        <p>Please cite: <a href="https://www.nature.com/articles/s41467-020-14998-3">T. Rhyker Ranallo-Benavidez et al. (2020) GenomeScope 2.0 and Smudgeplot for reference-free profiling of polyploid genomes. Nature Communications. https://doi.org/10.1038/s41467-020-14998-3</a></p>
       </div>
     </div>
 </div>
