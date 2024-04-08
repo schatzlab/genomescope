@@ -135,8 +135,8 @@ if (is.null(arguments$input) | is.null(arguments$output)) {
     minkmerx = 2;
   }
 
-  kmer_prof <- kmer_prof[c(minkmerx:(length(kmer_prof[,2])-1)),] #get rid of the last position
-  kmer_prof_orig <- kmer_prof
+  kmer_prof_orig <- kmer_prof # kmer_prof_orig will now store all including the last position
+  kmer_prof <- kmer_prof[c(minkmerx:(nrow(kmer_prof)-1)),] #get rid of the last position
 
   ## try to find the local minimum between errors and the first (heterozygous) peak
   kmer_trans = as.numeric(kmer_prof[,1])**transform_exp*as.numeric(kmer_prof[,2])
